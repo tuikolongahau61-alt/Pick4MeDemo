@@ -132,7 +132,11 @@ function showScreen(name) {
     const el = document.getElementById("screen-" + s);
     if (el) el.classList.toggle("is-active", s === name);
   });
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  // Jump straight to the top so the new screen always opens fully in view
+  // (no slow scroll that makes it look like it loaded half-hidden).
+  window.scrollTo(0, 0);
+  if (document.documentElement) document.documentElement.scrollTop = 0;
+  if (document.body) document.body.scrollTop = 0;
   trackEvent("view_screen", { screen: name });
 }
 

@@ -332,6 +332,48 @@ body {
 /* ============================ MENU ============================ */
 .menu-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 
+/* Sticky top bar so Back / Pick stay visible while scrolling the menu. */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: -20px -18px 16px;
+  padding: 14px 18px;
+  background: rgba(255, 250, 242, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--c-line);
+}
+.topbar-back {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--c-sea-deep);
+  padding: 8px 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.topbar-action {
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--c-coral), var(--c-coral-deep));
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-btn);
+  -webkit-tap-highlight-color: transparent;
+}
+.topbar-action:active { transform: translateY(1px) scale(0.99); }
+
 /* Slightly larger type on roomier phones. */
 @media (min-width: 420px) {
   #restaurant-name { font-size: 2.8rem; }
