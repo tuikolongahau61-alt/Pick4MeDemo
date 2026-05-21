@@ -10,6 +10,6 @@ so it hosts anywhere static.
 ## Live demo
 
 > Replace this with your GitHub Pages URL once it's live:
-> `https://YOUR-USERNAME.github.io/YOUR-REPO/`
+> `https://tuikolongahau61-alt.github.io/Pick4MeDemo/`
 
 ## What's in here
