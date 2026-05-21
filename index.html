@@ -5,48 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="theme-color" content="#0a8c8c" />
   <meta name="description" content="Maguro Demo Spot — scan, take a quick quiz, get a dish picked for you." />
-  <title>Maguro Spot Demo</title>
+  <title>Maguro Demo Spot</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app">
 
     <!-- =================================================================
-         SECTION: LANDING
+         SCREEN: LANDING
          ================================================================= -->
-    <section id="section-landing" class="section landing">
-      <div class="palm">🌴🍍</div>
-      <h1 id="restaurant-name">Maguro Spot Demo</h1>
-      <img src="menu.png" alt="Menu / メニュー" class="menu-image">
-      <p id="restaurant-tagline">Can't decide what to eat?</p>
-      <p id="restaurant-blurb"></p>
-      <button id="btn-pick" class="btn btn--primary">Pick for me</button>
-      <button id="btn-view-menu" class="btn btn--secondary">View menu</button>
-    </section>
+    <section id="screen-landing" class="screen landing is-active">
+      <div class="landing-inner">
+        <div class="logo-badge">🌴</div>
+        <h1 id="restaurant-name">Maguro Demo Spot</h1>
+        <p id="restaurant-tagline" class="tagline"></p>
+        <p id="restaurant-blurb" class="blurb"></p>
 
-    <!-- =================================================================
-         SECTION: QUIZ
-         ================================================================= -->
-    <section id="section-quiz" class="section quiz">
-      <header class="section-head">
-        <h2 class="section-title">Quick quiz</h2>
-        <p class="section-sub">Tap your answers, then get a pick.</p>
-      </header>
-      <div id="quiz-questions"><!-- rendered by script.js --></div>
-      <div class="quiz-actions">
-        <button id="btn-quiz-submit" class="btn btn--primary">Pick for me</button>
-        <button id="btn-quiz-back" class="btn btn--ghost">← Back</button>
+        <div class="landing-actions">
+          <button id="btn-pick" class="btn btn--primary btn--lg">🍤 Pick for me</button>
+          <button id="btn-view-menu" class="btn btn--ghost">View full menu</button>
+        </div>
+
+        <p class="landing-hint">Takes about 20 seconds</p>
       </div>
     </section>
 
     <!-- =================================================================
-         SECTION: RESULT
+         SCREEN: QUIZ  (one question at a time)
          ================================================================= -->
-    <section id="section-result" class="section result">
-      <header class="section-head">
-        <h2 class="section-title">Your pick</h2>
-      </header>
-      <div id="result-card"><!-- rendered by script.js --></div>
+    <section id="screen-quiz" class="screen quiz">
+      <div class="quiz-top">
+        <span id="quiz-progress" class="quiz-progress">Question 1 of 5</span>
+        <div class="quiz-bar"><div id="quiz-bar-fill" class="quiz-bar-fill"></div></div>
+      </div>
+
+      <div id="quiz-body" class="quiz-body"><!-- rendered by script.js --></div>
+
+      <div class="quiz-nav">
+        <button id="btn-quiz-back" class="btn btn--ghost">← Back</button>
+        <button id="btn-quiz-next" class="btn btn--primary">Next →</button>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SCREEN: RESULT
+         ================================================================= -->
+    <section id="screen-result" class="screen result">
+      <div id="result-body" class="result-body"><!-- rendered by script.js --></div>
       <div class="result-actions">
         <button id="btn-result-menu" class="btn btn--secondary">See full menu</button>
         <button id="btn-result-retry" class="btn btn--ghost">↺ Try again</button>
@@ -54,17 +59,17 @@
     </section>
 
     <!-- =================================================================
-         SECTION: MENU
+         SCREEN: MENU
          ================================================================= -->
-    <section id="section-menu" class="section menu">
-      <header class="section-head">
-        <h2 class="section-title">Full menu</h2>
-        <p class="section-sub">Everything we make, fresh to order.</p>
+    <section id="screen-menu" class="screen menu">
+      <header class="screen-head">
+        <h2 class="screen-title">Full menu</h2>
+        <p class="screen-sub">Everything we make, fresh to order.</p>
       </header>
       <div id="menu-list"><!-- rendered by script.js --></div>
-      <div class="btn-row" style="margin-top:16px;">
-        <button id="btn-menu-pick" class="btn btn--primary">Pick for me</button>
-        <button id="btn-menu-back" class="btn btn--secondary">← Home</button>
+      <div class="menu-actions">
+        <button id="btn-menu-pick" class="btn btn--primary">🍤 Pick for me</button>
+        <button id="btn-menu-back" class="btn btn--ghost">← Home</button>
       </div>
     </section>
 

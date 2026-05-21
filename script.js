@@ -1,10 +1,8 @@
 /* =========================================================================
    script.js
    Two layers, kept separate on purpose:
-     1. PURE LOGIC  — buildTagProfile, scoreItem, recommend. No DOM. These
-        are the functions you lift straight into a React app / hook.
-     2. UI LAYER    — render + event wiring. This is the part you'd replace
-        with JSX components later.
+     1. PURE LOGIC  — scoring + recommendation. No DOM. Easy to test/reuse.
+     2. UI LAYER    — rendering and events for the four screens.
    ========================================================================= */
 
 /* ============================ ANALYTICS ============================ */
@@ -14,22 +12,8 @@ function trackEvent(eventName, data = {}) {
 }
 
 /* ============================ PURE LOGIC ============================ */
-/* All functions below are dependency-free (besides the data constants)
-   and return plain values — ready to unit test or reuse in React. */
 
-/* Collect every tag the user picked into one flat array. */
-function buildTagProfile(answers, questions) {
-  const tags = [];
-  questions.forEach((q) => {
-    if (q.type === "budget") return; // budget handled separately
-    const chosen = answers[q.id];
-    const opt = q.options.find((o) => o.value === chosen);
-    if (opt && opt.tags) tags.push(...opt.tags);
-  });
-  return tags;
-}
-
-/* Resolve the budget answer into a numeric cap or null (no filter). */
+/* Resolve the budget answer into a numeric cap, or null = no price filter. */
 function resolveBudgetCap(answers, customAmount) {
   const sel = answers.budget;
   if (sel == null || sel === "none") return null;
@@ -43,158 +27,240 @@ function resolveBudgetCap(answers, customAmount) {
   return null;
 }
 
-/* Score a single item against the user's tag profile. */
-function scoreItem(item, tagProfile, weights) {
+/* Score one item against the user's answers.
+   Improved over the old version:
+   - Each question carries a `weight`, so craving and vibe matter more than
+     spice. Matching tags are worth tagMatch * weight.
+   - Featured items get a small boost so house favorites win close ties.
+   Returns a number. */
+function scoreItem(item, answers, questions, weights) {
   let score = 0;
-  tagProfile.forEach((tag) => {
-    if (item.tags.includes(tag)) score += weights.tagMatch;
+
+  questions.forEach((q) => {
+    if (q.type === "budget") return; // budget filters, doesn't score
+    const opt = q.options.find((o) => o.value === answers[q.id]);
+    if (!opt || !opt.tags) return;
+    const w = q.weight == null ? 1 : q.weight;
+    opt.tags.forEach((tag) => {
+      if (item.tags.includes(tag)) score += weights.tagMatch * w;
+    });
   });
+
   if (item.featured) score += weights.featuredBoost;
   return score;
 }
 
-/* Core recommender.
-   - Scores all items by tag overlap (+ featured boost).
-   - Filters by budget if a cap is set; no cap = no price filter.
-   - If nothing fits the budget, falls back to the cheapest closest match
-     (best score among all items, breaking ties by lowest price).
-   Returns { item, score, withinBudget, fallback }. */
-function recommend(items, tagProfile, budgetCap, weights) {
-  const scored = items.map((item) => ({
-    item,
-    score: scoreItem(item, tagProfile, weights),
-  }));
+/* Build a short, human reason for the pick from the user's strongest
+   answers. Example: "Picked because you wanted something filling and spicy."
+   We pull the `reason` phrases from the answers that actually matched the
+   chosen item, so the explanation feels honest. Keeps it to 2 reasons. */
+function buildReason(item, answers, questions) {
+  const reasons = [];
+  questions.forEach((q) => {
+    if (q.type === "budget") return;
+    const opt = q.options.find((o) => o.value === answers[q.id]);
+    if (!opt || !opt.reason) return;
+    // Only mention a reason if this answer actually overlaps the item.
+    const overlaps = (opt.tags || []).some((t) => item.tags.includes(t));
+    if (overlaps) reasons.push({ text: opt.reason, weight: q.weight == null ? 1 : q.weight });
+  });
 
-  // Pick the strongest match, ties broken by lower price.
-  const bestOf = (list) =>
-    list
-      .slice()
-      .sort((a, b) => b.score - a.score || a.item.price - b.item.price)[0];
+  // Strongest reasons first, keep up to two.
+  reasons.sort((a, b) => b.weight - a.weight);
+  const picked = reasons.slice(0, 2).map((r) => r.text).filter(Boolean);
 
-  if (budgetCap == null) {
-    const top = bestOf(scored);
-    return { ...top, withinBudget: true, fallback: false };
-  }
-
-  const affordable = scored.filter((s) => s.item.price <= budgetCap);
-  if (affordable.length > 0) {
-    const top = bestOf(affordable);
-    return { ...top, withinBudget: true, fallback: false };
-  }
-
-  // Nothing fits the budget → cheapest closest match overall.
-  const closest = scored
-    .slice()
-    .sort((a, b) => a.item.price - b.item.price || b.score - a.score)[0];
-  return { ...closest, withinBudget: false, fallback: true };
+  if (picked.length === 0) return "A house favorite we think you'll enjoy.";
+  if (picked.length === 1) return `Picked because you wanted ${picked[0]}.`;
+  return `Picked because you wanted ${picked[0]}, ${picked[1]}.`;
 }
 
-/* ============================ UI LAYER ============================ */
-/* Simple section router + renderers. Everything below touches the DOM. */
+/* Core recommender.
+   - Scores all items (weighted tag overlap + featured boost).
+   - Filters by budget when a cap is set; no cap = no price filter.
+   - If nothing fits the budget, falls back to the cheapest closest match.
+   Returns { item, score, withinBudget, fallback, reason }. */
+function recommend(items, answers, questions, budgetCap, weights) {
+  const scored = items.map((item) => ({
+    item,
+    score: scoreItem(item, answers, questions, weights),
+  }));
 
+  const bestOf = (list) =>
+    list.slice().sort((a, b) => b.score - a.score || a.item.price - b.item.price)[0];
+
+  let chosen;
+  let withinBudget = true;
+  let fallback = false;
+
+  if (budgetCap == null) {
+    chosen = bestOf(scored);
+  } else {
+    const affordable = scored.filter((s) => s.item.price <= budgetCap);
+    if (affordable.length > 0) {
+      chosen = bestOf(affordable);
+    } else {
+      // Nothing fits → cheapest closest match overall.
+      chosen = scored.slice().sort((a, b) => a.item.price - b.item.price || b.score - a.score)[0];
+      withinBudget = false;
+      fallback = true;
+    }
+  }
+
+  return {
+    item: chosen.item,
+    score: chosen.score,
+    withinBudget,
+    fallback,
+    reason: buildReason(chosen.item, answers, questions),
+  };
+}
+
+/* ============================ UI STATE ============================ */
 const state = {
-  section: "landing", // landing | quiz | result | menu
+  screen: "landing",      // landing | quiz | result | menu
   answers: {},
   customAmount: "",
+  step: 0,                // which quiz question is showing
   result: null,
 };
 
-const SECTIONS = ["landing", "quiz", "result", "menu"];
+const SCREENS = ["landing", "quiz", "result", "menu"];
 
-function showSection(name) {
-  state.section = name;
-  SECTIONS.forEach((s) => {
-    const el = document.getElementById("section-" + s);
+function showScreen(name) {
+  state.screen = name;
+  SCREENS.forEach((s) => {
+    const el = document.getElementById("screen-" + s);
     if (el) el.classList.toggle("is-active", s === name);
   });
   window.scrollTo({ top: 0, behavior: "smooth" });
-  trackEvent("view_section", { section: name });
+  trackEvent("view_screen", { screen: name });
 }
 
-/* ---- Landing ---- */
+/* ============================ LANDING ============================ */
 function renderLanding() {
   document.getElementById("restaurant-name").textContent = RESTAURANT.name;
   document.getElementById("restaurant-tagline").textContent = RESTAURANT.tagline;
   document.getElementById("restaurant-blurb").textContent = RESTAURANT.blurb;
 }
 
-/* ---- Quiz ---- */
-function renderQuiz() {
-  const root = document.getElementById("quiz-questions");
+/* ============================ QUIZ (one at a time) ============================ */
+
+/* Render the single question at state.step into the quiz screen. */
+function renderQuizStep() {
+  const q = QUIZ_QUESTIONS[state.step];
+  const total = QUIZ_QUESTIONS.length;
+  const root = document.getElementById("quiz-body");
   root.innerHTML = "";
 
-  QUIZ_QUESTIONS.forEach((q) => {
-    const card = document.createElement("div");
-    card.className = "quiz-card";
+  /* Progress: "Question 2 of 5" + a filling bar. */
+  const prog = document.getElementById("quiz-progress");
+  prog.textContent = `Question ${state.step + 1} of ${total}`;
+  const bar = document.getElementById("quiz-bar-fill");
+  bar.style.width = `${((state.step + 1) / total) * 100}%`;
 
-    const prompt = document.createElement("h3");
-    prompt.className = "quiz-prompt";
-    prompt.textContent = q.prompt;
-    card.appendChild(prompt);
+  /* Prompt + optional subtitle. */
+  const prompt = document.createElement("h2");
+  prompt.className = "quiz-prompt";
+  prompt.textContent = q.prompt;
+  root.appendChild(prompt);
 
-    const opts = document.createElement("div");
-    opts.className = "quiz-options";
+  if (q.subtitle) {
+    const sub = document.createElement("p");
+    sub.className = "quiz-subtitle";
+    sub.textContent = q.subtitle;
+    root.appendChild(sub);
+  }
 
-    q.options.forEach((o) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "chip";
-      btn.textContent = o.label;
-      btn.dataset.qid = q.id;
-      btn.dataset.value = o.value;
-      if (state.answers[q.id] === o.value) btn.classList.add("is-selected");
+  /* Options as big tappable cards. */
+  const opts = document.createElement("div");
+  opts.className = "quiz-options";
 
-      btn.addEventListener("click", () => {
-        state.answers[q.id] = o.value;
-        // toggle selected state within this question group
-        opts.querySelectorAll(".chip").forEach((c) => c.classList.remove("is-selected"));
+  q.options.forEach((o) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "option" + (state.answers[q.id] === o.value ? " is-selected" : "");
+    btn.textContent = o.label;
+    btn.addEventListener("click", () => {
+      state.answers[q.id] = o.value;
+      trackEvent("quiz_answer", { question: q.id, value: o.value });
+
+      // Show/hide the custom field if this is the budget question.
+      if (q.type === "budget") renderQuizStep();
+      else {
+        // brief highlight, then auto-advance for a fast feel
+        opts.querySelectorAll(".option").forEach((c) => c.classList.remove("is-selected"));
         btn.classList.add("is-selected");
-        // show/hide custom amount field for budget
-        if (q.type === "budget") {
-          customWrap.style.display = o.value === "custom" ? "block" : "none";
-        }
-        trackEvent("quiz_answer", { question: q.id, value: o.value });
-      });
-
-      opts.appendChild(btn);
+        setTimeout(nextStep, 180);
+      }
     });
-
-    card.appendChild(opts);
-
-    // Custom amount input for the budget question.
-    let customWrap;
-    if (q.type === "budget") {
-      customWrap = document.createElement("div");
-      customWrap.className = "custom-amount";
-      customWrap.style.display = state.answers.budget === "custom" ? "block" : "none";
-
-      const label = document.createElement("label");
-      label.textContent = "Your max ($)";
-      label.setAttribute("for", "custom-amount-input");
-
-      const input = document.createElement("input");
-      input.type = "number";
-      input.min = "1";
-      input.id = "custom-amount-input";
-      input.placeholder = "e.g. 12";
-      input.value = state.customAmount;
-      input.addEventListener("input", (e) => {
-        state.customAmount = e.target.value;
-      });
-
-      customWrap.appendChild(label);
-      customWrap.appendChild(input);
-      card.appendChild(customWrap);
-    }
-
-    root.appendChild(card);
+    opts.appendChild(btn);
   });
+  root.appendChild(opts);
+
+  /* Custom amount field, only on the budget question when "custom" chosen. */
+  if (q.type === "budget" && state.answers.budget === "custom") {
+    const wrap = document.createElement("div");
+    wrap.className = "custom-amount";
+
+    const label = document.createElement("label");
+    label.setAttribute("for", "custom-amount-input");
+    label.textContent = "Your max ($)";
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = "1";
+    input.id = "custom-amount-input";
+    input.inputMode = "numeric";
+    input.placeholder = "e.g. 12";
+    input.value = state.customAmount;
+    input.addEventListener("input", (e) => { state.customAmount = e.target.value; });
+
+    wrap.appendChild(label);
+    wrap.appendChild(input);
+    root.appendChild(wrap);
+  }
+
+  /* Footer nav: Back + Next/See pick. Budget needs a manual Next
+     (no auto-advance) so users can type a custom amount. */
+  const isLast = state.step === total - 1;
+  document.getElementById("btn-quiz-next").textContent = isLast ? "See my pick →" : "Next →";
+  document.getElementById("btn-quiz-back").style.visibility = state.step === 0 ? "hidden" : "visible";
+
+  // Next is disabled until the current question is answered.
+  const answered = state.answers[q.id] != null;
+  document.getElementById("btn-quiz-next").disabled = !answered;
+}
+
+function nextStep() {
+  const q = QUIZ_QUESTIONS[state.step];
+  if (state.answers[q.id] == null) return; // guard: must answer first
+
+  if (state.step < QUIZ_QUESTIONS.length - 1) {
+    state.step += 1;
+    renderQuizStep();
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevStep() {
+  if (state.step > 0) {
+    state.step -= 1;
+    renderQuizStep();
+  } else {
+    showScreen("landing");
+  }
+}
+
+function startQuiz() {
+  state.step = 0;
+  renderQuizStep();
+  showScreen("quiz");
 }
 
 function submitQuiz() {
-  const tagProfile = buildTagProfile(state.answers, QUIZ_QUESTIONS);
   const cap = resolveBudgetCap(state.answers, state.customAmount);
-  state.result = recommend(MENU_ITEMS, tagProfile, cap, SCORING);
+  state.result = recommend(MENU_ITEMS, state.answers, QUIZ_QUESTIONS, cap, SCORING);
 
   trackEvent("recommendation", {
     pick: state.result.item.id,
@@ -204,48 +270,43 @@ function submitQuiz() {
   });
 
   renderResult();
-  showSection("result");
+  showScreen("result");
 }
 
-/* ---- Result ---- */
+/* ============================ RESULT ============================ */
 function renderResult() {
-  const root = document.getElementById("result-card");
-  if (!state.result) {
-    root.innerHTML = "";
-    return;
-  }
-  const { item, fallback } = state.result;
-
+  const root = document.getElementById("result-body");
   root.innerHTML = "";
+  if (!state.result) return;
+
+  const { item, fallback, reason } = state.result;
 
   const note = document.createElement("p");
   note.className = "result-note";
   note.textContent = fallback
-    ? "Nothing fit perfectly, so here's the closest match for your budget:"
-    : "We think you'll love this:";
+    ? "Nothing matched perfectly within your budget — here's the closest pick:"
+    : "Here's your pick";
   root.appendChild(note);
 
   root.appendChild(buildItemCard(item, true));
+
+  const why = document.createElement("p");
+  why.className = "result-reason";
+  why.textContent = reason;
+  root.appendChild(why);
 }
 
-/* ---- Menu ---- */
+/* ============================ MENU ============================ */
 function renderMenu() {
   const root = document.getElementById("menu-list");
   root.innerHTML = "";
   MENU_ITEMS.forEach((item) => root.appendChild(buildItemCard(item, false)));
 }
 
-/* Shared item card builder, used by both Result and Menu. */
+/* Shared item card. Shows customer-facing `labels`, never internal tags. */
 function buildItemCard(item, isHero) {
   const card = document.createElement("article");
   card.className = "item-card" + (isHero ? " item-card--hero" : "");
-
-  if (item.featured) {
-    const badge = document.createElement("span");
-    badge.className = "badge";
-    badge.textContent = "★ Featured";
-    card.appendChild(badge);
-  }
 
   const head = document.createElement("div");
   head.className = "item-head";
@@ -267,15 +328,18 @@ function buildItemCard(item, isHero) {
   desc.textContent = item.description;
   card.appendChild(desc);
 
-  const tags = document.createElement("div");
-  tags.className = "item-tags";
-  item.tags.forEach((t) => {
-    const tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = t.replace(/-/g, " ");
-    tags.appendChild(tag);
-  });
-  card.appendChild(tags);
+  // Customer-facing labels only (Spicy, Popular, etc.). Hidden if none.
+  if (item.labels && item.labels.length) {
+    const labels = document.createElement("div");
+    labels.className = "item-labels";
+    item.labels.forEach((l) => {
+      const tag = document.createElement("span");
+      tag.className = "label label--" + l.toLowerCase().replace(/\s+/g, "-");
+      tag.textContent = l;
+      labels.appendChild(tag);
+    });
+    card.appendChild(labels);
+  }
 
   return card;
 }
@@ -284,34 +348,32 @@ function buildItemCard(item, isHero) {
 function wireEvents() {
   document.getElementById("btn-pick").addEventListener("click", () => {
     trackEvent("cta_click", { button: "pick_for_me" });
-    showSection("quiz");
+    startQuiz();
   });
   document.getElementById("btn-view-menu").addEventListener("click", () => {
     trackEvent("cta_click", { button: "view_menu" });
-    showSection("menu");
+    showScreen("menu");
   });
-  document.getElementById("btn-quiz-submit").addEventListener("click", submitQuiz);
-  document.getElementById("btn-quiz-back").addEventListener("click", () => showSection("landing"));
-  document.getElementById("btn-result-menu").addEventListener("click", () => showSection("menu"));
+
+  document.getElementById("btn-quiz-next").addEventListener("click", nextStep);
+  document.getElementById("btn-quiz-back").addEventListener("click", prevStep);
+
+  document.getElementById("btn-result-menu").addEventListener("click", () => showScreen("menu"));
   document.getElementById("btn-result-retry").addEventListener("click", () => {
     state.answers = {};
     state.customAmount = "";
-    renderQuiz();
-    showSection("quiz");
+    startQuiz();
   });
-  document.getElementById("btn-menu-back").addEventListener("click", () => showSection("landing"));
-  document.getElementById("btn-menu-pick").addEventListener("click", () => {
-    renderQuiz();
-    showSection("quiz");
-  });
+
+  document.getElementById("btn-menu-back").addEventListener("click", () => showScreen("landing"));
+  document.getElementById("btn-menu-pick").addEventListener("click", startQuiz);
 }
 
 function init() {
   renderLanding();
-  renderQuiz();
   renderMenu();
   wireEvents();
-  showSection("landing");
+  showScreen("landing");
   trackEvent("app_loaded", { restaurant: RESTAURANT.name });
 }
 
@@ -319,13 +381,7 @@ if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", init);
 }
 
-/* Export pure logic for a future React port / tests. */
+/* Export pure logic for tests / future React port. */
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    trackEvent,
-    buildTagProfile,
-    resolveBudgetCap,
-    scoreItem,
-    recommend,
-  };
+  module.exports = { trackEvent, resolveBudgetCap, scoreItem, buildReason, recommend };
 }
