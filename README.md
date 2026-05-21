@@ -1,4 +1,4 @@
-# 🌴 Maguro Demo Spot — QR Menu
+# 🌴 Maguro Spot Demo — QR Menu
 
 A lightweight mobile website for a restaurant QR menu. A customer scans a QR
 code at the table, opens the site on their phone, answers a quick 5-question
