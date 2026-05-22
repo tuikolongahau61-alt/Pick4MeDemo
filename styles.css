@@ -57,13 +57,18 @@ body {
   min-height: 100vh;
 }
 
-/* Screen switching (JS toggles .is-active). */
-.screen { display: none; animation: rise 0.32s ease both; }
-.screen.is-active { display: block; }
+/* Screen switching (JS toggles .is-active).
+   Each active screen fills from the top of the viewport so switching screens
+   never leaves you scrolled down — the new screen always starts at its top. */
+.screen { display: none; }
+.screen.is-active {
+  display: block;
+  animation: fadein 0.22s ease both;
+}
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ============================ BUTTONS ============================ */
@@ -113,7 +118,8 @@ body {
 }
 
 /* ============================ LANDING ============================ */
-.landing { min-height: 92vh; display: flex; align-items: center; }
+.landing { min-height: calc(100vh - 48px); display: flex; align-items: center; }
+.landing.is-active { display: flex; }
 .landing-inner { width: 100%; text-align: center; padding: 10px 4px; }
 
 .logo-badge {
@@ -170,21 +176,19 @@ body {
 .screen-sub { color: var(--c-ink-soft); font-weight: 600; }
 
 /* ============================ QUIZ ============================ */
-.quiz-top { padding: 8px 2px 22px; }
-.quiz-progress {
-  display: inline-block;
+.topbar-progress {
   font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--c-sea-deep);
-  margin-bottom: 10px;
 }
 .quiz-bar {
   height: 8px;
   background: #e9ddca;
   border-radius: var(--radius-pill);
   overflow: hidden;
+  margin-bottom: 22px;
 }
 .quiz-bar-fill {
   height: 100%;

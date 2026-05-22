@@ -34,15 +34,15 @@
          SCREEN: QUIZ  (one question at a time)
          ================================================================= -->
     <section id="screen-quiz" class="screen quiz">
-      <div class="quiz-top">
-        <span id="quiz-progress" class="quiz-progress">Question 1 of 5</span>
-        <div class="quiz-bar"><div id="quiz-bar-fill" class="quiz-bar-fill"></div></div>
+      <div class="topbar">
+        <button id="btn-quiz-back" class="topbar-back">← Back</button>
+        <span id="quiz-progress" class="topbar-progress">Question 1 of 5</span>
       </div>
+      <div class="quiz-bar"><div id="quiz-bar-fill" class="quiz-bar-fill"></div></div>
 
       <div id="quiz-body" class="quiz-body"><!-- rendered by script.js --></div>
 
       <div class="quiz-nav">
-        <button id="btn-quiz-back" class="btn btn--ghost">← Back</button>
         <button id="btn-quiz-next" class="btn btn--primary">Next →</button>
       </div>
     </section>

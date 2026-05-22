@@ -228,7 +228,9 @@ function renderQuizStep() {
      (no auto-advance) so users can type a custom amount. */
   const isLast = state.step === total - 1;
   document.getElementById("btn-quiz-next").textContent = isLast ? "See my pick →" : "Next →";
-  document.getElementById("btn-quiz-back").style.visibility = state.step === 0 ? "hidden" : "visible";
+  // Back is always visible now (it lives in the top bar). On the first
+  // question it returns to the landing screen; prevStep() handles that.
+  document.getElementById("btn-quiz-back").textContent = state.step === 0 ? "← Home" : "← Back";
 
   // Next is disabled until the current question is answered.
   const answered = state.answers[q.id] != null;
