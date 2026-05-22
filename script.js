@@ -132,11 +132,18 @@ function showScreen(name) {
     const el = document.getElementById("screen-" + s);
     if (el) el.classList.toggle("is-active", s === name);
   });
-  // Jump straight to the top so the new screen always opens fully in view
-  // (no slow scroll that makes it look like it loaded half-hidden).
-  window.scrollTo(0, 0);
-  if (document.documentElement) document.documentElement.scrollTop = 0;
-  if (document.body) document.body.scrollTop = 0;
+
+  // Force the page back to the very top. We do it now AND again on the next
+  // frame, because the new screen changes the page height after layout and
+  // an immediate scroll reset can otherwise be undone by the browser.
+  const toTop = () => {
+    window.scrollTo(0, 0);
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+  };
+  toTop();
+  requestAnimationFrame(toTop);
+
   trackEvent("view_screen", { screen: name });
 }
 

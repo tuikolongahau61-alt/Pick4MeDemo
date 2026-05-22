@@ -58,8 +58,9 @@ body {
 }
 
 /* Screen switching (JS toggles .is-active).
-   Each active screen fills from the top of the viewport so switching screens
-   never leaves you scrolled down — the new screen always starts at its top. */
+   Only the active screen is in the layout at all, anchored to the top of the
+   viewport. Inactive screens are fully removed (display:none), so there is
+   nothing above or below to scroll to — each screen truly replaces the last. */
 .screen { display: none; }
 .screen.is-active {
   display: block;
@@ -121,6 +122,13 @@ body {
 .landing { min-height: calc(100vh - 48px); display: flex; align-items: center; }
 .landing.is-active { display: flex; }
 .landing-inner { width: 100%; text-align: center; padding: 10px 4px; }
+/* Keep landing content compact so it fits one screen without scrolling. */
+@media (max-height: 700px) {
+  .logo-badge { width: 64px; height: 64px; font-size: 2rem; margin-bottom: 12px; }
+  #restaurant-name { font-size: 2.1rem; }
+  .tagline { font-size: 1.15rem; }
+  .blurb { margin-bottom: 20px; }
+}
 
 .logo-badge {
   width: 84px; height: 84px;
