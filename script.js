@@ -1,6 +1,6 @@
 /* Pick4Me v2 — no page scrolling, active screen only */
-console.log("PICK4ME VERSION 2 LOADED");
-document.documentElement.dataset.pick4meVersion = "2";
+console.log("PICK4ME VERSION 3 LOADED");
+document.documentElement.dataset.pick4meVersion = "3";
 
 function trackEvent(eventName, data = {}) {
   console.log("[trackEvent]", eventName, data);
@@ -47,7 +47,7 @@ function buildReason(item, answers, questions) {
   const picked = reasons.slice(0, 2).map((r) => r.text).filter(Boolean);
   if (picked.length === 0) return "A house favorite we think you'll enjoy.";
   if (picked.length === 1) return `Picked because you wanted ${picked[0]}.`;
-  return `Picked because you wanted ${picked[0]} and ${picked[1]}.`;
+  return `Picked because you wanted ${picked[0]}, ${picked[1]}.`;
 }
 
 function recommend(items, answers, questions, budgetCap, weights) {
