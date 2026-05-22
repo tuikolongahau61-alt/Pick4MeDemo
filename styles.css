@@ -48,22 +48,31 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Phone-width column, centered on larger screens. */
+/* Phone-width column. The app is locked to the viewport and never scrolls
+   itself — only the active screen scrolls internally if its content is tall.
+   This makes switching screens always start cleanly at the top, with no way
+   to scroll between the landing and the next screen. */
+html, body { height: 100%; overflow: hidden; }
+
 .app {
+  position: fixed;
+  inset: 0;
   width: 100%;
   max-width: 460px;
   margin: 0 auto;
-  padding: 20px 18px calc(28px + env(safe-area-inset-bottom));
-  min-height: 100vh;
 }
 
 /* Screen switching (JS toggles .is-active).
-   Only the active screen is in the layout at all, anchored to the top of the
-   viewport. Inactive screens are fully removed (display:none), so there is
-   nothing above or below to scroll to — each screen truly replaces the last. */
+   The active screen fills the whole app area and owns its own scroll, so it
+   always opens at its top and inactive screens are completely gone. */
 .screen { display: none; }
 .screen.is-active {
   display: block;
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 18px calc(28px + env(safe-area-inset-bottom));
   animation: fadein 0.22s ease both;
 }
 
@@ -119,8 +128,7 @@ body {
 }
 
 /* ============================ LANDING ============================ */
-.landing { min-height: calc(100vh - 48px); display: flex; align-items: center; }
-.landing.is-active { display: flex; }
+.landing.is-active { display: flex; align-items: center; min-height: 100%; }
 .landing-inner { width: 100%; text-align: center; padding: 10px 4px; }
 /* Keep landing content compact so it fits one screen without scrolling. */
 @media (max-height: 700px) {

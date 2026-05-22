@@ -128,18 +128,20 @@ const SCREENS = ["landing", "quiz", "result", "menu"];
 
 function showScreen(name) {
   state.screen = name;
+  let activeEl = null;
   SCREENS.forEach((s) => {
     const el = document.getElementById("screen-" + s);
-    if (el) el.classList.toggle("is-active", s === name);
+    if (!el) return;
+    const on = s === name;
+    el.classList.toggle("is-active", on);
+    if (on) activeEl = el;
   });
 
-  // Force the page back to the very top. We do it now AND again on the next
-  // frame, because the new screen changes the page height after layout and
-  // an immediate scroll reset can otherwise be undone by the browser.
+  // Each screen scrolls internally now, so reset THAT screen to its top.
+  // Also reset window scroll as a belt-and-suspenders fallback.
   const toTop = () => {
+    if (activeEl) activeEl.scrollTop = 0;
     window.scrollTo(0, 0);
-    if (document.documentElement) document.documentElement.scrollTop = 0;
-    if (document.body) document.body.scrollTop = 0;
   };
   toTop();
   requestAnimationFrame(toTop);
