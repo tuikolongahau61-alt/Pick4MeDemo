@@ -1,82 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <meta name="theme-color" content="#0a8c8c" />
-  <meta name="description" content="Maguro Demo Spot — scan, take a quick quiz, get a dish picked for you." />
-  <title>Maguro Demo Spot</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a6e78" />
+  <title>Pick4Me Menu</title>
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
-  <main class="app">
-
-    <!-- =================================================================
-         SCREEN: LANDING
-         ================================================================= -->
-    <section id="screen-landing" class="screen landing is-active">
+  <main class="app" id="app">
+    <section id="screen-landing" class="screen landing is-active" aria-labelledby="restaurant-name">
       <div class="landing-inner">
-        <div class="logo-badge">🌴</div>
-        <h1 id="restaurant-name">Maguro Demo Spot</h1>
-        <p id="restaurant-tagline" class="tagline"></p>
-        <p id="restaurant-blurb" class="blurb"></p>
-
+        <div class="logo-badge" aria-hidden="true">🍣</div>
+        <p class="eyebrow">QR Menu</p>
+        <h1 id="restaurant-name">Maguro</h1>
+        <p id="restaurant-tagline" class="tagline">Let us pick your perfect order.</p>
+        <p id="restaurant-blurb" class="blurb">Answer a few quick questions or jump straight into the full menu.</p>
         <div class="landing-actions">
-          <button id="btn-pick" class="btn btn--primary btn--lg">🍤 Pick for me</button>
-          <button id="btn-view-menu" class="btn btn--ghost">View full menu</button>
+          <button class="btn btn--primary btn--lg" id="btn-pick" type="button">Pick for me →</button>
+          <button class="btn btn--secondary btn--lg" id="btn-view-menu" type="button">View menu</button>
         </div>
-
-        <p class="landing-hint">Takes about 20 seconds</p>
+        <p class="landing-hint">Fast, simple, phone-friendly.</p>
       </div>
     </section>
 
-    <!-- =================================================================
-         SCREEN: QUIZ  (one question at a time)
-         ================================================================= -->
-    <section id="screen-quiz" class="screen quiz">
+    <section id="screen-quiz" class="screen" hidden aria-labelledby="quiz-title">
       <div class="topbar">
-        <button id="btn-quiz-back" class="topbar-back">← Back</button>
-        <span id="quiz-progress" class="topbar-progress">Question 1 of 5</span>
+        <button class="topbar-back" id="btn-quiz-back" type="button">← Home</button>
+        <span class="topbar-progress" id="quiz-progress">Question 1 of 5</span>
       </div>
-      <div class="quiz-bar"><div id="quiz-bar-fill" class="quiz-bar-fill"></div></div>
-
-      <div id="quiz-body" class="quiz-body"><!-- rendered by script.js --></div>
-
+      <div class="quiz-bar"><div class="quiz-bar-fill" id="quiz-bar-fill"></div></div>
+      <h2 class="screen-title sr-only" id="quiz-title">Pick for me quiz</h2>
+      <div class="quiz-body" id="quiz-body"></div>
       <div class="quiz-nav">
-        <button id="btn-quiz-next" class="btn btn--primary">Next →</button>
+        <button class="btn btn--primary" id="btn-quiz-next" type="button">Next →</button>
       </div>
     </section>
 
-    <!-- =================================================================
-         SCREEN: RESULT
-         ================================================================= -->
-    <section id="screen-result" class="screen result">
-      <div id="result-body" class="result-body"><!-- rendered by script.js --></div>
-      <div class="result-actions">
-        <button id="btn-result-menu" class="btn btn--secondary">See full menu</button>
-        <button id="btn-result-retry" class="btn btn--ghost">↺ Try again</button>
-      </div>
-    </section>
-
-    <!-- =================================================================
-         SCREEN: MENU
-         ================================================================= -->
-    <section id="screen-menu" class="screen menu">
+    <section id="screen-result" class="screen" hidden aria-labelledby="result-title">
       <div class="topbar">
-        <button id="btn-menu-back" class="topbar-back">← Home</button>
-        <button id="btn-menu-pick" class="topbar-action">🍤 Pick for me</button>
+        <button class="topbar-back" id="btn-result-retry" type="button">← Retry</button>
+        <button class="topbar-action" id="btn-result-menu" type="button">Menu</button>
       </div>
-      <header class="screen-head">
-        <h2 class="screen-title">Full menu</h2>
-        <p class="screen-sub">Everything we make, fresh to order.</p>
-      </header>
-      <div id="menu-list"><!-- rendered by script.js --></div>
+      <h2 class="screen-title" id="result-title">Your pick</h2>
+      <div class="result-body" id="result-body"></div>
     </section>
 
+    <section id="screen-menu" class="screen" hidden aria-labelledby="menu-title">
+      <div class="topbar">
+        <button class="topbar-back" id="btn-menu-back" type="button">← Home</button>
+        <button class="topbar-action" id="btn-menu-pick" type="button">Pick for me</button>
+      </div>
+      <div class="screen-head">
+        <h2 class="screen-title" id="menu-title">Menu</h2>
+        <p class="screen-sub">Tap “Pick for me” if you want help choosing.</p>
+      </div>
+      <div class="menu-list" id="menu-list"></div>
+    </section>
   </main>
 
-  <!-- data first, then logic -->
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+  <script src="data.js?v=2"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
