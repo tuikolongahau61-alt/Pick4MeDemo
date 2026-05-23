@@ -7,23 +7,26 @@
   <title>Pick4Me Menu</title>
   <style>
 :root {
-  --c-sea: #0e9aa7;
-  --c-sea-deep: #0a6e78;
-  --c-coral: #ff6f61;
-  --c-coral-deep: #e5503f;
+  --c-sea: #e86830;
+  --c-sea-deep: #c05020;
+  --c-coral: #e86830;
+  --c-coral-deep: #c05020;
   --c-mango: #ffb547;
-  --c-cream: #fffaf2;
-  --c-sand: #fff3e0;
-  --c-ink: #173b3d;
-  --c-ink-soft: #5b7274;
+  --c-cream: #fff8f2;
+  --c-sand: #fff0e8;
+  --c-ink: #2a1a08;
+  --c-ink-soft: #a06030;
   --c-card: #ffffff;
-  --c-line: #ece3d4;
-  --radius: 20px;
+  --c-line: #f0d8c0;
+  --radius: 16px;
   --radius-s: 14px;
   --radius-pill: 999px;
-  --shadow: 0 14px 34px rgba(10,80,80,0.14);
-  --shadow-s: 0 6px 18px rgba(10,80,80,0.10);
-  --shadow-btn: 0 8px 18px rgba(229,80,63,0.32);
+  --shadow: 0 8px 24px rgba(200,80,20,0.13);
+  --shadow-s: 0 4px 14px rgba(200,80,20,0.09);
+  --shadow-btn: 0 8px 20px rgba(200,80,20,0.30);
+  --c-green: #2eaa5e;
+  --c-green-deep: #1d8a47;
+  --shadow-btn-green: 0 8px 18px rgba(30,138,71,0.32);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { height: 100%; -webkit-text-size-adjust: 100%; overflow: hidden; }
@@ -32,7 +35,7 @@ body {
   overscroll-behavior: none;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--c-ink);
-  background: #def4f2;
+  background: #ffecd8;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -43,10 +46,7 @@ button { touch-action: manipulation; }
   width: 100%; max-width: 460px;
   height: 100svh; margin: 0 auto;
   overflow: hidden;
-  background:
-    radial-gradient(130% 80% at 85% -15%, rgba(255,181,71,0.30), transparent 55%),
-    radial-gradient(120% 75% at -15% 0%, rgba(255,111,97,0.22), transparent 52%),
-    linear-gradient(180deg, #def4f2 0%, var(--c-cream) 42%);
+  background: #fff8f2;
 }
 @supports (height: 100dvh) { .app { height: 100dvh; } }
 .screen { display: none; }
@@ -68,45 +68,74 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 8px; width: 100%; border: none; cursor: pointer;
-  font-weight: 800; font-size: 1.02rem; padding: 15px 18px;
+  font-weight: 800; font-size: 1.08rem; padding: 18px 20px;
   border-radius: var(--radius-pill);
   transition: transform 0.12s ease, filter 0.2s ease, opacity 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 .btn:active { transform: translateY(1px) scale(0.99); }
-.btn--lg { padding: 18px 20px; font-size: 1.12rem; }
+.btn--lg { padding: 20px 22px; font-size: 1.18rem; }
 .btn--primary {
   color: #fff;
-  background: linear-gradient(135deg, var(--c-coral), var(--c-coral-deep));
+  background: var(--c-coral);
   box-shadow: var(--shadow-btn);
 }
-.btn--primary:disabled { background: #e7d9c8; box-shadow: none; opacity: 0.8; }
+.btn--primary:disabled { background: #f0d8c0; box-shadow: none; opacity: 0.8; }
 .btn--secondary {
   color: var(--c-sea-deep); background: #fff;
-  border: 2px solid var(--c-sea); box-shadow: var(--shadow-s);
+  border: 2.5px solid var(--c-sea); box-shadow: var(--shadow-s);
 }
-.landing.is-active { display: grid; place-items: center; }
-.landing-inner { width: 100%; text-align: center; padding: 10px 4px; }
+.btn--cta {
+  color: #fff;
+  background: var(--c-green);
+  box-shadow: var(--shadow-btn-green);
+}
+.btn--cta:disabled { background: #f0d8c0; box-shadow: none; opacity: 0.8; }
+.item-img {
+  width: 100%; height: 160px; object-fit: cover;
+  border-radius: calc(var(--radius) - 4px) calc(var(--radius) - 4px) 0 0;
+  margin: -18px -18px 14px;
+  width: calc(100% + 36px);
+  display: block;
+}
+.result-soft-warn {
+  font-size: 0.88rem; font-weight: 700;
+  color: #7a4f00;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: var(--radius-s);
+  padding: 10px 14px;
+  margin-top: 10px;
+  line-height: 1.45;
+}
+.landing.is-active { display: flex; flex-direction: column; }
+.landing-inner { width: 100%; text-align: center; padding: 10px 20px 24px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.landing-hero-band {
+  background: var(--c-coral);
+  padding: calc(36px + env(safe-area-inset-top)) 24px 32px;
+  text-align: center;
+  position: relative;
+}
 .logo-badge {
-  width: 84px; height: 84px; margin: 0 auto 18px;
+  width: 80px; height: 80px; margin: 0 auto 16px;
   display: grid; place-items: center; font-size: 2.6rem;
-  background: linear-gradient(140deg, var(--c-sea), var(--c-sea-deep));
-  border-radius: 26px; box-shadow: var(--shadow);
+  background: rgba(255,255,255,0.2);
+  border-radius: 24px;
 }
 .eyebrow {
-  font-weight: 900; font-size: 0.78rem;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--c-sea-deep); margin-bottom: 8px;
+  font-weight: 800; font-size: 0.8rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.85); margin-bottom: 6px;
 }
 #restaurant-name {
-  font-size: clamp(2.3rem, 11vw, 3rem); font-weight: 900;
+  font-size: clamp(2.4rem, 11vw, 3.2rem); font-weight: 900;
   letter-spacing: -0.04em; line-height: 1;
-  color: var(--c-sea-deep); margin-bottom: 10px;
+  color: #fff; margin-bottom: 8px;
 }
-.tagline { font-size: 1.3rem; font-weight: 850; color: var(--c-coral-deep); margin-bottom: 10px; }
-.blurb { max-width: 31ch; margin: 0 auto 28px; color: var(--c-ink-soft); font-size: 1.02rem; font-weight: 600; }
+.tagline { font-size: 1.1rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 0; }
+.blurb { max-width: 31ch; margin: 0 auto 24px; color: var(--c-ink-soft); font-size: 1rem; font-weight: 600; }
 .landing-actions { display: flex; flex-direction: column; gap: 12px; }
-.landing-hint { margin-top: 16px; font-size: 0.85rem; font-weight: 700; color: var(--c-ink-soft); opacity: 0.8; }
+.landing-hint { margin-top: 14px; font-size: 0.85rem; font-weight: 600; color: var(--c-ink-soft); opacity: 0.85; }
 .topbar {
   position: sticky;
   top: calc(-20px - env(safe-area-inset-top));
@@ -114,51 +143,53 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
   justify-content: space-between; gap: 10px;
   margin: calc(-20px - env(safe-area-inset-top)) -18px 16px;
   padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
-  background: rgba(255,250,242,0.92);
+  background: rgba(255,248,242,0.96);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--c-line);
 }
 .topbar-back, .topbar-action {
-  border: none; cursor: pointer; font-weight: 850;
+  border: none; cursor: pointer; font-weight: 800;
   -webkit-tap-highlight-color: transparent;
 }
-.topbar-back { background: none; color: var(--c-sea-deep); padding: 8px 4px; }
+.topbar-back { background: none; color: var(--c-sea-deep); padding: 8px 4px; font-size: 1rem; }
 .topbar-action {
   color: #fff;
-  background: linear-gradient(135deg, var(--c-coral), var(--c-coral-deep));
-  padding: 10px 16px; border-radius: var(--radius-pill); box-shadow: var(--shadow-btn);
+  background: var(--c-coral);
+  padding: 10px 18px; border-radius: var(--radius-pill); box-shadow: var(--shadow-btn);
 }
 .topbar-progress {
-  font-size: 0.82rem; font-weight: 850; letter-spacing: 0.02em;
+  font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
   text-transform: uppercase; color: var(--c-sea-deep);
 }
 .screen-head { margin-bottom: 18px; }
-.screen-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -0.03em; color: var(--c-sea-deep); }
-.screen-sub { color: var(--c-ink-soft); font-weight: 650; }
+.screen-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -0.03em; color: var(--c-ink); }
+.screen-sub { color: var(--c-ink-soft); font-weight: 600; }
 .quiz-bar {
-  height: 8px; background: #e9ddca; border-radius: var(--radius-pill);
+  height: 8px; background: #f0d8c0; border-radius: var(--radius-pill);
   overflow: hidden; margin-bottom: 22px;
 }
 .quiz-bar-fill {
   height: 100%; width: 20%;
-  background: linear-gradient(90deg, var(--c-sea), var(--c-mango));
+  background: var(--c-coral);
   border-radius: var(--radius-pill); transition: width 0.25s ease;
 }
 .quiz-body { min-height: 46vh; }
-.quiz-prompt { font-size: 1.7rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 6px; }
+.quiz-prompt { font-size: 1.65rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 6px; color: var(--c-ink); }
 .quiz-subtitle { color: var(--c-ink-soft); font-weight: 650; margin-bottom: 18px; }
-.quiz-options { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 .option {
-  width: 100%; text-align: left; font-weight: 800; font-size: 1.08rem;
-  padding: 18px 20px; color: var(--c-ink); background: var(--c-card);
+  width: 100%; text-align: left; font-weight: 700; font-size: 1.12rem;
+  padding: 20px 20px; color: var(--c-ink); background: var(--c-card);
   border: 2px solid var(--c-line); border-radius: var(--radius-s);
   cursor: pointer; box-shadow: var(--shadow-s);
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
 }
 .option:active { transform: scale(0.99); }
 .option.is-selected {
-  border-color: var(--c-sea-deep); background: #effbfa;
-  box-shadow: 0 0 0 3px rgba(14,154,167,0.18), var(--shadow-s);
+  border-color: var(--c-coral); background: #fff0e8;
+  color: var(--c-sea-deep);
+  box-shadow: 0 0 0 3px rgba(232,104,48,0.15), var(--shadow-s);
 }
 .custom-amount { margin-top: 16px; }
 .custom-amount label { display: block; font-weight: 800; font-size: 0.92rem; margin-bottom: 6px; color: var(--c-ink-soft); }
@@ -172,28 +203,28 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
   color: var(--c-sea-deep); margin: 12px 0 16px;
 }
 .result-reason {
-  text-align: center; font-weight: 800; color: var(--c-ink);
+  text-align: center; font-weight: 700; color: var(--c-ink);
   background: var(--c-sand); border: 1px solid var(--c-line);
   border-radius: var(--radius-s); padding: 14px 16px; margin-top: 16px;
 }
 .menu-list { padding-bottom: 8px; }
 .item-card {
-  background: var(--c-card); border: 1px solid var(--c-line);
+  background: var(--c-card); border: 1.5px solid var(--c-line);
   border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow-s);
 }
-.item-card--hero { border: 2px solid var(--c-mango); box-shadow: var(--shadow); }
+.item-card--hero { border: 2.5px solid var(--c-coral); box-shadow: var(--shadow); }
 .item-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
-.item-name { font-size: 1.28rem; font-weight: 900; line-height: 1.2; }
-.item-price { color: var(--c-coral-deep); font-weight: 900; font-size: 1.16rem; white-space: nowrap; }
+.item-name { font-size: 1.28rem; font-weight: 900; line-height: 1.2; color: var(--c-ink); }
+.item-price { color: var(--c-coral-deep); font-weight: 900; font-size: 1.18rem; white-space: nowrap; }
 .item-desc { color: var(--c-ink-soft); font-size: 0.97rem; margin-bottom: 12px; }
 .item-labels { display: flex; flex-wrap: wrap; gap: 7px; }
 .label {
-  font-size: 0.76rem; font-weight: 900; padding: 5px 11px;
+  font-size: 0.76rem; font-weight: 800; padding: 5px 12px;
   border-radius: var(--radius-pill);
-  background: rgba(14,154,167,0.12); color: var(--c-sea-deep);
+  background: #fff0e8; color: var(--c-sea-deep);
 }
-.label--spicy { background: rgba(229,80,63,0.14); color: var(--c-coral-deep); }
-.label--popular { background: rgba(255,181,71,0.22); color: #9a6300; }
+.label--spicy { background: #fff0e8; color: var(--c-coral-deep); }
+.label--popular { background: rgba(255,181,71,0.22); color: #9a5000; }
 .label--vegetarian, .label--light { background: rgba(72,161,77,0.14); color: #2f7a34; }
 .result-actions { display: flex; flex-direction: column; gap: 11px; margin-top: 18px; }
 .btn--ghost {
@@ -248,65 +279,106 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
 
 /* ── Language selector ── */
 .lang-selector {
-  position: fixed;
-  top: calc(10px + env(safe-area-inset-top));
-  right: 14px;
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  right: 16px;
+  left: auto;
+  transform: none;
   z-index: 200;
-  display: flex;
-  gap: 4px;
-  background: rgba(255,250,242,0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--c-line);
-  border-radius: var(--radius-pill);
-  padding: 4px 6px;
-  box-shadow: var(--shadow-s);
 }
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.22);
+  border: 1.5px solid rgba(255,255,255,0.45);
+  border-radius: var(--radius-pill);
+  padding: 7px 12px 7px 10px;
+  box-shadow: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.lang-toggle:active { background: rgba(255,255,255,0.35); }
+.lang-toggle-globe { font-size: 1rem; line-height: 1; }
+.lang-toggle-caret {
+  font-size: 0.58rem;
+  opacity: 0.45;
+  transition: transform 0.15s;
+}
+.lang-selector.is-open .lang-toggle-caret { transform: rotate(180deg); }
+.lang-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: auto;
+  transform: none;
+  background: #fff;
+  border: 1.5px solid var(--c-line);
+  border-radius: var(--radius-s);
+  box-shadow: 0 8px 24px rgba(200,80,20,0.14);
+  overflow: hidden;
+  min-width: 140px;
+}
+.lang-selector.is-open .lang-dropdown { display: block; }
+.lang-selector.is-hidden { display: none; }
 .lang-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
   border: none;
   background: none;
   cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  color: var(--c-ink-soft);
-  padding: 5px 8px;
-  border-radius: var(--radius-pill);
-  transition: background 0.15s, color 0.15s;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  padding: 12px 16px;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1;
+  transition: background 0.1s;
 }
-.lang-btn:active { transform: scale(0.94); }
+.lang-btn + .lang-btn { border-top: 1px solid var(--c-line); }
+.lang-btn:active { background: #fff0e8; }
 .lang-btn.is-active {
-  background: var(--c-sea-deep);
-  color: #fff;
+  background: #fff0e8;
+  color: var(--c-sea-deep);
 }
   </style>
 </head>
 <body>
   <main class="app" id="app">
 
-    <!-- Language selector -->
-    <div class="lang-selector" id="lang-selector" role="group" aria-label="Language">
-      <button class="lang-btn is-active" data-lang="en" type="button">EN</button>
-      <button class="lang-btn" data-lang="ja" type="button">日本語</button>
-      <button class="lang-btn" data-lang="ko" type="button">한국어</button>
-      <button class="lang-btn" data-lang="zh" type="button">中文</button>
-    </div>
-
     <section id="screen-landing" class="screen landing is-active" aria-labelledby="restaurant-name">
-      <div class="landing-inner">
+      <div class="landing-hero-band">
+        <div id="lang-selector" class="lang-selector" aria-label="Language">
+          <button class="lang-toggle" id="lang-toggle" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="lang-toggle-globe" aria-hidden="true">🌐</span>
+            <span id="lang-toggle-label">EN</span>
+            <span class="lang-toggle-caret" aria-hidden="true">▼</span>
+          </button>
+          <div class="lang-dropdown" role="listbox" aria-label="Select language">
+            <button class="lang-btn is-active" data-lang="en" type="button" role="option">🇺🇸 English</button>
+            <button class="lang-btn" data-lang="ja" type="button" role="option">🇯🇵 日本語</button>
+            <button class="lang-btn" data-lang="ko" type="button" role="option">🇰🇷 한국어</button>
+            <button class="lang-btn" data-lang="zh" type="button" role="option">🇨🇳 中文</button>
+          </div>
+        </div>
         <div class="logo-badge" aria-hidden="true">🍣</div>
         <p class="eyebrow">UPick</p>
         <h1 id="restaurant-name">Demo Spot</h1>
         <p id="restaurant-tagline" class="tagline">Can't decide? We'll pick for you.</p>
-        <p id="restaurant-blurb" class="blurb">Answer 5 quick questions and get a dish matched to your mood.</p>
+      </div>
+      <div class="landing-inner">
+        <p id="restaurant-blurb" class="blurb">Answer a few quick questions and get a dish matched to your mood.</p>
         <div class="landing-actions">
-          <button class="btn btn--primary btn--lg" id="btn-pick" type="button">Pick for me →</button>
+          <button class="btn btn--cta btn--lg" id="btn-pick" type="button">Pick My Order →</button>
           <button class="btn btn--secondary btn--lg" id="btn-view-menu" type="button">View menu</button>
           <button class="btn btn--staff btn--lg" id="btn-staff" type="button">⭐ Staff Favorites</button>
         </div>
-        <p class="landing-hint">Fast, simple, phone-friendly.</p>
+        <p class="landing-hint">Available in English · 日本語 · 한국어 · 中文</p>
       </div>
     </section>
 
@@ -389,27 +461,30 @@ const QUIZ_QUESTIONS = [
   },
   {
     id: "budget",
-    prompt: "What's your budget?",
+    prompt: "How much are you looking to spend?",
     type: "budget",
     options: [
-      { label: "💸 Cheapest option", value: "cheapest" },
-      { label: "Under $10", value: "u10" },
-      { label: "$10–$15", value: "u15" },
-      { label: "$15–$20", value: "u20" },
-      { label: "🤙 No budget, just pick what's good", value: "none" }
+      { label: "💸 Budget-friendly", value: "budget", cap: 11 },
+      { label: "🍽️ Mid-range", value: "mid", cap: 15 },
+      { label: "🎉 Treat myself / doesn't matter", value: "none" }
     ]
   },
   {
     id: "craving",
-    prompt: "What sounds best right now?",
+    prompt: "What are you in the mood for?",
+    subtitle: "Pick one or more.",
+    type: "multi",
+    optional: false,
+    minSelect: 1,
     weight: 2,
     options: [
       { label: "🧂 Salty", value: "salty", tags: ["savory", "bold"], reason: "something salty" },
-      { label: "🍯 Sweet", value: "sweet", tags: ["sweet", "fresh"], reason: "something sweet" },
+      { label: "🌶️ Spicy", value: "spicy", tags: ["spicy", "bold"], reason: "something with heat" },
       { label: "🍖 Savory", value: "savory", tags: ["savory", "classic", "rice"], reason: "something savory" },
-      { label: "🥗 Fresh", value: "fresh", tags: ["fresh", "healthy"], reason: "something fresh" },
+      { label: "🍯 Sweet", value: "sweet", tags: ["sweet", "fresh"], reason: "something sweet" },
+      { label: "🥗 Fresh / Light", value: "fresh", tags: ["fresh", "healthy"], reason: "something fresh" },
       { label: "💪 Protein-heavy", value: "protein", tags: ["filling", "big-hunger", "fish", "shrimp"], reason: "packed with protein" },
-      { label: "🍜 Carby", value: "carby", tags: ["rice", "medium-hunger"], reason: "some good carbs" }
+      { label: "🍜 Carbs", value: "carby", tags: ["rice", "medium-hunger"], reason: "some good carbs" }
     ]
   },
   {
@@ -437,16 +512,25 @@ const QUIZ_QUESTIONS = [
   },
   {
     id: "dealbreakers",
-    prompt: "Any dealbreakers?",
-    subtitle: "Pick all that apply — or skip straight ahead.",
+    prompt: "Any allergies or restrictions?",
+    subtitle: "Pick all that apply — or skip.",
     type: "multi",
     optional: true,
     options: [
-      { label: "🌶️ No spicy", value: "no-spicy", excludeTags: ["spicy", "bold"] },
-      { label: "🐟 No seafood", value: "no-seafood", excludeTags: ["fish", "shrimp"] },
-      { label: "🧀 No dairy", value: "no-dairy", excludeTags: ["dairy"] },
-      { label: "🥩 No meat", value: "no-meat", excludeTags: ["fish", "shrimp"] },
-      { label: "🧱 No heavy food", value: "no-heavy", excludeTags: ["filling", "big-hunger"] }
+      // Hard allergies — strict exclusion
+      { label: "🥜 No peanuts",     value: "no-peanuts",   excludeTags: ["peanuts"],   hard: true },
+      { label: "🌰 No tree nuts",   value: "no-treenuts",  excludeTags: ["tree-nuts"], hard: true },
+      { label: "🦐 No shellfish",   value: "no-shellfish", excludeTags: ["shrimp","shellfish"], hard: true },
+      { label: "🐟 No fish",        value: "no-fish",      excludeTags: ["fish"],      hard: true },
+      { label: "🧀 No dairy",       value: "no-dairy",     excludeTags: ["dairy"],     hard: true },
+      { label: "🥚 No eggs",        value: "no-eggs",      excludeTags: ["eggs"],      hard: true },
+      { label: "🌾 No gluten/wheat",value: "no-gluten",    excludeTags: ["gluten"],    hard: true },
+      { label: "🫘 No soy",         value: "no-soy",       excludeTags: ["soy"],       hard: true },
+      { label: "🌻 No sesame",      value: "no-sesame",    excludeTags: ["sesame"],    hard: true },
+      // Soft preferences — warn but don't exclude
+      { label: "🌿 Vegetarian",     value: "vegetarian",   softExcludeTags: ["fish","shrimp","shellfish"], soft: true },
+      { label: "🌶️ No spicy",      value: "no-spicy",     softExcludeTags: ["spicy","bold"],             soft: true },
+      { label: "🧱 No heavy food",  value: "no-heavy",     softExcludeTags: ["filling","big-hunger"],     soft: true }
     ]
   },
   {
@@ -465,61 +549,61 @@ const MENU_ITEMS = [
   {
     id: "classic-ahi", name: "Classic Ahi Bowl", price: 13,
     description: "Cubed ahi tuna, shoyu, sweet onion, and sesame over warm rice.",
-    tags: ["fish", "savory", "medium-hunger", "classic", "rice"],
+    tags: ["fish", "savory", "medium-hunger", "classic", "rice", "sesame", "soy", "gluten"],
     labels: ["Popular", "Savory"], featured: true
   },
   {
     id: "spicy-tuna", name: "Volcano Spicy Tuna", price: 14,
     description: "Ahi tossed in chili aioli with crispy onion and togarashi.",
-    tags: ["fish", "spicy", "medium-hunger", "bold", "rice"],
+    tags: ["fish", "spicy", "medium-hunger", "bold", "rice", "sesame", "soy", "gluten", "eggs"],
     labels: ["Spicy", "Popular"], featured: true
   },
   {
     id: "salmon-shoyu", name: "Shoyu Salmon Bowl", price: 14,
     description: "Buttery salmon, shoyu glaze, edamame, cucumber, and scallion.",
-    tags: ["fish", "savory", "medium-hunger", "fresh", "rice"],
+    tags: ["fish", "savory", "medium-hunger", "fresh", "rice", "soy", "gluten"],
     labels: ["Fresh"], featured: false
   },
   {
     id: "spicy-salmon-deluxe", name: "Spicy Salmon Deluxe", price: 18,
     description: "Double salmon, sriracha mayo, jalapeño, avocado, and crunch.",
-    tags: ["fish", "spicy", "big-hunger", "bold", "rice"],
+    tags: ["fish", "spicy", "big-hunger", "bold", "rice", "soy", "gluten", "eggs"],
     labels: ["Spicy", "Filling"], featured: false
   },
   {
     id: "veggie-garden", name: "Garden Veggie Bowl", price: 11,
     description: "Tofu, avocado, edamame, cucumber, carrot, and ginger dressing.",
-    tags: ["veggie", "fresh", "light-hunger", "healthy", "rice"],
+    tags: ["veggie", "fresh", "light-hunger", "healthy", "rice", "soy", "sesame"],
     labels: ["Vegetarian", "Light"], featured: false
   },
   {
     id: "shrimp-tempura", name: "Crispy Shrimp Tempura Bowl", price: 15,
     description: "Golden tempura shrimp, spicy mayo, slaw, and pickled ginger.",
-    tags: ["shrimp", "savory", "big-hunger", "crunchy", "rice"],
+    tags: ["shrimp", "shellfish", "savory", "big-hunger", "crunchy", "rice", "gluten", "eggs"],
     labels: ["Popular", "Filling"], featured: true
   },
   {
     id: "poke-nachos", name: "Aloha Poke Nachos", price: 12,
     description: "Wonton chips piled with ahi, avocado, masago, and eel sauce.",
-    tags: ["fish", "savory", "shareable", "fun", "crunchy"],
+    tags: ["fish", "savory", "shareable", "fun", "crunchy", "gluten", "soy", "eggs"],
     labels: ["Shareable"], featured: false
   },
   {
     id: "mini-bowl", name: "Keiki Mini Bowl", price: 9,
     description: "A small bowl with your choice of one protein. Simple and quick.",
-    tags: ["fish", "savory", "light-hunger", "quick", "rice"],
+    tags: ["fish", "savory", "light-hunger", "quick", "rice", "soy", "gluten"],
     labels: ["Light"], featured: false
   },
   {
     id: "double-protein", name: "Double Protein Power Bowl", price: 19,
     description: "Two proteins, extra rice, and all the toppings. Come hungry.",
-    tags: ["fish", "savory", "big-hunger", "filling", "rice"],
+    tags: ["fish", "savory", "big-hunger", "filling", "rice", "soy", "gluten", "sesame"],
     labels: ["Filling"], featured: false
   },
   {
     id: "mango-tofu", name: "Mango Tofu Fresh Bowl", price: 10,
     description: "Crispy tofu, mango salsa, greens, lime, and sweet chili drizzle.",
-    tags: ["veggie", "spicy", "light-hunger", "fresh", "healthy"],
+    tags: ["veggie", "spicy", "light-hunger", "fresh", "healthy", "soy", "sesame"],
     labels: ["Vegetarian", "Light", "Spicy"], featured: false
   }
 ];
@@ -537,21 +621,39 @@ function trackEvent(eventName, data = {}) {
 function resolveBudgetCap(answers) {
   const sel = answers.budget;
   if (!sel || sel === "none") return null;
-  if (sel === "cheapest") return Math.min(...MENU_ITEMS.map(i => i.price));
-  if (sel === "u10") return 10;
-  if (sel === "u15") return 15;
-  if (sel === "u20") return 20;
-  return null;
+  // Find the cap from the question option
+  const budgetQ = QUIZ_QUESTIONS.find(q => q.id === "budget");
+  const opt = budgetQ?.options.find(o => o.value === sel);
+  return opt?.cap ?? null;
 }
 
 function getExcludedTags(answers) {
   const db = answers.dealbreakers;
-  if (!db || db.includes("none") || db.length === 0) return [];
+  if (!db || db.length === 0) return [];
   const excluded = new Set();
-  QUIZ_QUESTIONS.find(q => q.id === "dealbreakers").options.forEach(o => {
-    if (db.includes(o.value) && o.excludeTags) o.excludeTags.forEach(t => excluded.add(t));
+  const dbQ = QUIZ_QUESTIONS.find(q => q.id === "dealbreakers");
+  dbQ.options.forEach(o => {
+    if (db.includes(o.value) && o.hard && o.excludeTags) {
+      o.excludeTags.forEach(t => excluded.add(t));
+    }
   });
   return [...excluded];
+}
+
+// Returns { tags: Set, labels: string[] } for soft restriction warnings
+function getSoftWarnings(answers) {
+  const db = answers.dealbreakers;
+  if (!db || db.length === 0) return { tags: new Set(), labels: [] };
+  const tags = new Set();
+  const labels = [];
+  const dbQ = QUIZ_QUESTIONS.find(q => q.id === "dealbreakers");
+  dbQ.options.forEach(o => {
+    if (db.includes(o.value) && o.soft && o.softExcludeTags) {
+      o.softExcludeTags.forEach(t => tags.add(t));
+      labels.push(o.label.replace(/^[^ ]+ /, "")); // strip emoji
+    }
+  });
+  return { tags, labels };
 }
 
 function scoreItem(item, answers, questions) {
@@ -562,14 +664,32 @@ function scoreItem(item, answers, questions) {
     ?.options.find(o => o.value === answers.mood);
 
   questions.forEach(q => {
-    if (q.type === "budget" || q.type === "multi" || q.id === "resultStyle") return;
+    if (q.type === "budget" || q.id === "resultStyle" || q.id === "dealbreakers") return;
+    const w = q.weight ?? 1;
+
+    if (q.id === "craving" && Array.isArray(answers.craving)) {
+      // Multi-select craving: score each selected option
+      answers.craving.forEach(val => {
+        const opt = q.options.find(o => o.value === val);
+        if (!opt?.tags) return;
+        opt.tags.forEach(tag => {
+          if (item.tags.includes(tag)) score += SCORING.tagMatch * w;
+        });
+      });
+      return;
+    }
+
+    if (q.type === "multi") return; // skip other multi questions for tag scoring
     const opt = q.options.find(o => o.value === answers[q.id]);
     if (!opt || !opt.tags) return;
-    const w = q.weight ?? 1;
     opt.tags.forEach(tag => {
       if (item.tags.includes(tag)) score += SCORING.tagMatch * w;
     });
   });
+
+  // Budget scoring: small boost for items under cap
+  const budgetCap = resolveBudgetCap(answers);
+  if (budgetCap && item.price <= budgetCap) score += 4;
 
   if (item.featured) score += SCORING.featuredBoost;
   if (moodOpt?.boostFeatured && item.featured) score += SCORING.popularBoost;
@@ -583,7 +703,19 @@ function scoreItem(item, answers, questions) {
 function buildReason(item, answers, questions) {
   const parts = [];
   questions.forEach(q => {
-    if (q.type === "budget" || q.type === "multi" || q.id === "resultStyle") return;
+    if (q.type === "budget" || q.id === "resultStyle" || q.id === "dealbreakers") return;
+
+    if (q.id === "craving" && Array.isArray(answers.craving)) {
+      answers.craving.forEach(val => {
+        const opt = q.options.find(o => o.value === val);
+        if (!opt?.reason) return;
+        const overlaps = (opt.tags || []).some(t => item.tags.includes(t));
+        if (overlaps) parts.push({ text: opt.reason, weight: q.weight ?? 1 });
+      });
+      return;
+    }
+
+    if (q.type === "multi") return;
     const opt = q.options.find(o => o.value === answers[q.id]);
     if (!opt?.reason) return;
     const overlaps = (opt.tags || []).some(t => item.tags.includes(t));
@@ -601,10 +733,12 @@ function recommend(answers) {
   const questions = QUIZ_QUESTIONS;
   const budgetCap = resolveBudgetCap(answers);
   const excludedTags = getExcludedTags(answers);
+  const { tags: softTags, labels: softLabels } = getSoftWarnings(answers);
   const resultStyle = answers.resultStyle || "one";
   const priorityOpt = questions.find(q => q.id === "priority")
     ?.options.find(o => o.value === answers.priority);
 
+  // Hard filter: remove items with hard-allergy tags
   let pool = MENU_ITEMS.filter(item =>
     !excludedTags.some(t => item.tags.includes(t))
   );
@@ -614,7 +748,18 @@ function recommend(answers) {
   if (budgetCap != null && !budgetPool.length) { budgetPool = pool; fallback = true; }
   pool = budgetPool;
 
-  const scored = pool.map(item => ({ item, score: scoreItem(item, answers, questions) }));
+  const scored = pool.map(item => {
+    // Soft warnings: which restrictions does this item trigger?
+    const triggeredSoft = softLabels.filter((_, i) => {
+      const softTagArr = [...softTags];
+      // Find which soft option triggered this label
+      const dbQ = QUIZ_QUESTIONS.find(q => q.id === "dealbreakers");
+      const softOpts = dbQ.options.filter(o => o.soft && (answers.dealbreakers || []).includes(o.value));
+      const opt = softOpts[i];
+      return opt && opt.softExcludeTags && opt.softExcludeTags.some(t => item.tags.includes(t));
+    });
+    return { item, score: scoreItem(item, answers, questions), softWarnings: triggeredSoft };
+  });
 
   if (priorityOpt?.prioritizeCheap) {
     scored.sort((a, b) => a.item.price - b.item.price || b.score - a.score);
@@ -623,15 +768,15 @@ function recommend(answers) {
   }
 
   if (resultStyle === "top3") {
-    return { style: "top3", items: scored.slice(0, 3).map(s => s.item), ranked: scored.map(s => s.item), fallback };
+    return { style: "top3", items: scored.slice(0, 3), ranked: scored, fallback };
   }
   if (resultStyle === "eliminate") {
-    return { style: "eliminate", items: scored.slice(0, Math.min(5, scored.length)).map(s => s.item), ranked: scored.map(s => s.item), fallback };
+    return { style: "eliminate", items: scored.slice(0, Math.min(5, scored.length)), ranked: scored, fallback };
   }
   const chosen = scored[0];
   return {
     style: "one", item: chosen.item, score: chosen.score, fallback,
-    ranked: scored.map(s => s.item),
+    ranked: scored,
     reason: buildReason(chosen.item, answers, questions)
   };
 }
@@ -703,6 +848,7 @@ function renderQuizStep() {
 
   const opts = document.createElement("div");
   opts.className = "quiz-options";
+  const isLast = state.step === total - 1;
 
   if (q.type === "multi") {
     if (!Array.isArray(state.answers[q.id])) state.answers[q.id] = [];
@@ -734,11 +880,15 @@ function renderQuizStep() {
           const idx = q.options.findIndex(x => x.value === v);
           if (idx >= 0) opts.children[idx]?.classList.add("is-selected");
         });
+        // Refresh Next button enabled state for both optional and required multi
+        const nxt = document.getElementById("btn-quiz-next");
+        const nowEmpty = state.answers[q.id].length === 0;
         if (q.optional) {
-          const nxt = document.getElementById("btn-quiz-next");
-          nxt.textContent = state.answers[q.id].length === 0
+          nxt.textContent = nowEmpty
             ? (isLast ? t("dealbreakersSkipLast") : t("dealbreakersSkip"))
             : (isLast ? t("quizSeeMyPick") : t("quizNext"));
+        } else {
+          nxt.disabled = nowEmpty;
         }
       });
       opts.appendChild(btn);
@@ -763,7 +913,6 @@ function renderQuizStep() {
 
   root.appendChild(opts);
 
-  const isLast = state.step === total - 1;
   const next = document.getElementById("btn-quiz-next");
   if (q.type === "multi") {
     const isEmpty = !Array.isArray(state.answers[q.id]) || state.answers[q.id].length === 0;
@@ -864,7 +1013,7 @@ function renderResult() {
     }
 
     let pickIndex = r._pickIndex || 0;
-    const ranked = r.ranked || [r.item];
+    const ranked = r.ranked || [];
 
     function renderOnePick(idx) {
       const existing = root.querySelector(".one-pick-zone");
@@ -872,14 +1021,26 @@ function renderResult() {
       const existingActions = root.querySelector(".result-actions");
       if (existingActions) existingActions.remove();
 
+      const entry = ranked[idx];
+      const item = entry?.item || entry; // handle both object shapes
+      const softWarnings = entry?.softWarnings || [];
+
       const zone = document.createElement("div");
       zone.className = "one-pick-zone";
-      zone.appendChild(buildItemCard(ranked[idx], true));
+      zone.appendChild(buildItemCard(item, true));
 
       const why = document.createElement("p");
       why.className = "result-reason";
-      why.textContent = buildReason(ranked[idx], state.answers, QUIZ_QUESTIONS);
+      why.textContent = buildReason(item, state.answers, QUIZ_QUESTIONS);
       zone.appendChild(why);
+
+      if (softWarnings.length > 0) {
+        const warn = document.createElement("p");
+        warn.className = "result-soft-warn";
+        warn.textContent = `⚠️ This item may not match: ${softWarnings.join(", ")}. Ask if they can modify it.`;
+        zone.appendChild(warn);
+      }
+
       root.appendChild(zone);
 
       const hasMore = idx + 1 < ranked.length;
@@ -897,7 +1058,9 @@ function renderResult() {
     note.className = "result-note";
     note.textContent = t("resultTop3");
     root.appendChild(note);
-    r.items.forEach((item, i) => {
+    r.items.forEach((entry, i) => {
+      const item = entry?.item || entry;
+      const softWarnings = entry?.softWarnings || [];
       const wrap = document.createElement("div");
       wrap.className = "result-rank-wrap";
       const badge = document.createElement("span");
@@ -905,6 +1068,12 @@ function renderResult() {
       badge.textContent = ["🥇","🥈","🥉"][i] || `#${i+1}`;
       wrap.appendChild(badge);
       wrap.appendChild(buildItemCard(item, i === 0));
+      if (softWarnings.length > 0) {
+        const warn = document.createElement("p");
+        warn.className = "result-soft-warn";
+        warn.textContent = `⚠️ May not match: ${softWarnings.join(", ")}`;
+        wrap.appendChild(warn);
+      }
       root.appendChild(wrap);
     });
     buildResultActions(root, false, null);
@@ -926,13 +1095,16 @@ function renderResult() {
         fin.className = "result-note";
         fin.textContent = t("resultFinalPick");
         root.appendChild(fin);
-        root.appendChild(buildItemCard(pool[0], true));
+        const entry = pool[0];
+        const item = entry?.item || entry;
+        root.appendChild(buildItemCard(item, true));
         buildResultActions(root, false, null);
         return;
       }
       const poolEl = document.createElement("div");
       poolEl.className = "elim-pool";
-      pool.forEach((item, idx) => {
+      pool.forEach((entry, idx) => {
+        const item = entry?.item || entry;
         const row = document.createElement("div");
         row.className = "elim-row";
         row.appendChild(buildItemCard(item, false));
@@ -980,6 +1152,18 @@ function renderStaffFavorites() {
 function buildItemCard(item, isHero) {
   const card = document.createElement("article");
   card.className = "item-card" + (isHero ? " item-card--hero" : "");
+
+  // Optional image
+  if (item.image) {
+    const img = document.createElement("img");
+    img.className = "item-img";
+    img.src = item.image;
+    img.alt = item.name;
+    img.loading = "lazy";
+    img.onerror = () => { img.remove(); }; // silent fail if image 404s
+    card.appendChild(img);
+  }
+
   const head = document.createElement("div");
   head.className = "item-head";
   const name = document.createElement("h3");
@@ -1034,16 +1218,16 @@ const TRANSLATIONS = {
     eyebrow: "UPick",
     tagline: "Can't decide? We'll pick for you.",
     blurb: "Answer a few quick questions and get a dish matched to your mood.",
-    btnPick: "Pick for me →",
+    btnPick: "Pick My Order →",
     btnViewMenu: "View menu",
     btnStaff: "⭐ Staff Favorites",
-    landingHint: "Fast, simple, phone-friendly.",
+    landingHint: "Available in English · 日本語 · 한국어 · 中文",
     quizBack0: "← Home",
     quizBackN: "← Back",
     quizNext: "Next →",
     quizSeeMyPick: "See my pick →",
-    dealbreakersSkip: "No deal-breakers, next →",
-    dealbreakersSkipLast: "No deal-breakers, see my pick →",
+    dealbreakersSkip: "No restrictions, next →",
+    dealbreakersSkipLast: "No restrictions, see my pick →",
     topbarRetry: "← Retry",
     topbarMenu: "Menu",
     topbarMenuBack: "← Home",
@@ -1060,16 +1244,16 @@ const TRANSLATIONS = {
     resultTop3: "Your top 3 picks",
     resultElimNote: "Tap ✕ to eliminate — last one standing is your pick",
     resultFinalPick: "🎉 Your pick!",
-    nextBest: "Give me the next best thing",
+    nextBest: "Show next best item",
     viewFullMenu: "View full menu",
     questions: {
-      hunger:      { prompt: "How hungry are you?",           options: ["🍃 Just a snack","🍚 Normal hungry","🍱 Starving"] },
-      budget:      { prompt: "What's your budget?",           options: ["💸 Cheapest option","Under $10","$10–$15","$15–$20","🤙 No budget, just pick what's good"] },
-      craving:     { prompt: "What sounds best right now?",   options: ["🧂 Salty","🍯 Sweet","🍖 Savory","🥗 Fresh","💪 Protein-heavy","🍜 Carby"] },
-      mood:        { prompt: "What kind of mood are you in?", options: ["✅ Safe choice","⭐ Popular item","🆕 Something new","🎲 Surprise me"] },
-      priority:    { prompt: "What matters most?",            options: ["💰 Cheapest","🏋️ Most filling","🥦 Healthier option","😋 Best tasting","⚡ Fastest/easiest"] },
-      dealbreakers:{ prompt: "Any dealbreakers?", subtitle: "Pick all that apply — or skip straight ahead.", options: ["🌶️ No spicy","🐟 No seafood","🧀 No dairy","🥩 No meat","🧱 No heavy food"] },
-      resultStyle: { prompt: "How do you want your result?",  options: ["🎯 Give me one final pick","🏆 Show me top 3","❌ Let me eliminate options"] }
+      hunger:      { prompt: "How hungry are you?",                      options: ["🍃 Just a snack","🍚 Normal hungry","🍱 Starving"] },
+      budget:      { prompt: "How much are you looking to spend?",        options: ["💸 Budget-friendly","🍽️ Mid-range","🎉 Treat myself / doesn't matter"] },
+      craving:     { prompt: "What are you in the mood for?",  subtitle: "Pick one or more.",   options: ["🧂 Salty","🌶️ Spicy","🍖 Savory","🍯 Sweet","🥗 Fresh / Light","💪 Protein-heavy","🍜 Carbs"] },
+      mood:        { prompt: "What kind of mood are you in?",             options: ["✅ Safe choice","⭐ Popular item","🆕 Something new","🎲 Surprise me"] },
+      priority:    { prompt: "What matters most?",                        options: ["💰 Cheapest","🏋️ Most filling","🥦 Healthier option","😋 Best tasting","⚡ Fastest/easiest"] },
+      dealbreakers:{ prompt: "Any allergies or restrictions?", subtitle: "Pick all that apply — or skip.", options: ["🥜 No peanuts","🌰 No tree nuts","🦐 No shellfish","🐟 No fish","🧀 No dairy","🥚 No eggs","🌾 No gluten/wheat","🫘 No soy","🌻 No sesame","🌿 Vegetarian","🌶️ No spicy","🧱 No heavy food"] },
+      resultStyle: { prompt: "How do you want your result?",              options: ["🎯 Give me one final pick","🏆 Show me top 3","❌ Let me eliminate options"] }
     }
   },
   ja: {
@@ -1084,8 +1268,8 @@ const TRANSLATIONS = {
     quizBackN: "← 戻る",
     quizNext: "次へ →",
     quizSeeMyPick: "結果を見る →",
-    dealbreakersSkip: "NG なし、次へ →",
-    dealbreakersSkipLast: "NG なし、結果を見る →",
+    dealbreakersSkip: "制限なし、次へ →",
+    dealbreakersSkipLast: "制限なし、結果を見る →",
     topbarRetry: "← やり直す",
     topbarMenu: "メニュー",
     topbarMenuBack: "← ホーム",
@@ -1106,11 +1290,11 @@ const TRANSLATIONS = {
     viewFullMenu: "フルメニューを見る",
     questions: {
       hunger:      { prompt: "どのくらいお腹が空いていますか？",        options: ["🍃 軽くつまむ程度","🍚 普通にお腹が空いた","🍱 めちゃくちゃ腹ペコ"] },
-      budget:      { prompt: "予算はどのくらいですか？",                options: ["💸 一番安いもの","10ドル未満","10〜15ドル","15〜20ドル","🤙 予算なし、おいしいものを"] },
-      craving:     { prompt: "今、何が食べたいですか？",                options: ["🧂 しょっぱいもの","🍯 甘いもの","🍖 旨味たっぷり","🥗 さっぱりしたもの","💪 タンパク質たっぷり","🍜 炭水化物系"] },
+      budget:      { prompt: "予算はどのくらいですか？",                options: ["💸 お手頃","🍽️ 普通","🎉 気にしない"] },
+      craving:     { prompt: "今、何が食べたいですか？", subtitle: "複数選択できます。", options: ["🧂 しょっぱいもの","🌶️ 辛いもの","🍖 旨味たっぷり","🍯 甘いもの","🥗 さっぱりしたもの","💪 タンパク質たっぷり","🍜 炭水化物系"] },
       mood:        { prompt: "今の気分は？",                           options: ["✅ 安定の定番","⭐ 人気のメニュー","🆕 新しいものを試したい","🎲 サプライズで"] },
       priority:    { prompt: "一番大切にしたいことは？",                options: ["💰 価格重視","🏋️ ボリューム重視","🥦 ヘルシー重視","😋 おいしさ重視","⚡ 手軽さ重視"] },
-      dealbreakers:{ prompt: "苦手なものはありますか？", subtitle: "当てはまるものをすべて選ぶか、スキップしてください。", options: ["🌶️ 辛いものNG","🐟 魚介類NG","🧀 乳製品NG","🥩 肉類NG","🧱 重い食べ物NG"] },
+      dealbreakers:{ prompt: "アレルギーや制限はありますか？", subtitle: "当てはまるものをすべて選ぶか、スキップしてください。", options: ["🥜 ピーナッツNG","🌰 ナッツNG","🦐 甲殻類NG","🐟 魚NG","🧀 乳製品NG","🥚 卵NG","🌾 グルテン・小麦NG","🫘 大豆NG","🌻 ごまNG","🌿 ベジタリアン","🌶️ 辛いものNG","🧱 重い食べ物NG"] },
       resultStyle: { prompt: "結果の表示方法は？",                     options: ["🎯 ズバリ1品だけ","🏆 上位3品を見る","❌ 自分で絞り込む"] }
     }
   },
@@ -1126,8 +1310,8 @@ const TRANSLATIONS = {
     quizBackN: "← 뒤로",
     quizNext: "다음 →",
     quizSeeMyPick: "결과 보기 →",
-    dealbreakersSkip: "제외 없음, 다음 →",
-    dealbreakersSkipLast: "제외 없음, 결과 보기 →",
+    dealbreakersSkip: "제한 없음, 다음 →",
+    dealbreakersSkipLast: "제한 없음, 결과 보기 →",
     topbarRetry: "← 다시하기",
     topbarMenu: "메뉴",
     topbarMenuBack: "← 홈",
@@ -1148,11 +1332,11 @@ const TRANSLATIONS = {
     viewFullMenu: "전체 메뉴 보기",
     questions: {
       hunger:      { prompt: "얼마나 배고프세요?",                     options: ["🍃 간단히 요기만","🍚 보통 배고픔","🍱 엄청 배고픔"] },
-      budget:      { prompt: "예산은 어느 정도인가요?",                 options: ["💸 제일 저렴한 것","$10 미만","$10–$15","$15–$20","🤙 예산 상관없이 맛있는 것"] },
-      craving:     { prompt: "지금 뭐가 당기나요?",                    options: ["🧂 짭짤한 것","🍯 달콤한 것","🍖 고소한 것","🥗 신선한 것","💪 단백질 가득","🍜 탄수화물"] },
+      budget:      { prompt: "얼마나 쓸 생각이세요?",                  options: ["💸 저렴하게","🍽️ 중간 정도","🎉 상관없음"] },
+      craving:     { prompt: "지금 뭐가 당기나요?", subtitle: "복수 선택 가능.",   options: ["🧂 짭짤한 것","🌶️ 매운 것","🍖 고소한 것","🍯 달콤한 것","🥗 신선한 것","💪 단백질 가득","🍜 탄수화물"] },
       mood:        { prompt: "지금 어떤 기분인가요?",                   options: ["✅ 안전한 선택","⭐ 인기 메뉴","🆕 새로운 것","🎲 깜짝 추천"] },
       priority:    { prompt: "가장 중요한 건 뭔가요?",                  options: ["💰 가격","🏋️ 포만감","🥦 건강","😋 맛","⚡ 빠르고 간편함"] },
-      dealbreakers:{ prompt: "못 먹는 것이 있나요?", subtitle: "해당하는 것을 모두 선택하거나 건너뛰세요.", options: ["🌶️ 매운 것 NO","🐟 해산물 NO","🧀 유제품 NO","🥩 육류 NO","🧱 무거운 음식 NO"] },
+      dealbreakers:{ prompt: "알레르기나 제한이 있나요?", subtitle: "해당하는 것을 모두 선택하거나 건너뛰세요.", options: ["🥜 땅콩 NO","🌰 견과류 NO","🦐 갑각류 NO","🐟 생선 NO","🧀 유제품 NO","🥚 달걀 NO","🌾 글루텐/밀 NO","🫘 두부/콩 NO","🌻 참깨 NO","🌿 채식","🌶️ 매운 것 NO","🧱 무거운 음식 NO"] },
       resultStyle: { prompt: "결과를 어떻게 보고 싶나요?",              options: ["🎯 딱 1개만","🏆 TOP 3 보기","❌ 직접 제거하기"] }
     }
   },
@@ -1168,8 +1352,8 @@ const TRANSLATIONS = {
     quizBackN: "← 返回",
     quizNext: "下一步 →",
     quizSeeMyPick: "查看结果 →",
-    dealbreakersSkip: "没有忌口，下一步 →",
-    dealbreakersSkipLast: "没有忌口，查看结果 →",
+    dealbreakersSkip: "没有限制，下一步 →",
+    dealbreakersSkipLast: "没有限制，查看结果 →",
     topbarRetry: "← 重新来",
     topbarMenu: "菜单",
     topbarMenuBack: "← 首页",
@@ -1190,11 +1374,11 @@ const TRANSLATIONS = {
     viewFullMenu: "查看完整菜单",
     questions: {
       hunger:      { prompt: "你有多饿？",                             options: ["🍃 随便吃点","🍚 正常饿","🍱 饿到极点"] },
-      budget:      { prompt: "你的预算是多少？",                       options: ["💸 最便宜的","$10以下","$10–$15","$15–$20","🤙 不限预算，选最好的"] },
-      craving:     { prompt: "现在最想吃什么？",                       options: ["🧂 咸口的","🍯 甜口的","🍖 鲜香的","🥗 清爽的","💪 高蛋白","🍜 主食类"] },
+      budget:      { prompt: "你打算花多少？",                         options: ["💸 经济实惠","🍽️ 中等消费","🎉 无所谓"] },
+      craving:     { prompt: "现在最想吃什么？", subtitle: "可多选。",  options: ["🧂 咸口的","🌶️ 辣的","🍖 鲜香的","🍯 甜口的","🥗 清爽的","💪 高蛋白","🍜 主食类"] },
       mood:        { prompt: "你现在是什么心情？",                     options: ["✅ 经典稳妥","⭐ 热门菜品","🆕 尝点新的","🎲 随机惊喜"] },
       priority:    { prompt: "你最在乎什么？",                         options: ["💰 最便宜","🏋️ 最管饱","🥦 更健康","😋 最好吃","⚡ 快捷方便"] },
-      dealbreakers:{ prompt: "有什么忌口吗？", subtitle: "选择所有适用项，或直接跳过。", options: ["🌶️ 不要辣","🐟 不要海鲜","🧀 不要乳制品","🥩 不要肉类","🧱 不要重口味"] },
+      dealbreakers:{ prompt: "有过敏或饮食限制吗？", subtitle: "选择所有适用项，或直接跳过。", options: ["🥜 不要花生","🌰 不要坚果","🦐 不要甲壳类","🐟 不要鱼","🧀 不要乳制品","🥚 不要鸡蛋","🌾 不要麸质/小麦","🫘 不要大豆","🌻 不要芝麻","🌿 素食","🌶️ 不要辣","🧱 不要重口味"] },
       resultStyle: { prompt: "你想怎么看结果？",                       options: ["🎯 直接给我一个","🏆 看前三名","❌ 我来一个个排除"] }
     }
   }
@@ -1255,10 +1439,38 @@ function applyLang(lang) {
 }
 
 function wireLangSelector() {
-  document.getElementById("lang-selector").addEventListener("click", e => {
-    const btn = e.target.closest(".lang-btn");
-    if (btn && btn.dataset.lang) applyLang(btn.dataset.lang);
+  const selector = document.getElementById("lang-selector");
+  const toggle   = document.getElementById("lang-toggle");
+  const label    = document.getElementById("lang-toggle-label");
+  const SHORT    = { en: "EN", ja: "日本語", ko: "한국어", zh: "中文" };
+
+  function openDropdown() {
+    selector.classList.add("is-open");
+    toggle.setAttribute("aria-expanded", "true");
+  }
+  function closeDropdown() {
+    selector.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
+  toggle.addEventListener("click", e => {
+    e.stopPropagation();
+    selector.classList.contains("is-open") ? closeDropdown() : openDropdown();
   });
+
+  selector.addEventListener("click", e => {
+    const btn = e.target.closest(".lang-btn");
+    if (!btn || !btn.dataset.lang) return;
+    applyLang(btn.dataset.lang);
+    label.textContent = SHORT[btn.dataset.lang] || btn.dataset.lang.toUpperCase();
+    selector.querySelectorAll(".lang-btn").forEach(b =>
+      b.classList.toggle("is-active", b.dataset.lang === btn.dataset.lang)
+    );
+    closeDropdown();
+  });
+
+  document.addEventListener("click", () => closeDropdown());
+  document.addEventListener("touchstart", () => closeDropdown(), { passive: true });
 }
 
 function init() {
