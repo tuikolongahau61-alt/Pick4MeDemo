@@ -1,36 +1,93 @@
 # UPick
 
-UPick is a mobile-friendly restaurant QR menu and food recommendation website. Customers can scan a QR code, view the menu, see staff favorites, or answer a short quiz to get a dish picked for them.
+UPick is a simple QR-code restaurant menu and food picker website. Customers can scan a QR code, view the menu, or take a quick quiz to help decide what to order.
 
-## Current Version
-
-This project currently runs as a single-file website.
-
-The main file is:
-
-- `index.html`
-
-The CSS, JavaScript, menu data, quiz questions, and recommendation logic are all built directly into `index.html`.
-
-Older files like `styles.css`, `script.js`, and `data.js` may still exist in the repository, but they are not required for the current working version unless `index.html` links to them.
+The goal is to make ordering easier, faster, and more fun for customers who are already at the restaurant.
 
 ## Features
 
-- Mobile-first design
-- QR-code friendly landing page
-- “Pick for me” quiz
-- Budget question
-- Menu screen
-- Staff Favorites screen
-- Top recommendation result
-- Top 3 result option
-- Elimination-style result option
-- Built with plain HTML, CSS, and JavaScript
-- Hosted for free with GitHub Pages
+- Mobile-friendly QR menu website
+- “Pick for me” food quiz
+- Full menu view
+- Budget-based recommendations
+- Dealbreaker filters
+- Common allergy filters
+- Multilingual support
+- Simple one-file setup
+- Works with GitHub Pages
+- No app download required
 
-## File Structure
+## How It Works
 
-Current required file:
+1. A customer scans the restaurant’s QR code.
+2. They can choose to view the menu or take the food picker quiz.
+3. The quiz asks about preferences, budget, dealbreakers, and allergies.
+4. UPick recommends a menu item based on their answers.
+5. The customer can view details and decide what to order.
 
-```txt
-index.html
+## Project Files
+
+This version is built as a single `index.html` file.
+
+Older versions may have included separate files like:
+
+- `styles.css`
+- `script.js`
+- `data.js`
+
+Those are not required if all HTML, CSS, JavaScript, menu data, quiz logic, and language settings are inside the current `index.html` file.
+
+## Tech Stack
+
+- HTML
+- CSS
+- JavaScript
+- GitHub Pages
+
+## Purpose
+
+UPick is designed for small restaurants, food trucks, cafes, and local businesses that want a simple digital menu experience without needing a full app.
+
+It helps customers decide what to eat while giving businesses a more interactive QR menu.
+
+## Current Status
+
+UPick is currently an MVP.
+
+Current version includes:
+
+- QR menu landing page
+- Food picker quiz
+- Menu browsing
+- Allergy and dealbreaker filtering
+- Multilingual text support
+- Mobile-friendly layout
+
+## Future Ideas
+
+- Restaurant dashboard
+- Editable menu system
+- Multiple restaurant listings
+- Analytics for most-picked items
+- Deals and specials
+- Customer favorites
+- Restaurant recommendation version for areas like Waikiki
+- Ordering or booking integrations
+
+## Hosting
+
+This project can be hosted for free using GitHub Pages.
+
+To publish:
+
+1. Upload the `index.html` file to a GitHub repository.
+2. Go to repository settings.
+3. Open the Pages section.
+4. Set the source to the main branch.
+5. Save and wait for GitHub Pages to publish the site.
+
+## Name
+
+UPick means the customer can let the site help choose what to eat.
+
+Instead of staring at a menu forever, they scan, answer, and pick.
