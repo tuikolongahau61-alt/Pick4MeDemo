@@ -1,6 +1,6 @@
-# Pick4Me Menu
+# UPick
 
-Pick4Me Menu is a mobile-friendly restaurant QR menu and food recommendation website. Customers can scan a QR code, view the menu, see staff favorites, or answer a short quiz to get a dish picked for them.
+UPick is a mobile-friendly restaurant QR menu and food recommendation website. Customers can scan a QR code, view the menu, see staff favorites, or answer a short quiz to get a dish picked for them.
 
 ## Current Version
 
