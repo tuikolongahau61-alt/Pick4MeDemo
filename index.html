@@ -245,10 +245,54 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
   .tagline { font-size: 1.12rem; }
   .blurb { margin-bottom: 20px; }
 }
+
+/* ── Language selector ── */
+.lang-selector {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  right: 14px;
+  z-index: 200;
+  display: flex;
+  gap: 4px;
+  background: rgba(255,250,242,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-pill);
+  padding: 4px 6px;
+  box-shadow: var(--shadow-s);
+}
+.lang-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: var(--c-ink-soft);
+  padding: 5px 8px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+}
+.lang-btn:active { transform: scale(0.94); }
+.lang-btn.is-active {
+  background: var(--c-sea-deep);
+  color: #fff;
+}
   </style>
 </head>
 <body>
   <main class="app" id="app">
+
+    <!-- Language selector -->
+    <div class="lang-selector" id="lang-selector" role="group" aria-label="Language">
+      <button class="lang-btn is-active" data-lang="en" type="button">EN</button>
+      <button class="lang-btn" data-lang="ja" type="button">日本語</button>
+      <button class="lang-btn" data-lang="ko" type="button">한국어</button>
+      <button class="lang-btn" data-lang="zh" type="button">中文</button>
+    </div>
 
     <section id="screen-landing" class="screen landing is-active" aria-labelledby="restaurant-name">
       <div class="landing-inner">
@@ -646,13 +690,14 @@ function renderQuizStep() {
 
   const prompt = document.createElement("h2");
   prompt.className = "quiz-prompt";
-  prompt.textContent = q.prompt;
+  prompt.textContent = tQuestion(q.id, "prompt") || q.prompt;
   root.appendChild(prompt);
 
-  if (q.subtitle) {
+  const tSub = tQuestion(q.id, "subtitle");
+  if (q.subtitle || tSub) {
     const sub = document.createElement("p");
     sub.className = "quiz-subtitle";
-    sub.textContent = q.subtitle;
+    sub.textContent = tSub || q.subtitle;
     root.appendChild(sub);
   }
 
@@ -661,12 +706,13 @@ function renderQuizStep() {
 
   if (q.type === "multi") {
     if (!Array.isArray(state.answers[q.id])) state.answers[q.id] = [];
-    q.options.forEach(o => {
+    const tOpts = tQuestion(q.id, "options") || [];
+    q.options.forEach((o, oi) => {
       const btn = document.createElement("button");
       btn.type = "button";
       const sel = state.answers[q.id];
       btn.className = "option" + (sel.includes(o.value) ? " is-selected" : "");
-      btn.textContent = o.label;
+      btn.textContent = tOpts[oi] || o.label;
       btn.addEventListener("click", () => {
         let cur = state.answers[q.id];
         if (o.exclusive) {
@@ -691,18 +737,19 @@ function renderQuizStep() {
         if (q.optional) {
           const nxt = document.getElementById("btn-quiz-next");
           nxt.textContent = state.answers[q.id].length === 0
-            ? (isLast ? "No deal-breakers, see my pick →" : "No deal-breakers, next →")
-            : (isLast ? "See my pick →" : "Next →");
+            ? (isLast ? t("dealbreakersSkipLast") : t("dealbreakersSkip"))
+            : (isLast ? t("quizSeeMyPick") : t("quizNext"));
         }
       });
       opts.appendChild(btn);
     });
   } else {
-    q.options.forEach((o) => {
+    const tOpts = tQuestion(q.id, "options") || [];
+    q.options.forEach((o, oi) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "option" + (state.answers[q.id] === o.value ? " is-selected" : "");
-      btn.textContent = o.label;
+      btn.textContent = tOpts[oi] || o.label;
       btn.addEventListener("click", () => {
         state.answers[q.id] = o.value;
         trackEvent("quiz_answer", { question: q.id, value: o.value });
@@ -722,12 +769,12 @@ function renderQuizStep() {
     const isEmpty = !Array.isArray(state.answers[q.id]) || state.answers[q.id].length === 0;
     if (q.optional) {
       next.textContent = isEmpty
-        ? (isLast ? "No deal-breakers, see my pick →" : "No deal-breakers, next →")
-        : (isLast ? "See my pick →" : "Next →");
+        ? (isLast ? t("dealbreakersSkipLast") : t("dealbreakersSkip"))
+        : (isLast ? t("quizSeeMyPick") : t("quizNext"));
       next.style.display = "";
       next.disabled = false;
     } else {
-      next.textContent = isLast ? "See my pick →" : "Next →";
+      next.textContent = isLast ? t("quizSeeMyPick") : t("quizNext");
       next.style.display = "";
       next.disabled = isEmpty;
     }
@@ -735,6 +782,8 @@ function renderQuizStep() {
     next.style.display = "none";
     next.disabled = true;
   }
+
+  document.getElementById("btn-quiz-back").textContent = state.step === 0 ? t("quizBack0") : t("quizBackN");
 
   forceTop(getScreenEl("quiz"));
 }
@@ -785,7 +834,7 @@ function buildResultActions(root, showNextBest, onNextBest) {
     nbBtn.type = "button";
     nbBtn.className = "btn btn--secondary";
     nbBtn.id = "btn-next-best";
-    nbBtn.textContent = "Give me the next best thing";
+    nbBtn.textContent = t("nextBest");
     nbBtn.addEventListener("click", onNextBest);
     actions.appendChild(nbBtn);
   }
@@ -793,7 +842,7 @@ function buildResultActions(root, showNextBest, onNextBest) {
   const menuBtn = document.createElement("button");
   menuBtn.type = "button";
   menuBtn.className = "btn btn--primary";
-  menuBtn.textContent = "View full menu";
+  menuBtn.textContent = t("viewFullMenu");
   menuBtn.addEventListener("click", () => showScreen("menu"));
   actions.appendChild(menuBtn);
 
@@ -810,7 +859,7 @@ function renderResult() {
     if (r.fallback) {
       const fb = document.createElement("p");
       fb.className = "result-note";
-      fb.textContent = "Nothing fit your budget perfectly — here's the closest:";
+      fb.textContent = t("resultFallback");
       root.appendChild(fb);
     }
 
@@ -846,7 +895,7 @@ function renderResult() {
   } else if (r.style === "top3") {
     const note = document.createElement("p");
     note.className = "result-note";
-    note.textContent = "Your top 3 picks";
+    note.textContent = t("resultTop3");
     root.appendChild(note);
     r.items.forEach((item, i) => {
       const wrap = document.createElement("div");
@@ -863,7 +912,7 @@ function renderResult() {
   } else if (r.style === "eliminate") {
     const note = document.createElement("p");
     note.className = "result-note";
-    note.textContent = "Tap ✕ to eliminate — last one standing is your pick";
+    note.textContent = t("resultElimNote");
     root.appendChild(note);
     const pool = [...r.items];
     function renderElimPool() {
@@ -875,7 +924,7 @@ function renderResult() {
         root.innerHTML = "";
         const fin = document.createElement("p");
         fin.className = "result-note";
-        fin.textContent = "🎉 Your pick!";
+        fin.textContent = t("resultFinalPick");
         root.appendChild(fin);
         root.appendChild(buildItemCard(pool[0], true));
         buildResultActions(root, false, null);
@@ -921,7 +970,7 @@ function renderStaffFavorites() {
     wrap.className = "staff-pick-wrap";
     const badge = document.createElement("span");
     badge.className = "staff-pick-badge";
-    badge.textContent = i === 0 ? "🏆 Top pick" : "⭐ Staff pick";
+    badge.textContent = i === 0 ? t("staffTopPick") : t("staffPick");
     wrap.appendChild(badge);
     wrap.appendChild(buildItemCard(item, i === 0));
     root.appendChild(wrap);
@@ -977,11 +1026,247 @@ function wireEvents() {
   document.getElementById("btn-staff-pick").addEventListener("click", startQuiz);
 }
 
+/* =========================================================================
+   i18n — translations
+   ========================================================================= */
+const TRANSLATIONS = {
+  en: {
+    eyebrow: "UPick",
+    tagline: "Can't decide? We'll pick for you.",
+    blurb: "Answer a few quick questions and get a dish matched to your mood.",
+    btnPick: "Pick for me →",
+    btnViewMenu: "View menu",
+    btnStaff: "⭐ Staff Favorites",
+    landingHint: "Fast, simple, phone-friendly.",
+    quizBack0: "← Home",
+    quizBackN: "← Back",
+    quizNext: "Next →",
+    quizSeeMyPick: "See my pick →",
+    dealbreakersSkip: "No deal-breakers, next →",
+    dealbreakersSkipLast: "No deal-breakers, see my pick →",
+    topbarRetry: "← Retry",
+    topbarMenu: "Menu",
+    topbarMenuBack: "← Home",
+    topbarMenuPick: "Pick for me",
+    topbarStaffBack: "← Home",
+    topbarStaffPick: "Pick for me",
+    menuTitle: "Menu",
+    menuSub: "Tap \"Pick for me\" if you want help choosing.",
+    staffTitle: "⭐ Staff Favorites",
+    staffSub: "Items the team loves and regulars keep coming back for.",
+    staffTopPick: "🏆 Top pick",
+    staffPick: "⭐ Staff pick",
+    resultFallback: "Nothing fit your budget perfectly — here's the closest:",
+    resultTop3: "Your top 3 picks",
+    resultElimNote: "Tap ✕ to eliminate — last one standing is your pick",
+    resultFinalPick: "🎉 Your pick!",
+    nextBest: "Give me the next best thing",
+    viewFullMenu: "View full menu",
+    questions: {
+      hunger:      { prompt: "How hungry are you?",           options: ["🍃 Just a snack","🍚 Normal hungry","🍱 Starving"] },
+      budget:      { prompt: "What's your budget?",           options: ["💸 Cheapest option","Under $10","$10–$15","$15–$20","🤙 No budget, just pick what's good"] },
+      craving:     { prompt: "What sounds best right now?",   options: ["🧂 Salty","🍯 Sweet","🍖 Savory","🥗 Fresh","💪 Protein-heavy","🍜 Carby"] },
+      mood:        { prompt: "What kind of mood are you in?", options: ["✅ Safe choice","⭐ Popular item","🆕 Something new","🎲 Surprise me"] },
+      priority:    { prompt: "What matters most?",            options: ["💰 Cheapest","🏋️ Most filling","🥦 Healthier option","😋 Best tasting","⚡ Fastest/easiest"] },
+      dealbreakers:{ prompt: "Any dealbreakers?", subtitle: "Pick all that apply — or skip straight ahead.", options: ["🌶️ No spicy","🐟 No seafood","🧀 No dairy","🥩 No meat","🧱 No heavy food"] },
+      resultStyle: { prompt: "How do you want your result?",  options: ["🎯 Give me one final pick","🏆 Show me top 3","❌ Let me eliminate options"] }
+    }
+  },
+  ja: {
+    eyebrow: "UPick",
+    tagline: "迷ったら、任せてください。",
+    blurb: "いくつかの質問に答えると、気分にぴったりの一品をご提案します。",
+    btnPick: "選んでもらう →",
+    btnViewMenu: "メニューを見る",
+    btnStaff: "⭐ スタッフのおすすめ",
+    landingHint: "素早く・シンプル・スマホ対応",
+    quizBack0: "← ホーム",
+    quizBackN: "← 戻る",
+    quizNext: "次へ →",
+    quizSeeMyPick: "結果を見る →",
+    dealbreakersSkip: "NG なし、次へ →",
+    dealbreakersSkipLast: "NG なし、結果を見る →",
+    topbarRetry: "← やり直す",
+    topbarMenu: "メニュー",
+    topbarMenuBack: "← ホーム",
+    topbarMenuPick: "選んでもらう",
+    topbarStaffBack: "← ホーム",
+    topbarStaffPick: "選んでもらう",
+    menuTitle: "メニュー",
+    menuSub: "迷ったら「選んでもらう」をタップ。",
+    staffTitle: "⭐ スタッフのおすすめ",
+    staffSub: "スタッフとリピーターが大好きなメニューです。",
+    staffTopPick: "🏆 一番人気",
+    staffPick: "⭐ スタッフのイチオシ",
+    resultFallback: "ご予算にぴったりのものはありませんでしたが、最も近いものをご提案します：",
+    resultTop3: "あなたのトップ3",
+    resultElimNote: "✕ をタップして消去 — 最後に残ったものがあなたの一品",
+    resultFinalPick: "🎉 あなたの一品！",
+    nextBest: "次のおすすめを見る",
+    viewFullMenu: "フルメニューを見る",
+    questions: {
+      hunger:      { prompt: "どのくらいお腹が空いていますか？",        options: ["🍃 軽くつまむ程度","🍚 普通にお腹が空いた","🍱 めちゃくちゃ腹ペコ"] },
+      budget:      { prompt: "予算はどのくらいですか？",                options: ["💸 一番安いもの","10ドル未満","10〜15ドル","15〜20ドル","🤙 予算なし、おいしいものを"] },
+      craving:     { prompt: "今、何が食べたいですか？",                options: ["🧂 しょっぱいもの","🍯 甘いもの","🍖 旨味たっぷり","🥗 さっぱりしたもの","💪 タンパク質たっぷり","🍜 炭水化物系"] },
+      mood:        { prompt: "今の気分は？",                           options: ["✅ 安定の定番","⭐ 人気のメニュー","🆕 新しいものを試したい","🎲 サプライズで"] },
+      priority:    { prompt: "一番大切にしたいことは？",                options: ["💰 価格重視","🏋️ ボリューム重視","🥦 ヘルシー重視","😋 おいしさ重視","⚡ 手軽さ重視"] },
+      dealbreakers:{ prompt: "苦手なものはありますか？", subtitle: "当てはまるものをすべて選ぶか、スキップしてください。", options: ["🌶️ 辛いものNG","🐟 魚介類NG","🧀 乳製品NG","🥩 肉類NG","🧱 重い食べ物NG"] },
+      resultStyle: { prompt: "結果の表示方法は？",                     options: ["🎯 ズバリ1品だけ","🏆 上位3品を見る","❌ 自分で絞り込む"] }
+    }
+  },
+  ko: {
+    eyebrow: "UPick",
+    tagline: "고민될 때, 저희가 골라드려요.",
+    blurb: "몇 가지 질문에 답하면 지금 기분에 딱 맞는 메뉴를 추천해 드립니다.",
+    btnPick: "골라줘 →",
+    btnViewMenu: "메뉴 보기",
+    btnStaff: "⭐ 직원 추천",
+    landingHint: "빠르고 간단하고 모바일 친화적.",
+    quizBack0: "← 홈",
+    quizBackN: "← 뒤로",
+    quizNext: "다음 →",
+    quizSeeMyPick: "결과 보기 →",
+    dealbreakersSkip: "제외 없음, 다음 →",
+    dealbreakersSkipLast: "제외 없음, 결과 보기 →",
+    topbarRetry: "← 다시하기",
+    topbarMenu: "메뉴",
+    topbarMenuBack: "← 홈",
+    topbarMenuPick: "골라줘",
+    topbarStaffBack: "← 홈",
+    topbarStaffPick: "골라줘",
+    menuTitle: "메뉴",
+    menuSub: "선택이 어렵다면 \"골라줘\"를 탭하세요.",
+    staffTitle: "⭐ 직원 추천",
+    staffSub: "직원들과 단골들이 사랑하는 메뉴입니다.",
+    staffTopPick: "🏆 최고 인기",
+    staffPick: "⭐ 직원 추천",
+    resultFallback: "예산에 딱 맞는 메뉴는 없지만, 가장 가까운 메뉴를 추천드려요:",
+    resultTop3: "당신의 TOP 3",
+    resultElimNote: "✕ 를 탭해서 제거 — 마지막 남은 것이 당신의 선택",
+    resultFinalPick: "🎉 당신의 선택!",
+    nextBest: "다음으로 좋은 것 보기",
+    viewFullMenu: "전체 메뉴 보기",
+    questions: {
+      hunger:      { prompt: "얼마나 배고프세요?",                     options: ["🍃 간단히 요기만","🍚 보통 배고픔","🍱 엄청 배고픔"] },
+      budget:      { prompt: "예산은 어느 정도인가요?",                 options: ["💸 제일 저렴한 것","$10 미만","$10–$15","$15–$20","🤙 예산 상관없이 맛있는 것"] },
+      craving:     { prompt: "지금 뭐가 당기나요?",                    options: ["🧂 짭짤한 것","🍯 달콤한 것","🍖 고소한 것","🥗 신선한 것","💪 단백질 가득","🍜 탄수화물"] },
+      mood:        { prompt: "지금 어떤 기분인가요?",                   options: ["✅ 안전한 선택","⭐ 인기 메뉴","🆕 새로운 것","🎲 깜짝 추천"] },
+      priority:    { prompt: "가장 중요한 건 뭔가요?",                  options: ["💰 가격","🏋️ 포만감","🥦 건강","😋 맛","⚡ 빠르고 간편함"] },
+      dealbreakers:{ prompt: "못 먹는 것이 있나요?", subtitle: "해당하는 것을 모두 선택하거나 건너뛰세요.", options: ["🌶️ 매운 것 NO","🐟 해산물 NO","🧀 유제품 NO","🥩 육류 NO","🧱 무거운 음식 NO"] },
+      resultStyle: { prompt: "결과를 어떻게 보고 싶나요?",              options: ["🎯 딱 1개만","🏆 TOP 3 보기","❌ 직접 제거하기"] }
+    }
+  },
+  zh: {
+    eyebrow: "UPick",
+    tagline: "选不了？让我们来帮你选！",
+    blurb: "回答几个小问题，我们为你推荐最适合此刻心情的菜品。",
+    btnPick: "帮我选 →",
+    btnViewMenu: "查看菜单",
+    btnStaff: "⭐ 员工推荐",
+    landingHint: "快速、简单、手机友好。",
+    quizBack0: "← 首页",
+    quizBackN: "← 返回",
+    quizNext: "下一步 →",
+    quizSeeMyPick: "查看结果 →",
+    dealbreakersSkip: "没有忌口，下一步 →",
+    dealbreakersSkipLast: "没有忌口，查看结果 →",
+    topbarRetry: "← 重新来",
+    topbarMenu: "菜单",
+    topbarMenuBack: "← 首页",
+    topbarMenuPick: "帮我选",
+    topbarStaffBack: "← 首页",
+    topbarStaffPick: "帮我选",
+    menuTitle: "菜单",
+    menuSub: "如果难以抉择，点击「帮我选」。",
+    staffTitle: "⭐ 员工推荐",
+    staffSub: "团队和常客最钟爱的菜品。",
+    staffTopPick: "🏆 最佳推荐",
+    staffPick: "⭐ 员工精选",
+    resultFallback: "没有完全符合预算的选项，这是最接近的推荐：",
+    resultTop3: "你的 TOP 3",
+    resultElimNote: "点 ✕ 淘汰 — 最后剩下的就是你的选择",
+    resultFinalPick: "🎉 你的选择！",
+    nextBest: "看看次优推荐",
+    viewFullMenu: "查看完整菜单",
+    questions: {
+      hunger:      { prompt: "你有多饿？",                             options: ["🍃 随便吃点","🍚 正常饿","🍱 饿到极点"] },
+      budget:      { prompt: "你的预算是多少？",                       options: ["💸 最便宜的","$10以下","$10–$15","$15–$20","🤙 不限预算，选最好的"] },
+      craving:     { prompt: "现在最想吃什么？",                       options: ["🧂 咸口的","🍯 甜口的","🍖 鲜香的","🥗 清爽的","💪 高蛋白","🍜 主食类"] },
+      mood:        { prompt: "你现在是什么心情？",                     options: ["✅ 经典稳妥","⭐ 热门菜品","🆕 尝点新的","🎲 随机惊喜"] },
+      priority:    { prompt: "你最在乎什么？",                         options: ["💰 最便宜","🏋️ 最管饱","🥦 更健康","😋 最好吃","⚡ 快捷方便"] },
+      dealbreakers:{ prompt: "有什么忌口吗？", subtitle: "选择所有适用项，或直接跳过。", options: ["🌶️ 不要辣","🐟 不要海鲜","🧀 不要乳制品","🥩 不要肉类","🧱 不要重口味"] },
+      resultStyle: { prompt: "你想怎么看结果？",                       options: ["🎯 直接给我一个","🏆 看前三名","❌ 我来一个个排除"] }
+    }
+  }
+};
+
+let currentLang = "en";
+
+function t(key) {
+  return (TRANSLATIONS[currentLang] || TRANSLATIONS.en)[key]
+      || TRANSLATIONS.en[key]
+      || key;
+}
+
+function tQuestion(qId, field) {
+  const block = (TRANSLATIONS[currentLang]?.questions || {})[qId]
+             || TRANSLATIONS.en.questions[qId]
+             || {};
+  return block[field];
+}
+
+function applyLang(lang) {
+  currentLang = lang;
+
+  // Highlight active button
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.classList.toggle("is-active", btn.dataset.lang === lang);
+  });
+
+  // Landing screen
+  document.getElementById("restaurant-tagline").textContent = t("tagline");
+  document.getElementById("restaurant-blurb").textContent   = t("blurb");
+  document.querySelector(".eyebrow").textContent             = t("eyebrow");
+  document.getElementById("btn-pick").textContent            = t("btnPick");
+  document.getElementById("btn-view-menu").textContent       = t("btnViewMenu");
+  document.getElementById("btn-staff").textContent           = t("btnStaff");
+  document.querySelector(".landing-hint").textContent        = t("landingHint");
+
+  // Topbars (static labels)
+  document.getElementById("btn-result-retry").textContent = t("topbarRetry");
+  document.getElementById("btn-result-menu").textContent  = t("topbarMenu");
+  document.getElementById("btn-menu-back").textContent    = t("topbarMenuBack");
+  document.getElementById("btn-menu-pick").textContent    = t("topbarMenuPick");
+  document.getElementById("btn-staff-back").textContent   = t("topbarStaffBack");
+  document.getElementById("btn-staff-pick").textContent   = t("topbarStaffPick");
+
+  // Menu screen
+  document.getElementById("menu-title").textContent = t("menuTitle");
+  document.querySelector("#screen-menu .screen-sub").textContent = t("menuSub");
+
+  // Staff screen
+  document.getElementById("staff-title").textContent = t("staffTitle");
+  document.querySelector("#screen-staff .screen-sub").textContent = t("staffSub");
+  renderStaffFavorites();
+
+  // Re-render active dynamic screens
+  if (state.screen === "quiz") renderQuizStep();
+  if (state.screen === "result") renderResult();
+}
+
+function wireLangSelector() {
+  document.getElementById("lang-selector").addEventListener("click", e => {
+    const btn = e.target.closest(".lang-btn");
+    if (btn && btn.dataset.lang) applyLang(btn.dataset.lang);
+  });
+}
+
 function init() {
   renderLanding();
   renderMenu();
   renderStaffFavorites();
   wireEvents();
+  wireLangSelector();
   showScreen("landing");
   trackEvent("app_loaded", { restaurant: RESTAURANT.name });
 }
