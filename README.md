@@ -1,93 +1,80 @@
-# UPick
+# UPick / Pick4MeDemo
 
-UPick is a simple QR-code restaurant menu and food picker website. Customers can scan a QR code, view the menu, or take a quick quiz to help decide what to order.
+UPick is a mobile-first QR menu demo that helps customers decide what to order faster.
 
-The goal is to make ordering easier, faster, and more fun for customers who are already at the restaurant.
+Customers scan a QR code, answer a few quick questions, and get a recommended menu item based on hunger, budget, cravings, and dietary restrictions.
+
+## Live Demo Links
+
+Main UPick demo:  
+https://tuikolongahau61-alt.github.io/Pick4MeDemo/
+
+Food Truck Park demo:  
+https://tuikolongahau61-alt.github.io/Pick4MeDemo/food-truck-park.html
+
+Generic Food Trucks demo:  
+https://tuikolongahau61-alt.github.io/Pick4MeDemo/food-trucks.html
+
+Garlic Shack demo:  
+https://tuikolongahau61-alt.github.io/Pick4MeDemo/garlic-shack.html
+
+Lagoon demo:  
+https://tuikolongahau61-alt.github.io/Pick4MeDemo/lagoon.html
+
+Thai Tacos demo:  
+https://tuikolongahau61-alt.github.io/Pick4MeDemo/thai-tacos.html
 
 ## Features
 
-- Mobile-friendly QR menu website
-- “Pick for me” food quiz
-- Full menu view
+- Mobile-first QR menu experience
+- “Pick My Order” quiz
 - Budget-based recommendations
-- Dealbreaker filters
-- Common allergy filters
-- Multilingual support
-- Simple one-file setup
-- Works with GitHub Pages
-- No app download required
+- Allergy and dietary restriction filtering
+- Soft dealbreaker warnings
+- Full menu browsing
+- Vendor/restaurant-specific demo pages
+- Multilingual support:
+  - English
+  - Japanese
+  - Korean
+  - Chinese
+- Single-file HTML demos
+- Hosted with GitHub Pages
 
-## How It Works
+## Project Goal
 
-1. A customer scans the restaurant’s QR code.
-2. They can choose to view the menu or take the food picker quiz.
-3. The quiz asks about preferences, budget, dealbreakers, and allergies.
-4. UPick recommends a menu item based on their answers.
-5. The customer can view details and decide what to order.
+The goal is to help food trucks and small restaurants reduce customer decision paralysis, speed up ordering, and give customers a fun way to choose what to eat.
+
+Instead of replacing a restaurant’s existing menu, UPick can sit beside it as a “help me choose” option for customers who are unsure what to order.
 
 ## Project Files
 
-This version is built as a single `index.html` file.
+This project includes multiple single-file HTML demos.
 
-Older versions may have included separate files like:
+Each demo keeps its own HTML, CSS, JavaScript, menu data, quiz logic, and language settings inside one `.html` file.
 
-- `styles.css`
-- `script.js`
-- `data.js`
+Current demo files:
 
-Those are not required if all HTML, CSS, JavaScript, menu data, quiz logic, and language settings are inside the current `index.html` file.
-
-## Tech Stack
-
-- HTML
-- CSS
-- JavaScript
-- GitHub Pages
-
-## Purpose
-
-UPick is designed for small restaurants, food trucks, cafes, and local businesses that want a simple digital menu experience without needing a full app.
-
-It helps customers decide what to eat while giving businesses a more interactive QR menu.
+- `index.html` — Main UPick demo
+- `food-truck-park.html` — Multi-vendor food truck park demo
+- `food-trucks.html` — Generic food truck demo
+- `garlic-shack.html` — Garlic Shack demo
+- `lagoon.html` — Lagoon demo
+- `thai-tacos.html` — Thai Tacos demo
 
 ## Current Status
 
-UPick is currently an MVP.
+Early MVP / proof of concept.
 
-Current version includes:
-
-- QR menu landing page
-- Food picker quiz
-- Menu browsing
-- Allergy and dealbreaker filtering
-- Multilingual text support
-- Mobile-friendly layout
+The project is ready for testing with local food trucks and small restaurants.
 
 ## Future Ideas
 
-- Restaurant dashboard
-- Editable menu system
-- Multiple restaurant listings
-- Analytics for most-picked items
-- Deals and specials
-- Customer favorites
-- Restaurant recommendation version for areas like Waikiki
-- Ordering or booking integrations
-
-## Hosting
-
-This project can be hosted for free using GitHub Pages.
-
-To publish:
-
-1. Upload the `index.html` file to a GitHub repository.
-2. Go to repository settings.
-3. Open the Pages section.
-4. Set the source to the main branch.
-5. Save and wait for GitHub Pages to publish the site.
-
-## Name
-
-UPick means the customer can let the site help choose what to eat.
-
-Instead of staring at a menu forever, they scan, answer, and pick.
+- Drinks as add-ons only, not main food results
+- “Next best item” button
+- More restaurant-specific demo pages
+- Better vendor browsing
+- QR code pilot testing with real food trucks
+- Sold-out item workflow
+- Owner text-message update workflow
+- Multi-vendor food truck park support
