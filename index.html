@@ -271,6 +271,35 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
 }
 .elim-x:active { transform: scale(0.92); }
 .elim-row .item-card { padding-right: 52px; }
+/* ── Restriction section labels ── */
+.restriction-section-label {
+  font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--c-ink-soft); padding: 10px 0 2px;
+}
+/* ── Checkpoint screen ── */
+.checkpoint-body {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 32px 4px 24px;
+}
+.checkpoint-icon {
+  font-size: 2.6rem; margin-bottom: 18px;
+  width: 80px; height: 80px; display: grid; place-items: center;
+  background: var(--c-coral); border-radius: 24px;
+  box-shadow: var(--shadow-btn);
+}
+.checkpoint-title {
+  font-size: 1.9rem; font-weight: 900; letter-spacing: -0.03em;
+  color: var(--c-ink); line-height: 1.1; margin-bottom: 6px;
+}
+.checkpoint-headline {
+  font-size: 1.2rem; font-weight: 800; color: var(--c-sea-deep);
+  margin-bottom: 12px;
+}
+.checkpoint-sub {
+  color: var(--c-ink-soft); font-weight: 600; max-width: 30ch;
+  margin: 0 auto 28px; font-size: 0.98rem; line-height: 1.55;
+}
+.checkpoint-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 @media (max-height: 700px) {
   .logo-badge { width: 64px; height: 64px; font-size: 2rem; margin-bottom: 12px; }
   .tagline { font-size: 1.12rem; }
@@ -415,6 +444,24 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
       <div class="menu-list" id="menu-list"></div>
     </section>
 
+    <section id="screen-checkpoint" class="screen" hidden aria-labelledby="checkpoint-title">
+      <div class="topbar">
+        <button class="topbar-back" id="btn-checkpoint-back" type="button">← Back</button>
+        <span class="topbar-progress">Almost there</span>
+      </div>
+      <div class="checkpoint-body">
+        <div class="checkpoint-icon" aria-hidden="true">🎯</div>
+        <h2 class="checkpoint-title" id="checkpoint-title">Good enough to pick.</h2>
+        <p class="checkpoint-headline">Want the result now?</p>
+        <p class="checkpoint-sub">I can choose now, or ask a few more questions to make it more accurate.</p>
+        <div class="checkpoint-actions">
+          <button class="btn btn--cta btn--lg" id="btn-checkpoint-now" type="button">Show my pick →</button>
+          <button class="btn btn--secondary btn--lg" id="btn-checkpoint-top3" type="button">Show top 3</button>
+          <button class="btn btn--secondary btn--lg" id="btn-checkpoint-more" type="button">Make it more accurate</button>
+        </div>
+      </div>
+    </section>
+
     <section id="screen-staff" class="screen" hidden aria-labelledby="staff-title">
       <div class="topbar">
         <button class="topbar-back" id="btn-staff-back" type="button">← Home</button>
@@ -449,53 +496,78 @@ const SCORING = {
 };
 
 const QUIZ_QUESTIONS = [
+  /* ── CORE (always shown, Q1–4) ─────────────────────────────── */
   {
     id: "hunger",
     prompt: "How hungry are you?",
     weight: 2,
     options: [
-      { label: "🍃 Just a snack", value: "snack", tags: ["light-hunger", "quick"], reason: "something light" },
-      { label: "🍚 Normal hungry", value: "normal", tags: ["medium-hunger"], reason: "a regular portion" },
+      { label: "🍃 Snack", value: "snack", tags: ["light-hunger", "quick"], reason: "something light" },
+      { label: "🍚 Normal meal", value: "normal", tags: ["medium-hunger"], reason: "a regular portion" },
       { label: "🍱 Starving", value: "starving", tags: ["big-hunger", "filling"], reason: "something filling" }
     ]
   },
   {
     id: "budget",
-    prompt: "How much are you looking to spend?",
+    prompt: "What's your budget?",
     type: "budget",
     options: [
-      { label: "💸 Budget-friendly", value: "budget", cap: 11 },
-      { label: "🍽️ Mid-range", value: "mid", cap: 15 },
-      { label: "🎉 Treat myself / doesn't matter", value: "none" }
+      { label: "🤙 No budget — just pick what's good", value: "none" },
+      { label: "Under $10", value: "u10", cap: 10 },
+      { label: "Under $15", value: "u15", cap: 15 },
+      { label: "Under $20", value: "u20", cap: 20 }
     ]
   },
   {
     id: "craving",
-    prompt: "What are you in the mood for?",
-    subtitle: "Pick one or more.",
-    type: "multi",
-    optional: false,
-    minSelect: 1,
+    prompt: "What sounds best right now?",
     weight: 2,
     options: [
-      { label: "🧂 Salty", value: "salty", tags: ["savory", "bold"], reason: "something salty" },
-      { label: "🌶️ Spicy", value: "spicy", tags: ["spicy", "bold"], reason: "something with heat" },
-      { label: "🍖 Savory", value: "savory", tags: ["savory", "classic", "rice"], reason: "something savory" },
+      { label: "🧂 Savory", value: "savory", tags: ["savory", "classic", "rice"], reason: "something savory" },
       { label: "🍯 Sweet", value: "sweet", tags: ["sweet", "fresh"], reason: "something sweet" },
-      { label: "🥗 Fresh / Light", value: "fresh", tags: ["fresh", "healthy"], reason: "something fresh" },
-      { label: "💪 Protein-heavy", value: "protein", tags: ["filling", "big-hunger", "fish", "shrimp"], reason: "packed with protein" },
-      { label: "🍜 Carbs", value: "carby", tags: ["rice", "medium-hunger"], reason: "some good carbs" }
+      { label: "🌶️ Spicy", value: "spicy", tags: ["spicy", "bold"], reason: "something with heat" },
+      { label: "🥗 Fresh", value: "fresh", tags: ["fresh", "healthy"], reason: "something fresh" },
+      { label: "🍜 Comfort food", value: "comfort", tags: ["savory", "classic", "rice"], reason: "some good comfort food" },
+      { label: "💪 Protein-heavy", value: "protein", tags: ["filling", "big-hunger"], reason: "packed with protein" }
     ]
   },
+  {
+    id: "restrictions",
+    prompt: "Any hard no's or allergies?",
+    subtitle: "Pick all that apply — or tap Next to skip.",
+    type: "multi",
+    optional: true,
+    options: [
+      /* Hard allergies — strict exclusion from pool */
+      { label: "🥜 Peanuts",        value: "peanuts",      excludeTags: ["peanuts"],           hard: true },
+      { label: "🌰 Tree nuts",      value: "tree-nuts",    excludeTags: ["tree-nuts"],          hard: true },
+      { label: "🦞 Shellfish",      value: "shellfish",    excludeTags: ["shrimp","shellfish"], hard: true },
+      { label: "🐟 Fish",           value: "fish",         excludeTags: ["fish"],               hard: true },
+      { label: "🧀 Dairy",          value: "dairy",        excludeTags: ["dairy"],              hard: true },
+      { label: "🥚 Eggs",           value: "eggs",         excludeTags: ["eggs"],               hard: true },
+      { label: "🌾 Gluten / Wheat", value: "gluten",       excludeTags: ["gluten"],             hard: true },
+      { label: "🫘 Soy",            value: "soy",          excludeTags: ["soy"],                hard: true },
+      { label: "🫙 Sesame",         value: "sesame",       excludeTags: ["sesame"],             hard: true },
+      { label: "🐷 Pork",           value: "pork",         excludeTags: ["pork"],               hard: true },
+      { label: "🐄 Beef",           value: "beef",         excludeTags: ["beef"],               hard: true },
+      /* Soft dealbreakers — kept in pool, warning shown on result */
+      { label: "🌶️ Spicy",         value: "no-spicy",     warnTags: ["spicy","bold"],  warnLabel: "spicy ingredients", soft: true },
+      { label: "🍟 Fried food",     value: "no-fried",     warnTags: ["fried"],         warnLabel: "fried preparation", soft: true },
+      { label: "🧅 Onions",         value: "no-onions",    warnTags: ["onions"],        warnLabel: "onions",            soft: true },
+      { label: "🍄 Mushrooms",      value: "no-mushrooms", warnTags: ["mushrooms"],     warnLabel: "mushrooms",         soft: true },
+      { label: "✏️ Other (type below)", value: "other",                                                                 soft: true }
+    ]
+  },
+  /* ── EXTENDED (only if user picks "Make it more accurate") ─── */
   {
     id: "mood",
     prompt: "What kind of mood are you in?",
     weight: 1,
     options: [
-      { label: "✅ Safe choice", value: "safe", tags: ["classic", "savory"], reason: "a reliable classic" },
-      { label: "⭐ Popular item", value: "popular", tags: [], reason: "a crowd favorite", boostFeatured: true },
-      { label: "🆕 Something new", value: "new", tags: [], reason: "something different", boostNew: true },
-      { label: "🎲 Surprise me", value: "surprise", tags: [], reason: "a fun surprise" }
+      { label: "✅ Safe choice",   value: "safe",     tags: ["classic", "savory"], reason: "a reliable classic" },
+      { label: "⭐ Popular item",  value: "popular",  tags: [],                    reason: "a crowd favorite",   boostFeatured: true },
+      { label: "🆕 Something new", value: "new",      tags: [],                    reason: "something different", boostNew: true },
+      { label: "🎲 Surprise me",   value: "surprise", tags: [],                    reason: "a fun surprise" }
     ]
   },
   {
@@ -503,34 +575,11 @@ const QUIZ_QUESTIONS = [
     prompt: "What matters most?",
     weight: 2,
     options: [
-      { label: "💰 Cheapest", value: "cheapest", tags: [], reason: "great value", prioritizeCheap: true },
-      { label: "🏋️ Most filling", value: "filling", tags: ["filling", "big-hunger"], reason: "super filling" },
-      { label: "🥦 Healthier option", value: "healthy", tags: ["healthy", "fresh", "light-hunger"], reason: "on the healthier side" },
-      { label: "😋 Best tasting", value: "taste", tags: [], reason: "the tastiest pick", boostFeatured: true },
-      { label: "⚡ Fastest/easiest", value: "fast", tags: ["quick", "light-hunger"], reason: "quick and easy" }
-    ]
-  },
-  {
-    id: "dealbreakers",
-    prompt: "Any allergies or restrictions?",
-    subtitle: "Pick all that apply — or skip.",
-    type: "multi",
-    optional: true,
-    options: [
-      // Hard allergies — strict exclusion
-      { label: "🥜 No peanuts",     value: "no-peanuts",   excludeTags: ["peanuts"],   hard: true },
-      { label: "🌰 No tree nuts",   value: "no-treenuts",  excludeTags: ["tree-nuts"], hard: true },
-      { label: "🦐 No shellfish",   value: "no-shellfish", excludeTags: ["shrimp","shellfish"], hard: true },
-      { label: "🐟 No fish",        value: "no-fish",      excludeTags: ["fish"],      hard: true },
-      { label: "🧀 No dairy",       value: "no-dairy",     excludeTags: ["dairy"],     hard: true },
-      { label: "🥚 No eggs",        value: "no-eggs",      excludeTags: ["eggs"],      hard: true },
-      { label: "🌾 No gluten/wheat",value: "no-gluten",    excludeTags: ["gluten"],    hard: true },
-      { label: "🫘 No soy",         value: "no-soy",       excludeTags: ["soy"],       hard: true },
-      { label: "🌻 No sesame",      value: "no-sesame",    excludeTags: ["sesame"],    hard: true },
-      // Soft preferences — warn but don't exclude
-      { label: "🌿 Vegetarian",     value: "vegetarian",   softExcludeTags: ["fish","shrimp","shellfish"], soft: true },
-      { label: "🌶️ No spicy",      value: "no-spicy",     softExcludeTags: ["spicy","bold"],             soft: true },
-      { label: "🧱 No heavy food",  value: "no-heavy",     softExcludeTags: ["filling","big-hunger"],     soft: true }
+      { label: "💰 Cheapest",         value: "cheapest", tags: [],                                reason: "great value",          prioritizeCheap: true },
+      { label: "🏋️ Most filling",     value: "filling",  tags: ["filling","big-hunger"],          reason: "super filling" },
+      { label: "🥦 Healthier option", value: "healthy",  tags: ["healthy","fresh","light-hunger"],reason: "on the healthier side" },
+      { label: "😋 Best tasting",     value: "taste",    tags: [],                                reason: "the tastiest pick",    boostFeatured: true },
+      { label: "⚡ Fastest/easiest",  value: "fast",     tags: ["quick","light-hunger"],          reason: "quick and easy" }
     ]
   },
   {
@@ -538,24 +587,26 @@ const QUIZ_QUESTIONS = [
     prompt: "How do you want your result?",
     weight: 0,
     options: [
-      { label: "🎯 Give me one final pick", value: "one" },
-      { label: "🏆 Show me top 3", value: "top3" },
+      { label: "🎯 Give me one final pick",   value: "one" },
+      { label: "🏆 Show me top 3",            value: "top3" },
       { label: "❌ Let me eliminate options", value: "eliminate" }
     ]
   }
 ];
 
+const CORE_COUNT = 4; // questions shown before the checkpoint gate
+
 const MENU_ITEMS = [
   {
     id: "classic-ahi", name: "Classic Ahi Bowl", price: 13,
     description: "Cubed ahi tuna, shoyu, sweet onion, and sesame over warm rice.",
-    tags: ["fish", "savory", "medium-hunger", "classic", "rice", "sesame", "soy", "gluten"],
+    tags: ["fish", "savory", "medium-hunger", "classic", "rice", "sesame", "soy", "gluten", "onions"],
     labels: ["Popular", "Savory"], featured: true
   },
   {
     id: "spicy-tuna", name: "Volcano Spicy Tuna", price: 14,
     description: "Ahi tossed in chili aioli with crispy onion and togarashi.",
-    tags: ["fish", "spicy", "medium-hunger", "bold", "rice", "sesame", "soy", "gluten", "eggs"],
+    tags: ["fish", "spicy", "medium-hunger", "bold", "rice", "sesame", "soy", "gluten", "eggs", "onions"],
     labels: ["Spicy", "Popular"], featured: true
   },
   {
@@ -579,13 +630,13 @@ const MENU_ITEMS = [
   {
     id: "shrimp-tempura", name: "Crispy Shrimp Tempura Bowl", price: 15,
     description: "Golden tempura shrimp, spicy mayo, slaw, and pickled ginger.",
-    tags: ["shrimp", "shellfish", "savory", "big-hunger", "crunchy", "rice", "gluten", "eggs"],
+    tags: ["shrimp", "shellfish", "savory", "big-hunger", "fried", "rice", "gluten", "eggs"],
     labels: ["Popular", "Filling"], featured: true
   },
   {
     id: "poke-nachos", name: "Aloha Poke Nachos", price: 12,
     description: "Wonton chips piled with ahi, avocado, masago, and eel sauce.",
-    tags: ["fish", "savory", "shareable", "fun", "crunchy", "gluten", "soy", "eggs"],
+    tags: ["fish", "savory", "shareable", "fun", "fried", "gluten", "soy", "eggs"],
     labels: ["Shareable"], featured: false
   },
   {
@@ -621,39 +672,45 @@ function trackEvent(eventName, data = {}) {
 function resolveBudgetCap(answers) {
   const sel = answers.budget;
   if (!sel || sel === "none") return null;
-  // Find the cap from the question option
   const budgetQ = QUIZ_QUESTIONS.find(q => q.id === "budget");
   const opt = budgetQ?.options.find(o => o.value === sel);
   return opt?.cap ?? null;
 }
 
 function getExcludedTags(answers) {
-  const db = answers.dealbreakers;
-  if (!db || db.length === 0) return [];
+  const r = answers.restrictions;
+  if (!r || r.length === 0) return [];
   const excluded = new Set();
-  const dbQ = QUIZ_QUESTIONS.find(q => q.id === "dealbreakers");
-  dbQ.options.forEach(o => {
-    if (db.includes(o.value) && o.hard && o.excludeTags) {
+  const rQ = QUIZ_QUESTIONS.find(q => q.id === "restrictions");
+  rQ.options.forEach(o => {
+    if (r.includes(o.value) && o.hard && o.excludeTags) {
       o.excludeTags.forEach(t => excluded.add(t));
     }
   });
   return [...excluded];
 }
 
-// Returns { tags: Set, labels: string[] } for soft restriction warnings
+// Returns array of { warnTags, warnLabel } for soft dealbreakers
 function getSoftWarnings(answers) {
-  const db = answers.dealbreakers;
-  if (!db || db.length === 0) return { tags: new Set(), labels: [] };
-  const tags = new Set();
-  const labels = [];
-  const dbQ = QUIZ_QUESTIONS.find(q => q.id === "dealbreakers");
-  dbQ.options.forEach(o => {
-    if (db.includes(o.value) && o.soft && o.softExcludeTags) {
-      o.softExcludeTags.forEach(t => tags.add(t));
-      labels.push(o.label.replace(/^[^ ]+ /, "")); // strip emoji
+  const r = answers.restrictions;
+  if (!r || r.length === 0) return [];
+  const rQ = QUIZ_QUESTIONS.find(q => q.id === "restrictions");
+  const soft = [];
+  rQ.options.forEach(o => {
+    if (r.includes(o.value) && o.soft && o.warnTags) {
+      soft.push({ warnTags: o.warnTags, warnLabel: o.warnLabel });
     }
   });
-  return { tags, labels };
+  if (r.includes("other") && answers.restrictionOther?.trim()) {
+    soft.push({ warnTags: [], warnLabel: answers.restrictionOther.trim(), isCustom: true });
+  }
+  return soft;
+}
+
+function buildSoftWarningsForItem(item, softWarnings) {
+  return softWarnings
+    .filter(sw => sw.isCustom || sw.warnTags.some(t => item.tags.includes(t)))
+    .map(sw => sw.warnLabel);
 }
 
 function scoreItem(item, answers, questions) {
@@ -664,22 +721,9 @@ function scoreItem(item, answers, questions) {
     ?.options.find(o => o.value === answers.mood);
 
   questions.forEach(q => {
-    if (q.type === "budget" || q.id === "resultStyle" || q.id === "dealbreakers") return;
+    if (q.type === "budget" || q.id === "resultStyle" || q.id === "restrictions") return;
+    if (q.type === "multi") return;
     const w = q.weight ?? 1;
-
-    if (q.id === "craving" && Array.isArray(answers.craving)) {
-      // Multi-select craving: score each selected option
-      answers.craving.forEach(val => {
-        const opt = q.options.find(o => o.value === val);
-        if (!opt?.tags) return;
-        opt.tags.forEach(tag => {
-          if (item.tags.includes(tag)) score += SCORING.tagMatch * w;
-        });
-      });
-      return;
-    }
-
-    if (q.type === "multi") return; // skip other multi questions for tag scoring
     const opt = q.options.find(o => o.value === answers[q.id]);
     if (!opt || !opt.tags) return;
     opt.tags.forEach(tag => {
@@ -703,18 +747,7 @@ function scoreItem(item, answers, questions) {
 function buildReason(item, answers, questions) {
   const parts = [];
   questions.forEach(q => {
-    if (q.type === "budget" || q.id === "resultStyle" || q.id === "dealbreakers") return;
-
-    if (q.id === "craving" && Array.isArray(answers.craving)) {
-      answers.craving.forEach(val => {
-        const opt = q.options.find(o => o.value === val);
-        if (!opt?.reason) return;
-        const overlaps = (opt.tags || []).some(t => item.tags.includes(t));
-        if (overlaps) parts.push({ text: opt.reason, weight: q.weight ?? 1 });
-      });
-      return;
-    }
-
+    if (q.type === "budget" || q.id === "resultStyle" || q.id === "restrictions") return;
     if (q.type === "multi") return;
     const opt = q.options.find(o => o.value === answers[q.id]);
     if (!opt?.reason) return;
@@ -733,7 +766,7 @@ function recommend(answers) {
   const questions = QUIZ_QUESTIONS;
   const budgetCap = resolveBudgetCap(answers);
   const excludedTags = getExcludedTags(answers);
-  const { tags: softTags, labels: softLabels } = getSoftWarnings(answers);
+  const softWarnings = getSoftWarnings(answers);
   const resultStyle = answers.resultStyle || "one";
   const priorityOpt = questions.find(q => q.id === "priority")
     ?.options.find(o => o.value === answers.priority);
@@ -748,18 +781,11 @@ function recommend(answers) {
   if (budgetCap != null && !budgetPool.length) { budgetPool = pool; fallback = true; }
   pool = budgetPool;
 
-  const scored = pool.map(item => {
-    // Soft warnings: which restrictions does this item trigger?
-    const triggeredSoft = softLabels.filter((_, i) => {
-      const softTagArr = [...softTags];
-      // Find which soft option triggered this label
-      const dbQ = QUIZ_QUESTIONS.find(q => q.id === "dealbreakers");
-      const softOpts = dbQ.options.filter(o => o.soft && (answers.dealbreakers || []).includes(o.value));
-      const opt = softOpts[i];
-      return opt && opt.softExcludeTags && opt.softExcludeTags.some(t => item.tags.includes(t));
-    });
-    return { item, score: scoreItem(item, answers, questions), softWarnings: triggeredSoft };
-  });
+  const scored = pool.map(item => ({
+    item,
+    score: scoreItem(item, answers, questions),
+    softWarnings: buildSoftWarningsForItem(item, softWarnings)
+  }));
 
   if (priorityOpt?.prioritizeCheap) {
     scored.sort((a, b) => a.item.price - b.item.price || b.score - a.score);
@@ -782,10 +808,11 @@ function recommend(answers) {
 }
 
 const state = {
-  screen: "landing", answers: {}, step: 0, result: null
+  screen: "landing", answers: {}, step: 0, result: null,
+  extendedMode: false
 };
 
-const SCREENS = ["landing", "quiz", "result", "menu", "staff"];
+const SCREENS = ["landing", "quiz", "checkpoint", "result", "menu", "staff"];
 
 function getScreenEl(name) { return document.getElementById(`screen-${name}`); }
 
@@ -829,9 +856,17 @@ function renderQuizStep() {
   const root = document.getElementById("quiz-body");
   root.innerHTML = "";
 
-  document.getElementById("quiz-progress").textContent = `Question ${state.step + 1} of ${total}`;
-  document.getElementById("quiz-bar-fill").style.width = `${((state.step + 1) / total) * 100}%`;
-  document.getElementById("btn-quiz-back").textContent = state.step === 0 ? "← Home" : "← Back";
+  const isCore = state.step < CORE_COUNT;
+  if (isCore) {
+    document.getElementById("quiz-progress").textContent = `Question ${state.step + 1} of ${CORE_COUNT}`;
+    document.getElementById("quiz-bar-fill").style.width = `${((state.step + 1) / CORE_COUNT) * 100}%`;
+  } else {
+    const extIdx = state.step - CORE_COUNT + 1;
+    const extTotal = QUIZ_QUESTIONS.length - CORE_COUNT;
+    document.getElementById("quiz-progress").textContent = `Extra question ${extIdx} of ${extTotal}`;
+    document.getElementById("quiz-bar-fill").style.width = `${(extIdx / extTotal) * 100}%`;
+  }
+  document.getElementById("btn-quiz-back").textContent = state.step === 0 ? t("quizBack0") : t("quizBackN");
 
   const prompt = document.createElement("h2");
   prompt.className = "quiz-prompt";
@@ -853,7 +888,26 @@ function renderQuizStep() {
   if (q.type === "multi") {
     if (!Array.isArray(state.answers[q.id])) state.answers[q.id] = [];
     const tOpts = tQuestion(q.id, "options") || [];
+    const isRestrictions = q.id === "restrictions";
+    let hardHeaderAdded = false, softHeaderAdded = false;
     q.options.forEach((o, oi) => {
+      // Section dividers for the restrictions question
+      if (isRestrictions) {
+        if (o.hard && !hardHeaderAdded) {
+          const lbl = document.createElement("p");
+          lbl.className = "restriction-section-label";
+          lbl.textContent = "Hard allergies";
+          opts.appendChild(lbl);
+          hardHeaderAdded = true;
+        }
+        if (o.soft && !softHeaderAdded) {
+          const lbl = document.createElement("p");
+          lbl.className = "restriction-section-label";
+          lbl.textContent = "Preferences / dealbreakers";
+          opts.appendChild(lbl);
+          softHeaderAdded = true;
+        }
+      }
       const btn = document.createElement("button");
       btn.type = "button";
       const sel = state.answers[q.id];
@@ -875,12 +929,13 @@ function renderQuizStep() {
           }
         }
         trackEvent("quiz_answer", { question: q.id, value: state.answers[q.id] });
-        opts.querySelectorAll(".option").forEach(b => b.classList.remove("is-selected"));
+        const allOptBtns = opts.querySelectorAll(".option");
+        allOptBtns.forEach(b => b.classList.remove("is-selected"));
         state.answers[q.id].forEach(v => {
           const idx = q.options.findIndex(x => x.value === v);
-          if (idx >= 0) opts.children[idx]?.classList.add("is-selected");
+          if (idx >= 0) allOptBtns[idx]?.classList.add("is-selected");
         });
-        // Refresh Next button enabled state for both optional and required multi
+        // Refresh Next button enabled state
         const nxt = document.getElementById("btn-quiz-next");
         const nowEmpty = state.answers[q.id].length === 0;
         if (q.optional) {
@@ -890,8 +945,32 @@ function renderQuizStep() {
         } else {
           nxt.disabled = nowEmpty;
         }
+        // Toggle "Other" input visibility
+        if (isRestrictions) {
+          const wrap = document.getElementById("other-restriction-wrap");
+          if (wrap) wrap.style.display = state.answers[q.id].includes("other") ? "" : "none";
+        }
       });
       opts.appendChild(btn);
+      // "Other" text input — shown only when "other" is selected
+      if (isRestrictions && o.value === "other") {
+        const otherWrap = document.createElement("div");
+        otherWrap.className = "custom-amount";
+        otherWrap.id = "other-restriction-wrap";
+        otherWrap.style.display = state.answers[q.id].includes("other") ? "" : "none";
+        const lbl = document.createElement("label");
+        lbl.setAttribute("for", "other-restriction-input");
+        lbl.textContent = "Describe your restriction:";
+        const inp = document.createElement("input");
+        inp.type = "text";
+        inp.id = "other-restriction-input";
+        inp.placeholder = "e.g. coconut, cilantro…";
+        inp.value = state.answers.restrictionOther || "";
+        inp.addEventListener("input", () => { state.answers.restrictionOther = inp.value; });
+        otherWrap.appendChild(lbl);
+        otherWrap.appendChild(inp);
+        opts.appendChild(otherWrap);
+      }
     });
   } else {
     const tOpts = tQuestion(q.id, "options") || [];
@@ -932,8 +1011,6 @@ function renderQuizStep() {
     next.disabled = true;
   }
 
-  document.getElementById("btn-quiz-back").textContent = state.step === 0 ? t("quizBack0") : t("quizBackN");
-
   forceTop(getScreenEl("quiz"));
 }
 
@@ -944,6 +1021,11 @@ function nextStep() {
     ? (q.optional || (Array.isArray(ans) && ans.length > 0))
     : ans != null;
   if (!hasAnswer) return;
+  // After last core question, show checkpoint (unless already in extended mode)
+  if (state.step === CORE_COUNT - 1 && !state.extendedMode) {
+    showScreen("checkpoint");
+    return;
+  }
   if (state.step < QUIZ_QUESTIONS.length - 1) {
     state.step += 1;
     renderQuizStep();
@@ -953,6 +1035,11 @@ function nextStep() {
 }
 
 function prevStep() {
+  // Back from first extended question → return to checkpoint
+  if (state.step === CORE_COUNT && state.extendedMode) {
+    showScreen("checkpoint");
+    return;
+  }
   if (state.step > 0) {
     state.step -= 1;
     renderQuizStep();
@@ -963,6 +1050,7 @@ function prevStep() {
 
 function startQuiz() {
   state.step = 0;
+  state.extendedMode = false;
   renderQuizStep();
   showScreen("quiz");
 }
@@ -1199,8 +1287,27 @@ function wireEvents() {
   document.getElementById("btn-quiz-next").addEventListener("click", nextStep);
   document.getElementById("btn-quiz-back").addEventListener("click", prevStep);
   document.getElementById("btn-result-menu").addEventListener("click", () => showScreen("menu"));
+  // Checkpoint buttons
+  document.getElementById("btn-checkpoint-back").addEventListener("click", () => {
+    state.step = CORE_COUNT - 1;
+    renderQuizStep();
+    showScreen("quiz");
+  });
+  document.getElementById("btn-checkpoint-now").addEventListener("click", submitQuiz);
+  document.getElementById("btn-checkpoint-top3").addEventListener("click", () => {
+    state.answers.resultStyle = "top3";
+    submitQuiz();
+  });
+  document.getElementById("btn-checkpoint-more").addEventListener("click", () => {
+    state.extendedMode = true;
+    state.step = CORE_COUNT;
+    renderQuizStep();
+    showScreen("quiz");
+  });
+
   document.getElementById("btn-result-retry").addEventListener("click", () => {
     state.answers = {};
+    state.extendedMode = false;
     if (state.result) delete state.result._pickIndex;
     startQuiz();
   });
@@ -1247,12 +1354,12 @@ const TRANSLATIONS = {
     nextBest: "Show next best item",
     viewFullMenu: "View full menu",
     questions: {
-      hunger:      { prompt: "How hungry are you?",                      options: ["🍃 Just a snack","🍚 Normal hungry","🍱 Starving"] },
-      budget:      { prompt: "How much are you looking to spend?",        options: ["💸 Budget-friendly","🍽️ Mid-range","🎉 Treat myself / doesn't matter"] },
-      craving:     { prompt: "What are you in the mood for?",  subtitle: "Pick one or more.",   options: ["🧂 Salty","🌶️ Spicy","🍖 Savory","🍯 Sweet","🥗 Fresh / Light","💪 Protein-heavy","🍜 Carbs"] },
+      hunger:      { prompt: "How hungry are you?",                      options: ["🍃 Snack","🍚 Normal meal","🍱 Starving"] },
+      budget:      { prompt: "What's your budget?",                        options: ["🤙 No budget — just pick what's good","Under $10","Under $15","Under $20"] },
+      craving:     { prompt: "What sounds best right now?",    options: ["🧂 Savory","🍯 Sweet","🌶️ Spicy","🥗 Fresh","🍜 Comfort food","💪 Protein-heavy"] },
       mood:        { prompt: "What kind of mood are you in?",             options: ["✅ Safe choice","⭐ Popular item","🆕 Something new","🎲 Surprise me"] },
       priority:    { prompt: "What matters most?",                        options: ["💰 Cheapest","🏋️ Most filling","🥦 Healthier option","😋 Best tasting","⚡ Fastest/easiest"] },
-      dealbreakers:{ prompt: "Any allergies or restrictions?", subtitle: "Pick all that apply — or skip.", options: ["🥜 No peanuts","🌰 No tree nuts","🦐 No shellfish","🐟 No fish","🧀 No dairy","🥚 No eggs","🌾 No gluten/wheat","🫘 No soy","🌻 No sesame","🌿 Vegetarian","🌶️ No spicy","🧱 No heavy food"] },
+      restrictions:{ prompt: "Any hard no's or allergies?", subtitle: "Pick all that apply — or tap Next to skip.", options: ["🥜 Peanuts","🌰 Tree nuts","🦞 Shellfish","🐟 Fish","🧀 Dairy","🥚 Eggs","🌾 Gluten / Wheat","🫘 Soy","🫙 Sesame","🐷 Pork","🐄 Beef","🌶️ Spicy","🍟 Fried food","🧅 Onions","🍄 Mushrooms","✏️ Other (type below)"] },
       resultStyle: { prompt: "How do you want your result?",              options: ["🎯 Give me one final pick","🏆 Show me top 3","❌ Let me eliminate options"] }
     }
   },
@@ -1290,11 +1397,11 @@ const TRANSLATIONS = {
     viewFullMenu: "フルメニューを見る",
     questions: {
       hunger:      { prompt: "どのくらいお腹が空いていますか？",        options: ["🍃 軽くつまむ程度","🍚 普通にお腹が空いた","🍱 めちゃくちゃ腹ペコ"] },
-      budget:      { prompt: "予算はどのくらいですか？",                options: ["💸 お手頃","🍽️ 普通","🎉 気にしない"] },
-      craving:     { prompt: "今、何が食べたいですか？", subtitle: "複数選択できます。", options: ["🧂 しょっぱいもの","🌶️ 辛いもの","🍖 旨味たっぷり","🍯 甘いもの","🥗 さっぱりしたもの","💪 タンパク質たっぷり","🍜 炭水化物系"] },
+      budget:      { prompt: "予算はどのくらいですか？",                options: ["🤙 気にしない","10ドル以下","15ドル以下","20ドル以下"] },
+      craving:     { prompt: "今、何が食べたいですか？", options: ["🧂 うまみ系","🍯 甘いもの","🌶️ 辛いもの","🥗 さっぱりしたもの","🍜 コンフォートフード","💪 タンパク質たっぷり"] },
       mood:        { prompt: "今の気分は？",                           options: ["✅ 安定の定番","⭐ 人気のメニュー","🆕 新しいものを試したい","🎲 サプライズで"] },
       priority:    { prompt: "一番大切にしたいことは？",                options: ["💰 価格重視","🏋️ ボリューム重視","🥦 ヘルシー重視","😋 おいしさ重視","⚡ 手軽さ重視"] },
-      dealbreakers:{ prompt: "アレルギーや制限はありますか？", subtitle: "当てはまるものをすべて選ぶか、スキップしてください。", options: ["🥜 ピーナッツNG","🌰 ナッツNG","🦐 甲殻類NG","🐟 魚NG","🧀 乳製品NG","🥚 卵NG","🌾 グルテン・小麦NG","🫘 大豆NG","🌻 ごまNG","🌿 ベジタリアン","🌶️ 辛いものNG","🧱 重い食べ物NG"] },
+      restrictions:{ prompt: "アレルギーや制限はありますか？", subtitle: "当てはまるものをすべて選ぶか、スキップしてください。", options: ["🥜 ピーナッツ","🌰 ナッツ","🦞 甲殻類","🐟 魚","🧀 乳製品","🥚 卵","🌾 グルテン・小麦","🫘 大豆","🫙 ごま","🐷 豚肉","🐄 牛肉","🌶️ 辛いもの","🍟 揚げ物","🧅 玉ねぎ","🍄 きのこ","✏️ その他"] },
       resultStyle: { prompt: "結果の表示方法は？",                     options: ["🎯 ズバリ1品だけ","🏆 上位3品を見る","❌ 自分で絞り込む"] }
     }
   },
@@ -1332,11 +1439,11 @@ const TRANSLATIONS = {
     viewFullMenu: "전체 메뉴 보기",
     questions: {
       hunger:      { prompt: "얼마나 배고프세요?",                     options: ["🍃 간단히 요기만","🍚 보통 배고픔","🍱 엄청 배고픔"] },
-      budget:      { prompt: "얼마나 쓸 생각이세요?",                  options: ["💸 저렴하게","🍽️ 중간 정도","🎉 상관없음"] },
-      craving:     { prompt: "지금 뭐가 당기나요?", subtitle: "복수 선택 가능.",   options: ["🧂 짭짤한 것","🌶️ 매운 것","🍖 고소한 것","🍯 달콤한 것","🥗 신선한 것","💪 단백질 가득","🍜 탄수화물"] },
+      budget:      { prompt: "얼마나 쓸 생각이세요?",                  options: ["🤙 상관없음","$10 이하","$15 이하","$20 이하"] },
+      craving:     { prompt: "지금 뭐가 당기나요?", options: ["🧂 고소한 것","🍯 달콤한 것","🌶️ 매운 것","🥗 신선한 것","🍜 든든한 것","💪 단백질 가득"] },
       mood:        { prompt: "지금 어떤 기분인가요?",                   options: ["✅ 안전한 선택","⭐ 인기 메뉴","🆕 새로운 것","🎲 깜짝 추천"] },
       priority:    { prompt: "가장 중요한 건 뭔가요?",                  options: ["💰 가격","🏋️ 포만감","🥦 건강","😋 맛","⚡ 빠르고 간편함"] },
-      dealbreakers:{ prompt: "알레르기나 제한이 있나요?", subtitle: "해당하는 것을 모두 선택하거나 건너뛰세요.", options: ["🥜 땅콩 NO","🌰 견과류 NO","🦐 갑각류 NO","🐟 생선 NO","🧀 유제품 NO","🥚 달걀 NO","🌾 글루텐/밀 NO","🫘 두부/콩 NO","🌻 참깨 NO","🌿 채식","🌶️ 매운 것 NO","🧱 무거운 음식 NO"] },
+      restrictions:{ prompt: "알레르기나 제한이 있나요?", subtitle: "해당하는 것을 모두 선택하거나 건너뛰세요.", options: ["🥜 땅콩","🌰 견과류","🦞 갑각류","🐟 생선","🧀 유제품","🥚 달걀","🌾 글루텐/밀","🫘 대두","🫙 참깨","🐷 돼지고기","🐄 소고기","🌶️ 매운 것","🍟 튀긴 것","🧅 양파","🍄 버섯","✏️ 기타"] },
       resultStyle: { prompt: "결과를 어떻게 보고 싶나요?",              options: ["🎯 딱 1개만","🏆 TOP 3 보기","❌ 직접 제거하기"] }
     }
   },
@@ -1374,11 +1481,11 @@ const TRANSLATIONS = {
     viewFullMenu: "查看完整菜单",
     questions: {
       hunger:      { prompt: "你有多饿？",                             options: ["🍃 随便吃点","🍚 正常饿","🍱 饿到极点"] },
-      budget:      { prompt: "你打算花多少？",                         options: ["💸 经济实惠","🍽️ 中等消费","🎉 无所谓"] },
-      craving:     { prompt: "现在最想吃什么？", subtitle: "可多选。",  options: ["🧂 咸口的","🌶️ 辣的","🍖 鲜香的","🍯 甜口的","🥗 清爽的","💪 高蛋白","🍜 主食类"] },
+      budget:      { prompt: "你打算花多少？",                         options: ["🤙 无所谓","10美元以下","15美元以下","20美元以下"] },
+      craving:     { prompt: "现在最想吃什么？", options: ["🧂 鲜香的","🍯 甜口的","🌶️ 辣的","🥗 清爽的","🍜 暖心的","💪 高蛋白"] },
       mood:        { prompt: "你现在是什么心情？",                     options: ["✅ 经典稳妥","⭐ 热门菜品","🆕 尝点新的","🎲 随机惊喜"] },
       priority:    { prompt: "你最在乎什么？",                         options: ["💰 最便宜","🏋️ 最管饱","🥦 更健康","😋 最好吃","⚡ 快捷方便"] },
-      dealbreakers:{ prompt: "有过敏或饮食限制吗？", subtitle: "选择所有适用项，或直接跳过。", options: ["🥜 不要花生","🌰 不要坚果","🦐 不要甲壳类","🐟 不要鱼","🧀 不要乳制品","🥚 不要鸡蛋","🌾 不要麸质/小麦","🫘 不要大豆","🌻 不要芝麻","🌿 素食","🌶️ 不要辣","🧱 不要重口味"] },
+      restrictions:{ prompt: "有过敏或饮食限制吗？", subtitle: "选择所有适用项，或直接跳过。", options: ["🥜 花生","🌰 坚果","🦞 甲壳类","🐟 鱼","🧀 乳制品","🥚 鸡蛋","🌾 麸质/小麦","🫘 大豆","🫙 芝麻","🐷 猪肉","🐄 牛肉","🌶️ 辣","🍟 炸食","🧅 洋葱","🍄 蘑菇","✏️ 其他"] },
       resultStyle: { prompt: "你想怎么看结果？",                       options: ["🎯 直接给我一个","🏆 看前三名","❌ 我来一个个排除"] }
     }
   }
@@ -1470,7 +1577,9 @@ function wireLangSelector() {
   });
 
   document.addEventListener("click", () => closeDropdown());
-  document.addEventListener("touchstart", () => closeDropdown(), { passive: true });
+  // Stop touch events from bubbling out of the selector so the
+  // document-level closeDropdown doesn't fire before a lang-btn click registers.
+  selector.addEventListener("touchstart", e => e.stopPropagation(), { passive: true });
 }
 
 function init() {
