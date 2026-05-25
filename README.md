@@ -6,13 +6,13 @@ Platewise is a mobile-first QR menu tool for food trucks and small restaurants. 
 
 ## Demo Links
 
-- [Main Platewise Demo](index.html)
-- [O’Sun Grill Pilot Demo](osun-grill.html)
-- [Thai Tacos Demo](thai-tacos.html)
-- [Garlic Shack Demo](garlic-shack.html)
-- [Food Trucks Demo](food-trucks.html)
-- [Food Truck Park Demo](food-truck-park.html)
-- [Lagoon Demo](lagoon.html)
+- [Main Platewise Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/)
+- [O’Sun Grill Pilot Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/osun-grill.html)
+- [Thai Tacos Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/thai-tacos.html)
+- [Garlic Shack Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/garlic-shack.html)
+- [Food Trucks Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/food-trucks.html)
+- [Food Truck Park Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/food-truck-park.html)
+- [Lagoon Demo](https://YOUR-USERNAME.github.io/YOUR-REPO/lagoon.html)
 
 ## Current Status
 
