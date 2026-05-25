@@ -1,80 +1,51 @@
-# UPick / Pick4MeDemo
+# Platewise
 
-UPick is a mobile-first QR menu demo that helps customers decide what to order faster.
+**No more menus. Just pick.**
 
-Customers scan a QR code, answer a few quick questions, and get a recommended menu item based on hunger, budget, cravings, and dietary restrictions.
-
-## Live Demo Links
-
-Main UPick demo:  
-https://tuikolongahau61-alt.github.io/Pick4MeDemo/
-
-Food Truck Park demo:  
-https://tuikolongahau61-alt.github.io/Pick4MeDemo/food-truck-park.html
-
-Generic Food Trucks demo:  
-https://tuikolongahau61-alt.github.io/Pick4MeDemo/food-trucks.html
-
-Garlic Shack demo:  
-https://tuikolongahau61-alt.github.io/Pick4MeDemo/garlic-shack.html
-
-Lagoon demo:  
-https://tuikolongahau61-alt.github.io/Pick4MeDemo/lagoon.html
-
-Thai Tacos demo:  
-https://tuikolongahau61-alt.github.io/Pick4MeDemo/thai-tacos.html
-
-## Features
-
-- Mobile-first QR menu experience
-- “Pick My Order” quiz
-- Budget-based recommendations
-- Allergy and dietary restriction filtering
-- Soft dealbreaker warnings
-- Full menu browsing
-- Vendor/restaurant-specific demo pages
-- Multilingual support:
-  - English
-  - Japanese
-  - Korean
-  - Chinese
-- Single-file HTML demos
-- Hosted with GitHub Pages
-
-## Project Goal
-
-The goal is to help food trucks and small restaurants reduce customer decision paralysis, speed up ordering, and give customers a fun way to choose what to eat.
-
-Instead of replacing a restaurant’s existing menu, UPick can sit beside it as a “help me choose” option for customers who are unsure what to order.
-
-## Project Files
-
-This project includes multiple single-file HTML demos.
-
-Each demo keeps its own HTML, CSS, JavaScript, menu data, quiz logic, and language settings inside one `.html` file.
-
-Current demo files:
-
-- `index.html` — Main UPick demo
-- `food-truck-park.html` — Multi-vendor food truck park demo
-- `food-trucks.html` — Generic food truck demo
-- `garlic-shack.html` — Garlic Shack demo
-- `lagoon.html` — Lagoon demo
-- `thai-tacos.html` — Thai Tacos demo
+Platewise is a mobile-first QR menu tool for food trucks and small restaurants. Customers scan a QR code, answer a few quick questions, and get a personalized food recommendation based on their taste, hunger level, budget, and restrictions.
 
 ## Current Status
 
-Early MVP / proof of concept.
+Platewise is currently in the MVP / customer discovery stage.
 
-The project is ready for testing with local food trucks and small restaurants.
+The first live pilot demo is being built for **O’Sun Grill**, a food truck in Waikiki. The goal is to test the tool with real customers, learn how people use it, and improve the experience based on feedback.
 
-## Future Ideas
+## What It Does
 
-- Drinks as add-ons only, not main food results
-- “Next best item” button
-- More restaurant-specific demo pages
-- Better vendor browsing
-- QR code pilot testing with real food trucks
-- Sold-out item workflow
-- Owner text-message update workflow
-- Multi-vendor food truck park support
+- Helps customers decide what to order faster
+- Reduces menu overwhelm
+- Recommends items based on preferences and restrictions
+- Gives vendors a simple QR-based tool without extra technical work
+- Collects lightweight feedback to improve the experience
+
+## Pilot Goals
+
+For the current pilot, the goal is to:
+
+- Get 5–10 customers to try it this week
+- Track where users drop off
+- Collect 1–5 star feedback
+- Learn what customers actually need
+- Improve the quiz and recommendation flow before expanding to more vendors
+
+## Long-Term Vision
+
+Future versions may include:
+
+- Saved customer preferences
+- Allergy-aware recommendations
+- Personalized picks across multiple food trucks and restaurants
+- Multi-vendor food truck park recommendations
+- Vendor tools for specials, sold-out items, and menu updates
+
+## Tech
+
+- Single-file HTML/CSS/JS demos
+- GitHub Pages compatible
+- No backend yet
+- Built for fast testing and iteration
+
+## Current Pilot
+
+**O’Sun Grill Pilot Demo:**  
+_Add GitHub Pages link here_
