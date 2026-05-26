@@ -178,6 +178,9 @@ body.is-switching .screen.is-active { scroll-behavior: auto !important; }
 .feedback-actions { display: flex; flex-direction: column; gap: 11px; width: 100%; }
 .feedback-thanks { display: flex; flex-direction: column; align-items: center; width: 100%; padding-top: 8px; }
 .feedback-thanks-text { font-size: 1.4rem; font-weight: 900; color: var(--c-sea-deep); margin-bottom: 20px; line-height: 1.3; }
+/* ── Match-reason chips ── */
+.match-reasons { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
+.match-chip { font-size: 0.75rem; font-weight: 800; padding: 4px 11px; border-radius: var(--radius-pill); background: rgba(184,105,26,0.09); color: var(--c-sea-deep); border: 1px solid rgba(184,105,26,0.22); letter-spacing: 0.01em; }
   </style>
 </head>
 <body>
@@ -349,12 +352,16 @@ const QUIZ_QUESTIONS = [
   },
   {
     id: "craving", prompt: "What sounds good right now?", weight: 2,
+    // NOTE: keep protein craving tags to ONLY the protein-identifying tag(s).
+    // Generic tags like "savory", "garlic", "bbq" match almost everything and
+    // cause non-protein items to outscore matching ones — e.g. chicken wings
+    // scoring higher than shrimp on a shrimp craving via shared "savory"+"garlic".
     options: [
-      { label: "🍤 Garlic shrimp",            value: "shrimp",  tags: ["shrimp","savory","garlic"],          reason: "garlic shrimp" },
-      { label: "🍗 BBQ or grilled chicken",   value: "chicken", tags: ["chicken","bbq","savory"],            reason: "BBQ chicken" },
-      { label: "🥩 Kalbi / Beef",              value: "beef",    tags: ["beef","bbq","savory","filling"],     reason: "Kalbi or beef" },
-      { label: "🐟 Fish or seafood",          value: "fish",    tags: ["fish","savory","garlic"],            reason: "fish or seafood" },
-      { label: "🍖 Pork chop",               value: "pork",    tags: ["pork","savory","filling"],           reason: "pork chop" },
+      { label: "🍤 Garlic shrimp",            value: "shrimp",  tags: ["shrimp","shellfish"],               reason: "garlic shrimp" },
+      { label: "🍗 BBQ or grilled chicken",   value: "chicken", tags: ["chicken"],                          reason: "BBQ chicken" },
+      { label: "🥩 Kalbi / Beef",              value: "beef",    tags: ["beef"],                             reason: "Kalbi or beef" },
+      { label: "🐟 Fish or seafood",          value: "fish",    tags: ["fish","shellfish"],                 reason: "fish or seafood" },
+      { label: "🍖 Pork chop",               value: "pork",    tags: ["pork"],                             reason: "pork chop" },
       { label: "🥟 Appetizers / lighter",    value: "light",   tags: ["light-hunger","quick","appetizer"],  reason: "something lighter" }
     ]
   },
@@ -560,6 +567,62 @@ function resolveBudgetRange(a){const s=a.budget;if(!s||s==="none")return{min:nul
 function getExcludedTags(a){const r=a.restrictions;if(!r||!r.length)return[];const s=new Set();const rQ=QUIZ_QUESTIONS.find(q=>q.id==="restrictions");rQ.options.forEach(o=>{if(r.includes(o.value)&&o.hard&&o.excludeTags)o.excludeTags.forEach(t=>s.add(t));});return[...s];}
 function getSoftWarnings(a){const r=a.restrictions;if(!r||!r.length)return[];const rQ=QUIZ_QUESTIONS.find(q=>q.id==="restrictions");const s=[];rQ.options.forEach(o=>{if(r.includes(o.value)&&o.soft&&o.warnTags)s.push({warnTags:o.warnTags,warnLabel:o.warnLabel});});if(r.includes("other")&&a.restrictionOther?.trim())s.push({warnTags:[],warnLabel:a.restrictionOther.trim(),isCustom:true});return s;}
 function buildSoftWarningsForItem(item,sw){return sw.filter(w=>w.isCustom||w.warnTags.some(t=>item.tags.includes(t))).map(w=>w.warnLabel);}
+
+/* ── Match-reason chips ── */
+function buildMatchReasons(item,answers){
+  const reasons=[];
+  // 1. Craving / protein match
+  // Distinguish exact-protein match from broader shellfish overlap so calamari
+  // doesn't claim "Matches your shrimp craving" when it's not shrimp.
+  const cravingQ=QUIZ_QUESTIONS.find(q=>q.id==="craving");
+  const cravingOpt=cravingQ?.options.find(o=>o.value===answers.craving);
+  const PROTEIN_TAG={shrimp:"shrimp",chicken:"chicken",beef:"beef",fish:"fish",pork:"pork"};
+  const proteinTag=PROTEIN_TAG[answers.craving];
+  const cravingLabel={shrimp:"Matches your shrimp craving",chicken:"Matches your chicken craving",
+    beef:"Matches your beef craving",fish:"Matches your seafood craving",
+    pork:"Matches your pork craving",light:"A lighter bite"};
+  if(proteinTag&&item.tags.includes(proteinTag)){
+    // Exact protein match
+    reasons.push("✓ "+(cravingLabel[answers.craving]||"Matches your craving"));
+  }else if(proteinTag&&(answers.craving==="shrimp"||answers.craving==="fish")&&item.tags.includes("shellfish")){
+    // Broader seafood match (e.g. calamari on shrimp craving, or shrimp item on fish craving)
+    reasons.push("✓ Seafood option");
+  }else if(!proteinTag&&cravingOpt?.tags?.some(t=>item.tags.includes(t))){
+    // Non-protein craving (light appetizers)
+    reasons.push("✓ "+(cravingLabel[answers.craving]||"Matches your craving"));
+  }
+  // 2. Budget in range
+  const{min:bmin,cap:bc}=resolveBudgetRange(answers);
+  if(bc!=null||bmin!=null){
+    const inBudget=(bc==null||item.price<=bc)&&(bmin==null||item.price>=bmin);
+    if(inBudget){
+      const budgetLabel={u15:"Under $15",r15_20:"In the $15–$20 range",u20plus:"$20+ pick"};
+      if(budgetLabel[answers.budget])reasons.push("✓ "+budgetLabel[answers.budget]);
+    }
+  }
+  // 3. Guest favorite
+  if(item.featured)reasons.push("✓ Guest favorite");
+  // 4. Priority match
+  const pv=answers.priority;
+  if(pv==="filling"&&item.tags.includes("filling"))reasons.push("✓ Very filling");
+  if(pv==="healthy"&&(item.tags.includes("light-hunger")||item.tags.includes("appetizer")))reasons.push("✓ Lighter option");
+  if(pv==="fast"&&item.tags.includes("quick"))reasons.push("✓ Quick to get");
+  if(pv==="cheapest")reasons.push("✓ Best value pick");
+  // 5. Dietary flags
+  if(item.tags.includes("vegetarian"))reasons.push("✓ Vegetarian-friendly");
+  const noSpicy=(answers.restrictions||[]).includes("no-spicy");
+  if(item.tags.includes("spicy")&&!noSpicy)reasons.push("✓ Spicy kick");
+  return reasons.slice(0,3);
+}
+function renderMatchReasons(item,answers,container){
+  const reasons=buildMatchReasons(item,answers);
+  if(!reasons.length)return;
+  const strip=document.createElement("div");
+  strip.className="match-reasons";
+  reasons.forEach(r=>{const c=document.createElement("span");c.className="match-chip";c.textContent=r;strip.appendChild(c);});
+  container.appendChild(strip);
+}
+
 function scoreItem(item,answers,questions){let score=0;const pOpt=questions.find(q=>q.id==="priority")?.options.find(o=>o.value===answers.priority);const mOpt=questions.find(q=>q.id==="mood")?.options.find(o=>o.value===answers.mood);questions.forEach(q=>{if(q.type==="budget"||q.id==="resultStyle"||q.id==="restrictions"||q.type==="multi")return;const w=q.weight??1;const opt=q.options.find(o=>o.value===answers[q.id]);if(!opt||!opt.tags)return;opt.tags.forEach(tag=>{if(item.tags.includes(tag))score+=SCORING.tagMatch*w;});});const{min:bmin,cap:bc}=resolveBudgetRange(answers);const inBudget=(bc==null||item.price<=bc)&&(bmin==null||item.price>=bmin);if(inBudget)score+=4;if(item.featured)score+=SCORING.featuredBoost;if(mOpt?.boostFeatured&&item.featured)score+=SCORING.popularBoost;if(pOpt?.boostFeatured&&item.featured)score+=SCORING.popularBoost;if(pOpt?.value==="filling"&&item.tags.includes("filling"))score+=SCORING.fillingBoost;if(pOpt?.value==="healthy"&&(item.tags.includes("healthy")||item.tags.includes("fresh")))score+=SCORING.healthyBoost;return score;}
 function buildReason(item,answers,questions){const parts=[];questions.forEach(q=>{if(q.type==="budget"||q.id==="resultStyle"||q.id==="restrictions"||q.type==="multi")return;const opt=q.options.find(o=>o.value===answers[q.id]);if(!opt?.reason)return;const ov=(opt.tags||[]).some(t=>item.tags.includes(t));if(ov||opt.boostFeatured||opt.boostNew||opt.prioritizeCheap)parts.push({text:opt.reason,weight:q.weight??1});});parts.sort((a,b)=>b.weight-a.weight);const top=parts.slice(0,2).map(r=>r.text).filter(Boolean);if(!top.length)return"A crowd favorite we think you'll enjoy.";if(top.length===1)return`Picked because you wanted ${top[0]}.`;return`Picked because you wanted ${top[0]} and ${top[1]}.`;}
 function recommend(answers){const questions=QUIZ_QUESTIONS;const{min:bmin,cap:bc}=resolveBudgetRange(answers);const hasBudgetFilter=bc!=null||bmin!=null;const excl=getExcludedTags(answers);const sw=getSoftWarnings(answers);const style=answers.resultStyle||"one";const pOpt=questions.find(q=>q.id==="priority")?.options.find(o=>o.value===answers.priority);let pool=MENU_ITEMS.filter(i=>!excl.some(t=>i.tags.includes(t)));let fallback=false;let bp=hasBudgetFilter?pool.filter(i=>(bc==null||i.price<=bc)&&(bmin==null||i.price>=bmin)):pool;if(hasBudgetFilter&&!bp.length){bp=pool;fallback=true;}pool=bp;const scored=pool.map(i=>({item:i,score:scoreItem(i,answers,questions),softWarnings:buildSoftWarningsForItem(i,sw)}));if(pOpt?.prioritizeCheap)scored.sort((a,b)=>a.item.price-b.item.price||b.score-a.score);else scored.sort((a,b)=>b.score-a.score||a.item.price-b.item.price);if(style==="top3")return{style:"top3",items:scored.slice(0,3),ranked:scored,fallback};if(style==="eliminate")return{style:"eliminate",items:scored.slice(0,Math.min(5,scored.length)),ranked:scored,fallback};const c=scored[0];return{style:"one",item:c.item,score:c.score,fallback,ranked:scored,reason:buildReason(c.item,answers,QUIZ_QUESTIONS)};}
@@ -586,7 +649,7 @@ function buildResultActions(root,showNB,onNB){
 
 function addPopularReason(item,container){if(item.featured&&item.popularReason){const pr=document.createElement("p");pr.className="popular-reason";pr.textContent="🌟 People love this: "+item.popularReason;container.appendChild(pr);}}
 
-function renderResult(){const root=document.getElementById("result-body");root.innerHTML="";if(!state.result)return;const r=state.result;if(r.style==="one"){if(r.fallback){const fb=document.createElement("p");fb.className="result-note";fb.textContent=t("resultFallback");root.appendChild(fb);}let pi=r._pickIndex||0;const ranked=r.ranked||[];function renderOnePick(idx){const ez=root.querySelector(".one-pick-zone");if(ez)ez.remove();const ea=root.querySelector(".result-actions");if(ea)ea.remove();const entry=ranked[idx];const item=entry?.item||entry;const sw=entry?.softWarnings||[];const zone=document.createElement("div");zone.className="one-pick-zone";zone.appendChild(buildItemCard(item,true));const why=document.createElement("p");why.className="result-reason";why.textContent=buildReason(item,state.answers,QUIZ_QUESTIONS);zone.appendChild(why);addPopularReason(item,zone);if(sw.length>0){const w=document.createElement("p");w.className="result-soft-warn";w.textContent=t("softWarnOne").replace("%s",sw.join(", "));zone.appendChild(w);}root.appendChild(zone);const hm=idx+1<ranked.length;buildResultActions(root,hm,()=>{pi=idx+1;r._pickIndex=pi;renderOnePick(pi);});}renderOnePick(pi);}else if(r.style==="top3"){const note=document.createElement("p");note.className="result-note";note.textContent=t("resultTop3");root.appendChild(note);r.items.forEach((entry,i)=>{const item=entry?.item||entry;const sw=entry?.softWarnings||[];const wrap=document.createElement("div");wrap.className="result-rank-wrap";const badge=document.createElement("span");badge.className="result-rank-badge";badge.textContent=["🥇","🥈","🥉"][i]||`#${i+1}`;wrap.appendChild(badge);wrap.appendChild(buildItemCard(item,i===0));if(i===0)addPopularReason(item,wrap);if(sw.length>0){const w=document.createElement("p");w.className="result-soft-warn";w.textContent=t("softWarnShort").replace("%s",sw.join(", "));wrap.appendChild(w);}root.appendChild(wrap);});buildResultActions(root,false,null);}else if(r.style==="eliminate"){const note=document.createElement("p");note.className="result-note";note.textContent=t("resultElimNote");root.appendChild(note);const pool=[...r.items];function renderElim(){const ep=root.querySelector(".elim-pool");if(ep)ep.remove();const ea=root.querySelector(".result-actions");if(ea)ea.remove();if(pool.length===1){root.innerHTML="";const f=document.createElement("p");f.className="result-note";f.textContent=t("resultFinalPick");root.appendChild(f);const fi=pool[0]?.item||pool[0];root.appendChild(buildItemCard(fi,true));addPopularReason(fi,root);buildResultActions(root,false,null);return;}const pe=document.createElement("div");pe.className="elim-pool";pool.forEach((entry,idx)=>{const item=entry?.item||entry;const row=document.createElement("div");row.className="elim-row";row.appendChild(buildItemCard(item,false));const xb=document.createElement("button");xb.type="button";xb.className="elim-x";xb.textContent="✕";xb.setAttribute("aria-label",`Remove ${item.name}`);xb.addEventListener("click",()=>{pool.splice(idx,1);renderElim();});row.appendChild(xb);pe.appendChild(row);});root.appendChild(pe);buildResultActions(root,false,null);}renderElim();}}
+function renderResult(){const root=document.getElementById("result-body");root.innerHTML="";if(!state.result)return;const r=state.result;if(r.style==="one"){if(r.fallback){const fb=document.createElement("p");fb.className="result-note";fb.textContent=t("resultFallback");root.appendChild(fb);}let pi=r._pickIndex||0;const ranked=r.ranked||[];function renderOnePick(idx){const ez=root.querySelector(".one-pick-zone");if(ez)ez.remove();const ea=root.querySelector(".result-actions");if(ea)ea.remove();const entry=ranked[idx];const item=entry?.item||entry;const sw=entry?.softWarnings||[];const zone=document.createElement("div");zone.className="one-pick-zone";zone.appendChild(buildItemCard(item,true));renderMatchReasons(item,state.answers,zone);const why=document.createElement("p");why.className="result-reason";why.textContent=buildReason(item,state.answers,QUIZ_QUESTIONS);zone.appendChild(why);addPopularReason(item,zone);if(sw.length>0){const w=document.createElement("p");w.className="result-soft-warn";w.textContent=t("softWarnOne").replace("%s",sw.join(", "));zone.appendChild(w);}root.appendChild(zone);const hm=idx+1<ranked.length;buildResultActions(root,hm,()=>{pi=idx+1;r._pickIndex=pi;renderOnePick(pi);});}renderOnePick(pi);}else if(r.style==="top3"){const note=document.createElement("p");note.className="result-note";note.textContent=t("resultTop3");root.appendChild(note);r.items.forEach((entry,i)=>{const item=entry?.item||entry;const sw=entry?.softWarnings||[];const wrap=document.createElement("div");wrap.className="result-rank-wrap";const badge=document.createElement("span");badge.className="result-rank-badge";badge.textContent=["🥇","🥈","🥉"][i]||`#${i+1}`;wrap.appendChild(badge);wrap.appendChild(buildItemCard(item,i===0));renderMatchReasons(item,state.answers,wrap);if(i===0)addPopularReason(item,wrap);if(sw.length>0){const w=document.createElement("p");w.className="result-soft-warn";w.textContent=t("softWarnShort").replace("%s",sw.join(", "));wrap.appendChild(w);}root.appendChild(wrap);});buildResultActions(root,false,null);}else if(r.style==="eliminate"){const note=document.createElement("p");note.className="result-note";note.textContent=t("resultElimNote");root.appendChild(note);const pool=[...r.items];function renderElim(){const ep=root.querySelector(".elim-pool");if(ep)ep.remove();const ea=root.querySelector(".result-actions");if(ea)ea.remove();if(pool.length===1){root.innerHTML="";const f=document.createElement("p");f.className="result-note";f.textContent=t("resultFinalPick");root.appendChild(f);const fi=pool[0]?.item||pool[0];root.appendChild(buildItemCard(fi,true));addPopularReason(fi,root);buildResultActions(root,false,null);return;}const pe=document.createElement("div");pe.className="elim-pool";pool.forEach((entry,idx)=>{const item=entry?.item||entry;const row=document.createElement("div");row.className="elim-row";row.appendChild(buildItemCard(item,false));const xb=document.createElement("button");xb.type="button";xb.className="elim-x";xb.textContent="✕";xb.setAttribute("aria-label",`Remove ${item.name}`);xb.addEventListener("click",()=>{pool.splice(idx,1);renderElim();});row.appendChild(xb);pe.appendChild(row);});root.appendChild(pe);buildResultActions(root,false,null);}renderElim();}}
 function renderMenu(){const root=document.getElementById("menu-list");root.innerHTML="";MENU_ITEMS.forEach(i=>root.appendChild(buildItemCard(i,false)));}
 function renderStaffFavorites(){const root=document.getElementById("staff-list");root.innerHTML="";const picks=MENU_ITEMS.filter(i=>i.featured);picks.forEach((item,i)=>{const w=document.createElement("div");w.className="staff-pick-wrap";const b=document.createElement("span");b.className="staff-pick-badge";b.textContent=i===0?t("staffTopPick"):t("staffPick");w.appendChild(b);w.appendChild(buildItemCard(item,i===0));if(item.popularReason){const pr=document.createElement("p");pr.className="popular-reason";pr.textContent="🌟 People love this: "+item.popularReason;w.appendChild(pr);}root.appendChild(w);});}
 function buildItemCard(item,isHero){const card=document.createElement("article");card.className="item-card"+(isHero?" item-card--hero":"");if(item.image){const img=document.createElement("img");img.className="item-img";img.src=item.image;img.alt=item.name;img.loading="lazy";img.onerror=()=>img.remove();card.appendChild(img);}const head=document.createElement("div");head.className="item-head";const name=document.createElement("h3");name.className="item-name";name.textContent=item.name;const price=document.createElement("span");price.className="item-price";price.textContent=`$${item.price.toFixed(2)}`;head.appendChild(name);head.appendChild(price);card.appendChild(head);const desc=document.createElement("p");desc.className="item-desc";desc.textContent=item.description;card.appendChild(desc);if(item.labels&&item.labels.length){const labels=document.createElement("div");labels.className="item-labels";item.labels.forEach(l=>{const tag=document.createElement("span");tag.className="label label--"+l.toLowerCase().replace(/\s+/g,"-");tag.textContent=l;labels.appendChild(tag);});card.appendChild(labels);}if(item.withRice){const ru=document.createElement("p");ru.className="rice-upgrade-note";ru.textContent="🍳 Want fried rice instead? Upgrade for +$6.";card.appendChild(ru);}return card;}
