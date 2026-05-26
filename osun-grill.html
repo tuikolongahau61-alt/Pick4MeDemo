@@ -342,9 +342,9 @@ const QUIZ_QUESTIONS = [
     id: "budget", prompt: "What's your budget?", type: "budget",
     options: [
       { label: "🤙 No budget — just pick the best", value: "none" },
-      { label: "Under $12", value: "u12", cap: 12 },
-      { label: "Under $17", value: "u17", cap: 17 },
-      { label: "Under $21", value: "u21", cap: 21 }
+      { label: "Under $15",  value: "u15",     cap: 15 },
+      { label: "$15–$20",    value: "r15_20",  min: 15, cap: 20 },
+      { label: "$20+",       value: "u20plus", min: 20 }
     ]
   },
   {
@@ -352,7 +352,7 @@ const QUIZ_QUESTIONS = [
     options: [
       { label: "🍤 Garlic shrimp",            value: "shrimp",  tags: ["shrimp","savory","garlic"],          reason: "garlic shrimp" },
       { label: "🍗 BBQ or grilled chicken",   value: "chicken", tags: ["chicken","bbq","savory"],            reason: "BBQ chicken" },
-      { label: "🥩 Short ribs (Kalbi)",       value: "beef",    tags: ["beef","bbq","savory","filling"],     reason: "Kalbi short ribs" },
+      { label: "🥩 Kalbi / Beef",              value: "beef",    tags: ["beef","bbq","savory","filling"],     reason: "Kalbi or beef" },
       { label: "🐟 Fish or seafood",          value: "fish",    tags: ["fish","savory","garlic"],            reason: "fish or seafood" },
       { label: "🍖 Pork chop",               value: "pork",    tags: ["pork","savory","filling"],           reason: "pork chop" },
       { label: "🥟 Appetizers / lighter",    value: "light",   tags: ["light-hunger","quick","appetizer"],  reason: "something lighter" }
@@ -409,97 +409,103 @@ const QUIZ_QUESTIONS = [
 const MENU_ITEMS = [
   /* ── Appetizers ── */
   {
-    id: "garlic-wings", name: "Garlic Butter Chicken Wings", price: 12,
+    id: "garlic-wings", name: "Garlic Butter Chicken Wings", price: 15.75,
     description: "Crispy golden wings tossed in our signature rich garlic butter sauce.",
     tags: ["chicken","savory","garlic","light-hunger","quick","appetizer"],
     labels: ["Popular"], featured: true,
     popularReason: "crispy, garlicky, and impossible to stop eating — a go-to starter."
   },
   {
-    id: "shrimp-tempura", name: "Shrimp Tempura", price: 12,
+    id: "shrimp-tempura", name: "Shrimp Tempura", price: 16.50,
     description: "Plump shrimp dipped in a light, airy batter and fried until golden crisp.",
     tags: ["shrimp","light-hunger","quick","appetizer","shellfish"],
     labels: ["Light"], featured: false
   },
   {
-    id: "fried-gyoza", name: "Fried Gyoza", price: 9,
+    id: "gyoza", name: "Gyoza", price: 12.75,
     description: "Japanese-style dumplings filled with savory pork and vegetables, pan-fried for a crispy bite.",
     tags: ["pork","savory","light-hunger","quick","appetizer","gluten","soy"],
     labels: ["Light"], featured: false
   },
   {
-    id: "veggie-rolls", name: "Veggie Spring Rolls", price: 9,
+    id: "veggie-rolls", name: "Veggie Spring Rolls", price: 12.75,
     description: "Crispy rolls filled with a fresh vegetable mix, fried golden and perfect for sharing.",
     tags: ["light-hunger","quick","appetizer","vegetarian"],
     labels: ["Vegetarian", "Light"], featured: false
   },
+  {
+    id: "fried-calamari", name: "Fried Calamari", price: 14.75,
+    description: "Tender calamari rings lightly battered and fried until golden, served with a dipping sauce.",
+    tags: ["shellfish","savory","light-hunger","quick","appetizer"],
+    labels: ["Light"], featured: false
+  },
+  {
+    id: "onion-rings", name: "Onion Rings", price: 12.75,
+    description: "Thick-cut onion rings in a crispy golden batter — a classic crowd-pleasing side.",
+    tags: ["savory","light-hunger","quick","appetizer","vegetarian"],
+    labels: ["Light"], featured: false
+  },
   /* ── Entrées (served with rice & salad) ── */
   {
-    id: "garlic-shrimp", name: "Garlic Butter Shrimp", price: 18, withRice: true,
+    id: "garlic-shrimp", name: "Garlic Butter Shrimp", price: 21.50, withRice: true,
     description: "A North Shore classic. Large shrimp sautéed in plenty of butter and fresh chopped garlic. Served with rice and salad.",
     tags: ["shrimp","savory","garlic","classic","hawaiian","medium-hunger","shellfish"],
     labels: ["Popular", "Classic"], featured: true,
     popularReason: "a North Shore legend — guests say it's the reason they came back a second time."
   },
   {
-    id: "bbq-chicken", name: "BBQ Chicken", price: 16, withRice: true,
+    id: "bbq-chicken", name: "BBQ Chicken", price: 18.50, withRice: true,
     description: "Boneless chicken thighs marinated in island spices and grilled with our house BBQ sauce. Served with rice and salad.",
     tags: ["chicken","bbq","savory","classic","hawaiian","medium-hunger"],
     labels: ["Popular", "Classic"], featured: true,
     popularReason: "a crowd go-to — that island BBQ glaze keeps people ordering it again."
   },
   {
-    id: "kalbi", name: "Kalbi (Korean Short Ribs)", price: 19, withRice: true,
+    id: "kalbi", name: "Kalbi (Beef Short Ribs)", price: 23.75, withRice: true,
     description: "Tender beef short ribs marinated in a sweet and savory soy-ginger glaze, grilled to perfection. Served with rice and salad.",
     tags: ["beef","bbq","savory","filling","big-hunger","classic","soy"],
     labels: ["Popular", "Filling"], featured: true,
     popularReason: "sweet, savory, fall-off-the-bone short ribs — people say it's the best thing on the menu."
   },
   {
-    id: "salted-egg-shrimp", name: "Salted Egg Yolk Shrimp", price: 18, withRice: true,
+    id: "salted-egg-shrimp", name: "Salted Egg Yolk Shrimp", price: 23.50, withRice: true,
     description: "A rich, umami-packed favorite. Crispy shrimp coated in a savory cured egg yolk sauce. Served with rice and salad.",
     tags: ["shrimp","savory","rich","medium-hunger","shellfish","eggs"],
     labels: ["Popular"], featured: true,
     popularReason: "an umami bomb that surprises first-timers in the best possible way."
   },
   {
-    id: "garlic-chicken", name: "Garlic Chicken", price: 15, withRice: true,
-    description: "Crispy fried chicken chunks tossed in a savory and sweet garlic soy glaze. Served with rice and salad.",
-    tags: ["chicken","savory","garlic","medium-hunger","soy"],
-    labels: ["Savory"], featured: false
-  },
-  {
-    id: "honey-coconut-shrimp", name: "Honey Coconut Shrimp", price: 18, withRice: true,
-    description: "Crispy shrimp coated in a creamy, sweet tropical sauce with a hint of coconut. Served with rice and salad.",
-    tags: ["shrimp","sweet","medium-hunger","shellfish"],
-    labels: ["Sweet"], featured: false
-  },
-  {
-    id: "pork-chop", name: "Pork Chop", price: 16, withRice: true,
+    id: "pork-chop", name: "Pork Chop", price: 20.75, withRice: true,
     description: "Juicy pork chops simply seasoned and pan-fried until golden brown. Served with rice and salad.",
     tags: ["pork","savory","filling","medium-hunger","classic"],
     labels: ["Filling"], featured: false
   },
   {
-    id: "salt-pepper-shrimp", name: "Salt & Pepper Shrimp", price: 17, withRice: true,
+    id: "salt-pepper-shrimp", name: "Salt & Pepper Shrimp", price: 21.50, withRice: true,
     description: "Wok-tossed with fresh chili peppers, garlic, and sea salt for a crispy, spicy kick. Served with rice and salad.",
     tags: ["shrimp","savory","spicy","medium-hunger","shellfish"],
     labels: ["Spicy"], featured: false
   },
   {
-    id: "steak", name: "Steak", price: 20, withRice: true,
+    id: "steak", name: "Steak", price: 23.75, withRice: true,
     description: "Juicy slices of beef seared hot and served with rice and salad.",
     tags: ["beef","savory","filling","big-hunger"],
     labels: ["Filling"], featured: false
   },
   {
-    id: "fish-fillet", name: "Garlic Butter Fish Fillet", price: 17, withRice: true,
+    id: "shaking-beef", name: "Shaking Beef", price: 23.75, withRice: true,
+    description: "Vietnamese-style wok-tossed beef cubes seared in a savory garlic and soy glaze. Tender, rich, and full of umami. Served with rice and salad.",
+    tags: ["beef","savory","garlic","filling","big-hunger","soy"],
+    labels: ["Filling"], featured: false
+  },
+  {
+    id: "fish-fillet", name: "Garlic Butter Fish Fillet", price: 19.50, withRice: true,
     description: "Tender white fish fillets pan-seared and smothered in our famous garlic butter sauce. Served with rice and salad.",
     tags: ["fish","savory","garlic","medium-hunger"],
     labels: ["Savory"], featured: false
   },
   {
-    id: "fried-rice", name: "Fried Rice", price: 11,
+    id: "fried-rice", name: "Fried Rice", price: 14.50,
     description: "Wok-tossed jasmine rice with eggs, vegetables, and savory seasonings.",
     tags: ["savory","light-hunger","quick","soy","eggs"],
     labels: ["Light"], featured: false
@@ -534,8 +540,8 @@ const TRANSLATIONS = {
     restrictionsOtherLabel: "Describe your restriction:", restrictionsOtherPlaceholder: "e.g. coconut, cilantro…",
     questions: {
       hunger:       { prompt: "How hungry are you?",            options: ["🥟 Just a small bite","🍽️ Ready for a full plate","🔥 Starving — max plates"] },
-      budget:       { prompt: "What's your budget?",            options: ["🤙 No budget — just pick the best","Under $12","Under $17","Under $21"] },
-      craving:      { prompt: "What sounds good right now?",    options: ["🍤 Garlic shrimp","🍗 BBQ or grilled chicken","🥩 Short ribs (Kalbi)","🐟 Fish or seafood","🍖 Pork chop","🥟 Appetizers / lighter"] },
+      budget:       { prompt: "What's your budget?",            options: ["🤙 No budget — just pick the best","Under $15","$15–$20","$20+"] },
+      craving:      { prompt: "What sounds good right now?",    options: ["🍤 Garlic shrimp","🍗 BBQ or grilled chicken","🥩 Kalbi / Beef","🐟 Fish or seafood","🍖 Pork chop","🥟 Appetizers / lighter"] },
       restrictions: { prompt: "Any hard no's or allergies?",    subtitle: "Pick all that apply — or tap Next to skip.", options: ["🥜 Peanuts","🌰 Tree nuts","🦞 Shellfish","🐟 Fish","🧀 Dairy","🥚 Eggs","🌾 Gluten / Wheat","🫘 Soy","🐷 Pork","🐄 Beef","🌶️ Spicy","🍬 Lots of sugar","✏️ Other (type below)"] },
       mood:         { prompt: "What kind of mood are you in?",  options: ["✅ Local classic","⭐ Most popular","🆕 Something new","🌞 Light & easy"] },
       priority:     { prompt: "What matters most?",             options: ["💰 Cheapest pick","🏋️ Most filling","🥦 Lighter option","😋 Most delicious","⚡ Quick to get"] },
@@ -550,13 +556,13 @@ let currentLang = "en";
 function t(key) { return (TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key]||TRANSLATIONS.en[key]||key; }
 function tQuestion(qId,field){const b=(TRANSLATIONS[currentLang]?.questions||{})[qId]||TRANSLATIONS.en.questions[qId]||{};return b[field];}
 function trackEvent(n,d={}){console.log("[track]",n,d);}
-function resolveBudgetCap(a){const s=a.budget;if(!s||s==="none")return null;const q=QUIZ_QUESTIONS.find(q=>q.id==="budget");return q?.options.find(o=>o.value===s)?.cap??null;}
+function resolveBudgetRange(a){const s=a.budget;if(!s||s==="none")return{min:null,cap:null};const q=QUIZ_QUESTIONS.find(q=>q.id==="budget");const opt=q?.options.find(o=>o.value===s);return{min:opt?.min??null,cap:opt?.cap??null};}
 function getExcludedTags(a){const r=a.restrictions;if(!r||!r.length)return[];const s=new Set();const rQ=QUIZ_QUESTIONS.find(q=>q.id==="restrictions");rQ.options.forEach(o=>{if(r.includes(o.value)&&o.hard&&o.excludeTags)o.excludeTags.forEach(t=>s.add(t));});return[...s];}
 function getSoftWarnings(a){const r=a.restrictions;if(!r||!r.length)return[];const rQ=QUIZ_QUESTIONS.find(q=>q.id==="restrictions");const s=[];rQ.options.forEach(o=>{if(r.includes(o.value)&&o.soft&&o.warnTags)s.push({warnTags:o.warnTags,warnLabel:o.warnLabel});});if(r.includes("other")&&a.restrictionOther?.trim())s.push({warnTags:[],warnLabel:a.restrictionOther.trim(),isCustom:true});return s;}
 function buildSoftWarningsForItem(item,sw){return sw.filter(w=>w.isCustom||w.warnTags.some(t=>item.tags.includes(t))).map(w=>w.warnLabel);}
-function scoreItem(item,answers,questions){let score=0;const pOpt=questions.find(q=>q.id==="priority")?.options.find(o=>o.value===answers.priority);const mOpt=questions.find(q=>q.id==="mood")?.options.find(o=>o.value===answers.mood);questions.forEach(q=>{if(q.type==="budget"||q.id==="resultStyle"||q.id==="restrictions"||q.type==="multi")return;const w=q.weight??1;const opt=q.options.find(o=>o.value===answers[q.id]);if(!opt||!opt.tags)return;opt.tags.forEach(tag=>{if(item.tags.includes(tag))score+=SCORING.tagMatch*w;});});const bc=resolveBudgetCap(answers);if(bc&&item.price<=bc)score+=4;if(item.featured)score+=SCORING.featuredBoost;if(mOpt?.boostFeatured&&item.featured)score+=SCORING.popularBoost;if(pOpt?.boostFeatured&&item.featured)score+=SCORING.popularBoost;if(pOpt?.value==="filling"&&item.tags.includes("filling"))score+=SCORING.fillingBoost;if(pOpt?.value==="healthy"&&(item.tags.includes("healthy")||item.tags.includes("fresh")))score+=SCORING.healthyBoost;return score;}
+function scoreItem(item,answers,questions){let score=0;const pOpt=questions.find(q=>q.id==="priority")?.options.find(o=>o.value===answers.priority);const mOpt=questions.find(q=>q.id==="mood")?.options.find(o=>o.value===answers.mood);questions.forEach(q=>{if(q.type==="budget"||q.id==="resultStyle"||q.id==="restrictions"||q.type==="multi")return;const w=q.weight??1;const opt=q.options.find(o=>o.value===answers[q.id]);if(!opt||!opt.tags)return;opt.tags.forEach(tag=>{if(item.tags.includes(tag))score+=SCORING.tagMatch*w;});});const{min:bmin,cap:bc}=resolveBudgetRange(answers);const inBudget=(bc==null||item.price<=bc)&&(bmin==null||item.price>=bmin);if(inBudget)score+=4;if(item.featured)score+=SCORING.featuredBoost;if(mOpt?.boostFeatured&&item.featured)score+=SCORING.popularBoost;if(pOpt?.boostFeatured&&item.featured)score+=SCORING.popularBoost;if(pOpt?.value==="filling"&&item.tags.includes("filling"))score+=SCORING.fillingBoost;if(pOpt?.value==="healthy"&&(item.tags.includes("healthy")||item.tags.includes("fresh")))score+=SCORING.healthyBoost;return score;}
 function buildReason(item,answers,questions){const parts=[];questions.forEach(q=>{if(q.type==="budget"||q.id==="resultStyle"||q.id==="restrictions"||q.type==="multi")return;const opt=q.options.find(o=>o.value===answers[q.id]);if(!opt?.reason)return;const ov=(opt.tags||[]).some(t=>item.tags.includes(t));if(ov||opt.boostFeatured||opt.boostNew||opt.prioritizeCheap)parts.push({text:opt.reason,weight:q.weight??1});});parts.sort((a,b)=>b.weight-a.weight);const top=parts.slice(0,2).map(r=>r.text).filter(Boolean);if(!top.length)return"A crowd favorite we think you'll enjoy.";if(top.length===1)return`Picked because you wanted ${top[0]}.`;return`Picked because you wanted ${top[0]} and ${top[1]}.`;}
-function recommend(answers){const questions=QUIZ_QUESTIONS;const bc=resolveBudgetCap(answers);const excl=getExcludedTags(answers);const sw=getSoftWarnings(answers);const style=answers.resultStyle||"one";const pOpt=questions.find(q=>q.id==="priority")?.options.find(o=>o.value===answers.priority);let pool=MENU_ITEMS.filter(i=>!excl.some(t=>i.tags.includes(t)));let fallback=false;let bp=bc!=null?pool.filter(i=>i.price<=bc):pool;if(bc!=null&&!bp.length){bp=pool;fallback=true;}pool=bp;const scored=pool.map(i=>({item:i,score:scoreItem(i,answers,questions),softWarnings:buildSoftWarningsForItem(i,sw)}));if(pOpt?.prioritizeCheap)scored.sort((a,b)=>a.item.price-b.item.price||b.score-a.score);else scored.sort((a,b)=>b.score-a.score||a.item.price-b.item.price);if(style==="top3")return{style:"top3",items:scored.slice(0,3),ranked:scored,fallback};if(style==="eliminate")return{style:"eliminate",items:scored.slice(0,Math.min(5,scored.length)),ranked:scored,fallback};const c=scored[0];return{style:"one",item:c.item,score:c.score,fallback,ranked:scored,reason:buildReason(c.item,answers,QUIZ_QUESTIONS)};}
+function recommend(answers){const questions=QUIZ_QUESTIONS;const{min:bmin,cap:bc}=resolveBudgetRange(answers);const hasBudgetFilter=bc!=null||bmin!=null;const excl=getExcludedTags(answers);const sw=getSoftWarnings(answers);const style=answers.resultStyle||"one";const pOpt=questions.find(q=>q.id==="priority")?.options.find(o=>o.value===answers.priority);let pool=MENU_ITEMS.filter(i=>!excl.some(t=>i.tags.includes(t)));let fallback=false;let bp=hasBudgetFilter?pool.filter(i=>(bc==null||i.price<=bc)&&(bmin==null||i.price>=bmin)):pool;if(hasBudgetFilter&&!bp.length){bp=pool;fallback=true;}pool=bp;const scored=pool.map(i=>({item:i,score:scoreItem(i,answers,questions),softWarnings:buildSoftWarningsForItem(i,sw)}));if(pOpt?.prioritizeCheap)scored.sort((a,b)=>a.item.price-b.item.price||b.score-a.score);else scored.sort((a,b)=>b.score-a.score||a.item.price-b.item.price);if(style==="top3")return{style:"top3",items:scored.slice(0,3),ranked:scored,fallback};if(style==="eliminate")return{style:"eliminate",items:scored.slice(0,Math.min(5,scored.length)),ranked:scored,fallback};const c=scored[0];return{style:"one",item:c.item,score:c.score,fallback,ranked:scored,reason:buildReason(c.item,answers,QUIZ_QUESTIONS)};}
 
 const state={screen:"landing",answers:{},step:0,result:null,extendedMode:false};
 const SCREENS=["landing","quiz","checkpoint","result","menu","staff","feedback"];
@@ -583,7 +589,7 @@ function addPopularReason(item,container){if(item.featured&&item.popularReason){
 function renderResult(){const root=document.getElementById("result-body");root.innerHTML="";if(!state.result)return;const r=state.result;if(r.style==="one"){if(r.fallback){const fb=document.createElement("p");fb.className="result-note";fb.textContent=t("resultFallback");root.appendChild(fb);}let pi=r._pickIndex||0;const ranked=r.ranked||[];function renderOnePick(idx){const ez=root.querySelector(".one-pick-zone");if(ez)ez.remove();const ea=root.querySelector(".result-actions");if(ea)ea.remove();const entry=ranked[idx];const item=entry?.item||entry;const sw=entry?.softWarnings||[];const zone=document.createElement("div");zone.className="one-pick-zone";zone.appendChild(buildItemCard(item,true));const why=document.createElement("p");why.className="result-reason";why.textContent=buildReason(item,state.answers,QUIZ_QUESTIONS);zone.appendChild(why);addPopularReason(item,zone);if(sw.length>0){const w=document.createElement("p");w.className="result-soft-warn";w.textContent=t("softWarnOne").replace("%s",sw.join(", "));zone.appendChild(w);}root.appendChild(zone);const hm=idx+1<ranked.length;buildResultActions(root,hm,()=>{pi=idx+1;r._pickIndex=pi;renderOnePick(pi);});}renderOnePick(pi);}else if(r.style==="top3"){const note=document.createElement("p");note.className="result-note";note.textContent=t("resultTop3");root.appendChild(note);r.items.forEach((entry,i)=>{const item=entry?.item||entry;const sw=entry?.softWarnings||[];const wrap=document.createElement("div");wrap.className="result-rank-wrap";const badge=document.createElement("span");badge.className="result-rank-badge";badge.textContent=["🥇","🥈","🥉"][i]||`#${i+1}`;wrap.appendChild(badge);wrap.appendChild(buildItemCard(item,i===0));if(i===0)addPopularReason(item,wrap);if(sw.length>0){const w=document.createElement("p");w.className="result-soft-warn";w.textContent=t("softWarnShort").replace("%s",sw.join(", "));wrap.appendChild(w);}root.appendChild(wrap);});buildResultActions(root,false,null);}else if(r.style==="eliminate"){const note=document.createElement("p");note.className="result-note";note.textContent=t("resultElimNote");root.appendChild(note);const pool=[...r.items];function renderElim(){const ep=root.querySelector(".elim-pool");if(ep)ep.remove();const ea=root.querySelector(".result-actions");if(ea)ea.remove();if(pool.length===1){root.innerHTML="";const f=document.createElement("p");f.className="result-note";f.textContent=t("resultFinalPick");root.appendChild(f);const fi=pool[0]?.item||pool[0];root.appendChild(buildItemCard(fi,true));addPopularReason(fi,root);buildResultActions(root,false,null);return;}const pe=document.createElement("div");pe.className="elim-pool";pool.forEach((entry,idx)=>{const item=entry?.item||entry;const row=document.createElement("div");row.className="elim-row";row.appendChild(buildItemCard(item,false));const xb=document.createElement("button");xb.type="button";xb.className="elim-x";xb.textContent="✕";xb.setAttribute("aria-label",`Remove ${item.name}`);xb.addEventListener("click",()=>{pool.splice(idx,1);renderElim();});row.appendChild(xb);pe.appendChild(row);});root.appendChild(pe);buildResultActions(root,false,null);}renderElim();}}
 function renderMenu(){const root=document.getElementById("menu-list");root.innerHTML="";MENU_ITEMS.forEach(i=>root.appendChild(buildItemCard(i,false)));}
 function renderStaffFavorites(){const root=document.getElementById("staff-list");root.innerHTML="";const picks=MENU_ITEMS.filter(i=>i.featured);picks.forEach((item,i)=>{const w=document.createElement("div");w.className="staff-pick-wrap";const b=document.createElement("span");b.className="staff-pick-badge";b.textContent=i===0?t("staffTopPick"):t("staffPick");w.appendChild(b);w.appendChild(buildItemCard(item,i===0));if(item.popularReason){const pr=document.createElement("p");pr.className="popular-reason";pr.textContent="🌟 People love this: "+item.popularReason;w.appendChild(pr);}root.appendChild(w);});}
-function buildItemCard(item,isHero){const card=document.createElement("article");card.className="item-card"+(isHero?" item-card--hero":"");if(item.image){const img=document.createElement("img");img.className="item-img";img.src=item.image;img.alt=item.name;img.loading="lazy";img.onerror=()=>img.remove();card.appendChild(img);}const head=document.createElement("div");head.className="item-head";const name=document.createElement("h3");name.className="item-name";name.textContent=item.name;const price=document.createElement("span");price.className="item-price";price.textContent=`$${item.price}`;head.appendChild(name);head.appendChild(price);card.appendChild(head);const desc=document.createElement("p");desc.className="item-desc";desc.textContent=item.description;card.appendChild(desc);if(item.labels&&item.labels.length){const labels=document.createElement("div");labels.className="item-labels";item.labels.forEach(l=>{const tag=document.createElement("span");tag.className="label label--"+l.toLowerCase().replace(/\s+/g,"-");tag.textContent=l;labels.appendChild(tag);});card.appendChild(labels);}if(item.withRice){const ru=document.createElement("p");ru.className="rice-upgrade-note";ru.textContent="🍳 Want fried rice instead? Upgrade for +$6.";card.appendChild(ru);}return card;}
+function buildItemCard(item,isHero){const card=document.createElement("article");card.className="item-card"+(isHero?" item-card--hero":"");if(item.image){const img=document.createElement("img");img.className="item-img";img.src=item.image;img.alt=item.name;img.loading="lazy";img.onerror=()=>img.remove();card.appendChild(img);}const head=document.createElement("div");head.className="item-head";const name=document.createElement("h3");name.className="item-name";name.textContent=item.name;const price=document.createElement("span");price.className="item-price";price.textContent=`$${item.price.toFixed(2)}`;head.appendChild(name);head.appendChild(price);card.appendChild(head);const desc=document.createElement("p");desc.className="item-desc";desc.textContent=item.description;card.appendChild(desc);if(item.labels&&item.labels.length){const labels=document.createElement("div");labels.className="item-labels";item.labels.forEach(l=>{const tag=document.createElement("span");tag.className="label label--"+l.toLowerCase().replace(/\s+/g,"-");tag.textContent=l;labels.appendChild(tag);});card.appendChild(labels);}if(item.withRice){const ru=document.createElement("p");ru.className="rice-upgrade-note";ru.textContent="🍳 Want fried rice instead? Upgrade for +$6.";card.appendChild(ru);}return card;}
 
 /* ── Feedback ── */
 function resetFeedback(){document.querySelectorAll(".star").forEach(s=>s.classList.remove("is-active"));document.getElementById("btn-feedback-submit").disabled=true;const cw=document.getElementById("feedback-comment-wrap");if(cw)cw.style.display="none";const fc=document.getElementById("feedback-comment");if(fc)fc.value="";const fa=document.getElementById("feedback-actions");if(fa)fa.style.display="";const ft=document.getElementById("feedback-thanks");if(ft)ft.style.display="none";}
