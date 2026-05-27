@@ -1,61 +1,143 @@
-# Platewise
+# Brilla — Food Decision App for Restaurants & Food Trucks
 
-**No more menus. Just pick.**
+**Current Pilot Name:** PlateUp  
+**Long-Term Brand:** Brilla  
+**Tagline:** No more menus. Just pick.  
+**Status:** 🚀 Live Pilot — O'Sun Grill (May 26, 2026)
 
-Platewise is a mobile-first QR menu tool for food trucks and small restaurants. Customers scan a QR code, answer a few quick questions, and get a personalized food recommendation based on their taste, hunger level, budget, and restrictions.
+## What is Brilla?
 
-## Demo Links
+Brilla is a mobile-first QR menu + AI recommendation system that helps customers decide what to order. It solves:
+- **Decision paralysis** — "I don't know what to order"
+- **Menu readability** — Physical menus are hard to read
+- **Group dining** — Family/friends with conflicting preferences
+- **Allergies/restrictions** — Finding safe options quickly
 
-- [Main Platewise Demo](https://tuikolongahau61-alt.github.io/Platewise/)
-- [O’Sun Grill Pilot Demo](https://tuikolongahau61-alt.github.io/Platewise/osun-grill.html)
-- [Thai Tacos Demo](https://tuikolongahau61-alt.github.io/Platewise/thai-tacos.html)
-- [Garlic Shack Demo](https://tuikolongahau61-alt.github.io/Platewise/garlic-shack.html)
-- [Food Trucks Demo](https://tuikolongahau61-alt.github.io/Platewise/food-trucks.html)
-- [Food Truck Park Demo](https://tuikolongahau61-alt.github.io/Platewise/food-truck-park.html)
-- [Lagoon Demo](https://tuikolongahau61-alt.github.io/Platewise/lagoon.html)
+## Pilot Goals (This Week)
 
-## Current Status
-
-Platewise is currently in the MVP / customer discovery stage.
-
-The first live pilot demo is being built for **O’Sun Grill**, a food truck in Waikiki. The goal is to test the tool with real customers, learn how people use it, and improve the experience based on feedback.
-
-## What It Does
-
-- Helps customers decide what to order faster
-- Reduces menu overwhelm
-- Recommends items based on preferences and restrictions
-- Gives vendors a simple QR-based tool without extra technical work
-- Collects lightweight feedback to improve the experience
-
-## Pilot Goals
-
-For the current pilot, the goal is to:
-
-- Get 5–10 customers to try it this week
-- Track where users drop off
-- Collect 1–5 star feedback
+- Get 5–10 customers to try the app
+- Track where users drop off in the quiz
+- Collect 1–5 star ratings
 - Learn what customers actually need
-- Improve the quiz and recommendation flow before expanding to more vendors
+- Refine recommendation flow based on real feedback
 
-## Long-Term Vision
+## Current Pilot: "PlateUp"
 
-Future versions may include:
+**Location:** O'Sun Grill (Vietnamese food truck, Waikiki)  
+**Live URL:** `plate-up.alex-the-astronaut.workers.dev/o-sun-grill`  
+**Pilot Product Name:** PlateUp  
+**Timeline:** Week of May 26, 2026 — Testing with 5–10 diners  
+**Backend:** ✅ Data collection live
 
-- Saved customer preferences
-- Allergy-aware recommendations
-- Personalized picks across multiple food trucks and restaurants
-- Multi-vendor food truck park recommendations
-- Vendor tools for specials, sold-out items, and menu updates
+### How It Works
 
-## Tech
+1. **QR Code** — Customer scans code at truck
+2. **Quiz** — 4 quick questions (craving, budget, hunger level, restrictions)
+3. **Recommendation** — App suggests best item from menu
+4. **Feedback** — Customer rates recommendation (1–5 stars)
 
-- Single-file HTML/CSS/JS demos
-- GitHub Pages compatible
-- No backend yet
-- Built for fast testing and iteration
+## Project Structure
 
-## Current Pilot
+```
+/
+├── index.html              (deprecated demo)
+├── osun-grill.html         (O'Sun Grill pilot — main file)
+├── index-live.html         (stable version for Alex's backend integration)
+├── index-dev.html          (working/testing version)
+├── [other demo files]      (garlic-shack.html, thai-tacos.html, etc.)
+└── README.md               (this file)
+```
 
-**O’Sun Grill Pilot Demo:**  
-[Open the demo](osun-grill.html)
+## Files in This Repo
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `osun-grill.html` | O'Sun Grill pilot version | Active |
+| `index-live.html` | Stable version (for backend) | In use by Alex |
+| `index-dev.html` | Working/iteration version | In use by Armando |
+| `garlic-shack.html` | Concept/demo | Not active |
+| `thai-tacos.html` | Concept/demo | Not active |
+
+## Naming & Rebranding Timeline
+
+**Phase 1: Pilot (Now – May/June 2026)**
+- **Name:** PlateUp
+- **Domain:** `plate-up.alex-the-astronaut.workers.dev`
+- **Focus:** O'Sun Grill pilot, proving desirability
+- **QR Codes:** Printed with PlateUp branding
+- **When it ends:** After O'Sun Grill pilot success (20/35 users rate 4+ stars)
+
+**Phase 2: Scaling (June+ 2026)**
+- **Name:** Brilla
+- **Domain:** TBD (brilla.com or similar)
+- **Focus:** Multi-restaurant scaling
+- **Trigger:** Rebrand happens when onboarding second food truck
+- **Domain redirect:** Old PlateUp links redirect to Brilla (so existing QR codes still work)
+
+## Tech Stack
+
+- **Frontend:** Single-file HTML/CSS/JS (mobile-optimized)
+- **Backend:** (In development by Alex) Data collection, menu management
+- **Hosting:** Cloudflare Workers (currently), GitHub Pages (demos)
+- **Language:** English (Japanese translation planned)
+
+## For Food Truck Owners
+
+- **No technical setup required** — QR code + link
+- **Simple feedback loop** — See what customers actually pick
+- **Low barrier to entry** — Free pilot, no commitment
+- **Concierge support** — We handle menu updates
+
+---
+
+## Development Notes
+
+### For Armando (Customer Discovery)
+- Use `index-dev.html` for testing/iterations
+- Track feedback in Google Sheets
+- Document drop-off patterns
+- Commit updates to GitHub
+
+### For Alex (Backend)
+- Integrate with `index-live.html`
+- Wire data collection (quiz answers, recommendations, clicks, ratings)
+- Track metrics for algorithm optimization
+- Backend Phase 2: Move menu management to API
+
+## Success Metrics
+
+**Desirability Proof (By June 24):**
+- **35 total users tested** at O'Sun Grill
+- **20/35 rate it 4–5 stars** (proof of desirability)
+- **Ready to pitch second food truck** for Phase 2
+
+**If successful:** Move to Phase 2 (menu management backend), rebrand to Brilla, onboard second vendor
+
+**If unsuccessful:** Pivot to new audience or new pain point (guided by Heather)
+
+## Deployment
+
+**Current:**
+```
+plate-up.alex-the-astronaut.workers.dev/o-sun-grill
+```
+
+**QR Code Strategy:**
+- Physical QR codes printed and laminated
+- Placed at food truck for customer access
+- Points to live demo URL
+
+## TODO
+
+- [ ] Phase 2: Menu management backend
+- [ ] Phase 3: Recommendation engine optimization (ML-driven)
+- [ ] Rebrand to Brilla (after pilot success)
+- [ ] Multi-restaurant dashboard
+- [ ] Japanese language support
+- [ ] Future: Tap-to-pay integration, group ordering, saved profiles
+
+---
+
+**Questions?** Check the codebase or ask in Slack (#upick-updates).  
+**Status:** 🚀 Live at O'Sun Grill — Week 1  
+**Last Updated:** May 26, 2026
