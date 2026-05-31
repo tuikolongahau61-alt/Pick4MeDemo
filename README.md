@@ -1,75 +1,98 @@
-# Brilla — AI Menu Recommendation for Food Trucks
+## Latest Update – Customer Discovery Iteration (May 31, 2026)
 
-**Brand:** Brilla  
-**Tagline:** No more menus. Just pick.  
-**Status:** Live Pilot — O'Sun Grill, Waikiki (May 2026)
+### Why We Changed the Flow
 
----
+Initial customer data showed significant dropoff before users completed the recommendation quiz. Users appeared to be looking for photos, prices, and popular items before committing to answering questions.
 
-## What is Brilla?
+Instead of leading with the quiz, Brilla now focuses on helping customers build confidence before asking for input.
 
-Brilla is a mobile-first QR menu + recommendation app that helps customers decide what to order. Customer scans a QR code, answers a few quick questions, and gets a personalized food pick — no more standing at the counter unsure.
+### New User Flow
 
-**Problems it solves:**
-- Decision paralysis — "I don't know what to order"
-- Menu readability — physical menus are hard to read
-- Language barriers — multilingual support for tourist-heavy markets
-- Allergy filtering — finds safe options quickly
+Language Selection
 
----
+↓
 
-## Current Pilot: O'Sun Grill
+Customer Favorites
+- Top 3 recommended items
+- Photos
+- Prices
+- Social proof
 
-**Location:** O'Sun Grill — Vietnamese plate lunch food truck, Waikiki  
-**Live URL:** `brilla.alextheastronaut.workers.dev/osun-grill`  
-**Main repo:** [vidollet/Brilla](https://github.com/vidollet/Brilla)  
-**Timeline:** Week of May 26, 2026 — live diner testing  
-**Languages:** English, Spanish, Japanese, Chinese  
-**Backend:** Neon (PostgreSQL) — event tracking live
+↓
 
-### How it works
+Help Me Decide
 
-1. Customer scans QR code at the food truck
-2. Picks their language
-3. Views the menu or takes a short quiz (hunger level, budget, craving, allergies)
-4. Gets a personalized dish recommendation
-5. Rates it 1–5 stars on the result screen
+↓
 
----
+Recommendation Quiz
 
-## Files
+↓
 
-| File | Description |
-|------|-------------|
-| `osun-grill.html` | Main frontend — the live pilot app for O'Sun Grill |
-| `UI_MOCKUP_MAY29.html` | UI mockup of proposed changes (open in browser) |
+Ready to Order?
+- Recommendation
+- Top 3
+- Continue
 
----
+↓
 
-## Tech Stack
+Results
 
-- **Frontend:** Single-file HTML/CSS/JS, mobile-first
-- **Backend:** Cloudflare Workers + Neon — [vidollet/Brilla](https://github.com/vidollet/Brilla)
-- **Tracking:** Quiz answers, recommendations, and ratings logged to Neon
+### Key Product Decisions
 
----
+- Quiz is now positioned as optional assistance rather than the primary experience.
+- Popular items, photos, and pricing are surfaced earlier.
+- Reduced friction before value is delivered.
+- Simplified recommendation flow and navigation.
+- Preserved existing analytics and backend compatibility.
+- Customer behavior now drives product decisions instead of assumptions.
 
-## Pilot Goal
+### What We Learned
 
-35 diners tested → 20+ rate it 4–5 stars by June 24 = desirability proven → pitch second food truck.
+- The biggest issue is early dropoff, not recommendation quality.
+- Customers appear to want confidence before commitment.
+- Photos, pricing, and popularity matter more than additional questions.
+- The recommendation engine should help narrow choices, not force decisions.
+- The "Ready to Order?" checkpoint gives customers control over how much assistance they want.
 
----
+### Current Hypothesis
 
-## Dev Workflow
+Customers want confidence before commitment.
 
-This is Armando's dev fork. Before making changes:
+Showing:
+- Photos
+- Prices
+- Popular items
+- Social proof
 
-1. Pull latest `osun-grill.html` from [vidollet/Brilla](https://github.com/vidollet/Brilla)
-2. Make and test changes locally
-3. Push here, then notify Alex of what changed for production deployment
+before the quiz will increase engagement and recommendation usage.
 
-**Don't edit the live site directly** — all changes deploy through Alex's repo.
+### Current Focus
 
----
+The goal is not to create the perfect recommendation.
 
-*Last updated: May 29, 2026*
+The goal is to help customers narrow down choices faster and make ordering easier.
+
+### Next Validation Step
+
+Collect an additional 30–50 scans and compare:
+
+Old Flow:
+Language → Menu → Quiz
+
+New Flow:
+Language → Customer Favorites → Help Me Decide → Recommendation
+
+Future changes will be driven by observed customer behavior rather than assumptions.
+
+### Development Notes
+
+Recent frontend debugging revealed that GPT is highly effective for quickly identifying UI bugs, rendering issues, navigation problems, and screen flow errors. Claude remains valuable for larger implementations and project-wide refactors.
+
+Current workflow:
+
+1. Reproduce bug
+2. Use GPT to identify likely root cause
+3. Use Claude for implementation or larger code changes
+4. Verify analytics and backend compatibility before deployment
+
+Production analytics and customer data collection take priority over UI changes.
