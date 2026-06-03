@@ -1,98 +1,98 @@
-## Latest Update – Customer Discovery Iteration (May 31, 2026)
+Brilla
 
-### Why We Changed the Flow
+🚀 Live Preview
 
-Initial customer data showed significant dropoff before users completed the recommendation quiz. Users appeared to be looking for photos, prices, and popular items before committing to answering questions.
+https://vidollet.github.io/Brilla/
 
-Instead of leading with the quiz, Brilla now focuses on helping customers build confidence before asking for input.
+Brilla is a smart menu platform designed to reduce decision fatigue and help customers find the right food faster.
 
-### New User Flow
+Instead of scrolling through a menu and guessing what to order, customers answer a few simple questions and watch the menu automatically re-rank based on their preferences.
 
-Language Selection
+Current pilot location:
 
-↓
+* O’Sun Grill (Waikīkī, Hawaiʻi)
 
-Customer Favorites
-- Top 3 recommended items
-- Photos
-- Prices
-- Social proof
+Current Features
 
-↓
+Smart Menu
 
-Help Me Decide
+Customers answer:
 
-↓
+* What matters most?
+* How hungry are you?
+* What sounds good?
 
-Recommendation Quiz
+The menu updates in real time after every answer.
 
-↓
+Personalized Ranking
 
-Ready to Order?
-- Recommendation
-- Top 3
-- Continue
+Menu items are dynamically reordered based on:
 
-↓
+* Value
+* Popularity
+* Hunger level
+* Protein preference
 
-Results
+Menu Browsing
 
-### Key Product Decisions
+* Full menu remains visible at all times
+* No separate recommendation page
+* No category headers
+* Mobile-first design
 
-- Quiz is now positioned as optional assistance rather than the primary experience.
-- Popular items, photos, and pricing are surfaced earlier.
-- Reduced friction before value is delivered.
-- Simplified recommendation flow and navigation.
-- Preserved existing analytics and backend compatibility.
-- Customer behavior now drives product decisions instead of assumptions.
+Item Details
 
-### What We Learned
+Customers can:
 
-- The biggest issue is early dropoff, not recommendation quality.
-- Customers appear to want confidence before commitment.
-- Photos, pricing, and popularity matter more than additional questions.
-- The recommendation engine should help narrow choices, not force decisions.
-- The "Ready to Order?" checkpoint gives customers control over how much assistance they want.
+* View item descriptions
+* View photos
+* See prices
+* Order at the window
 
-### Current Hypothesis
+Feedback Collection
 
-Customers want confidence before commitment.
+Built-in feedback tools allow customers to:
 
-Showing:
-- Photos
-- Prices
-- Popular items
-- Social proof
+* Leave feedback
+* Report bugs
+* Submit quick thumbs-up/thumbs-down ratings
 
-before the quiz will increase engagement and recommendation usage.
+Analytics
 
-### Current Focus
+Brilla tracks:
 
-The goal is not to create the perfect recommendation.
+* Menu interactions
+* Question completion
+* Recommendation generation
+* Item clicks
+* Feedback submissions
+* Session activity
 
-The goal is to help customers narrow down choices faster and make ordering easier.
+Vision
 
-### Next Validation Step
+Brilla is building a smarter way to browse menus.
 
-Collect an additional 30–50 scans and compare:
+The long-term goal is to help customers discover food faster while helping restaurants, food trucks, and vendors better showcase their menus through personalized ranking and recommendation experiences.
 
-Old Flow:
-Language → Menu → Quiz
+Tech Stack
 
-New Flow:
-Language → Customer Favorites → Help Me Decide → Recommendation
+Frontend:
 
-Future changes will be driven by observed customer behavior rather than assumptions.
+* HTML
+* CSS
+* JavaScript
 
-### Development Notes
+Backend:
 
-Recent frontend debugging revealed that GPT is highly effective for quickly identifying UI bugs, rendering issues, navigation problems, and screen flow errors. Claude remains valuable for larger implementations and project-wide refactors.
+* Node.js
+* Analytics API
+* Neon Database
 
-Current workflow:
+Hosting:
 
-1. Reproduce bug
-2. Use GPT to identify likely root cause
-3. Use Claude for implementation or larger code changes
-4. Verify analytics and backend compatibility before deployment
+* GitHub Pages
+* Fly.io
 
-Production analytics and customer data collection take priority over UI changes.
+Status
+
+Active customer discovery and pilot testing.
