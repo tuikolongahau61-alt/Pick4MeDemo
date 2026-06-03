@@ -2,7 +2,7 @@ Brilla
 
 🚀 Live Preview
 
-https://vidollet.github.io/Brilla/
+[https://vidollet.github.io/Brilla/](https://vidollet.github.io/Brilla/osun-grill.html)
 
 Brilla is a smart menu platform designed to reduce decision fatigue and help customers find the right food faster.
 
