@@ -120,6 +120,7 @@
 
   /* ── Q1 centered state ── */
   #scroll-container { position: relative; }
+  #scroll-container.scroll-locked { overflow: hidden; }
   .q-wrap--centered { position: absolute; top: 50%; left: 16px; right: 16px; transform: translateY(-50%); z-index: 25; padding: 0; }
 
   /* ── Full menu list ── */
@@ -452,7 +453,6 @@ function getRanked() {
 function renderQ() {
   const wrap = document.getElementById("q-wrap");
   wrap.innerHTML = "";
-  wrap.classList.toggle("q-wrap--centered", quizStep === -1);
 
   if (quizStep === -1) {
     // Q1 — priority picker, centered, no progress, no count
@@ -592,6 +592,7 @@ function renderMenu() {
   const container = document.getElementById("menu-list");
   container.innerHTML = "";
   container.classList.toggle("menu-locked", quizStep === -1);
+  document.getElementById("scroll-container").classList.toggle("scroll-locked", quizStep === -1);
   const ranked = getRanked();
   ranked.forEach((item, i) => {
     const card = document.createElement("div");
