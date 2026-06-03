@@ -71,8 +71,6 @@
 
   /* ── Question block ── */
   .q-wrap { padding: 12px 16px 0; flex-shrink: 0; }
-  .q-wrap--sticky { position: sticky; top: 0; z-index: 20; background: var(--c-bg); padding-bottom: 8px; box-shadow: 0 4px 12px rgba(39,20,0,0.07); }
-
   /* Q1 — priority picker, no progress */
   .q1-card { background: #fff; border: 2px solid var(--c-line); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow-s); }
   .q1-prompt { font-size: 1.05rem; font-weight: 900; color: var(--c-ink); margin-bottom: 10px; }
@@ -138,7 +136,6 @@
 
   /* ── Full menu list ── */
   .menu-list { padding: 12px 16px 80px; display: flex; flex-direction: column; gap: 8px; }
-  .menu-list-header { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-ink-soft); padding: 4px 0 2px; }
 
   @keyframes itemEnter {
     from { opacity: 0; transform: translateY(6px); }
@@ -331,8 +328,7 @@
           <div style="font-size:1.25rem;font-weight:900;color:var(--c-coral-deep);white-space:nowrap;" id="detail-price"></div>
         </div>
         <div class="detail-labels" id="detail-labels"></div>
-        <div class="detail-why" id="detail-why" style="display:none;"></div>
-        <div class="detail-desc" id="detail-desc"></div>
+<div class="detail-desc" id="detail-desc"></div>
       </div>
       <div style="padding:16px 20px 36px;">
         <button class="btn-green" onclick="showOrderPopup()">Order Now →</button>
@@ -732,7 +728,6 @@ function openDetail(item) {
     s.textContent = l;
     labelsEl.appendChild(s);
   });
-  document.getElementById("detail-why").style.display = "none";
   trackEvent("result_item_clicked", { item_id: item.id, source: "smart_menu" });
   goScreen("detail");
 }
