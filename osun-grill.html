@@ -294,7 +294,7 @@
     <div class="q1-modal-body">
       <div class="q1-modal-eyebrow">Personalize your menu</div>
       <div class="q1-card" style="width:100%;">
-        <div class="q1-prompt">What are you in the mood for?</div>
+        <div class="q1-prompt">What matters most?</div>
         <div class="q1-options" id="q1-modal-options"></div>
       </div>
     </div>
@@ -390,25 +390,18 @@ let screenHistory = [];
 // Step 0  = Q2 (hunger, progress 50%)
 // Step 1  = Q3 (craving, progress 100%)
 // Step 2  = done
-const TOTAL_STEPS = 3; // Q2 hunger + Q4 budget + Q3 avoid
+const TOTAL_STEPS = 2; // Q2 + Q3
 let quizStep = -1;     // -1 = Q1 not yet answered
 let answers = {};      // { priority, hunger, craving }
 let quizStarted = false;
 let finalLogged = false;
 
-// Q1 (modal gate) — CRAVING. This is just the one tap needed to enter the menu, so it's the most
-// tappable question we have: concrete + appetizing (people answer a craving instantly). It's also the
-// highest-signal axis, so the entry tap doubles as the strongest input to the ranking.
 const Q1_OPTIONS = [
-  { label: "🍤 Shrimp",      value: "shrimp"  },
-  { label: "🍗 Chicken",     value: "chicken" },
-  { label: "🥩 Beef",        value: "beef"    },
-  { label: "🍖 Pork",        value: "pork"    },
-  { label: "🐟 Fish",        value: "fish"    },
-  { label: "🥬 Veggie",      value: "veg"     },
-  { label: "🍽️ Surprise me", value: "any"     },
+  { label: "💰 Best Value", value: "value"   },
+  { label: "🔥 Popular",    value: "popular"  },
+  { label: "💪 Filling",    value: "filling"  },
+  { label: "🥗 Lighter",    value: "lighter"  },
 ];
-const Q1_PROMPT = "What are you in the mood for?";
 const Q2 = {
   id: "hunger", prompt: "How hungry?",
   options: [
@@ -417,39 +410,18 @@ const Q2 = {
     { label: "Very hungry",  value: "starving", tags: ["big-hunger","filling"] },
   ]
 };
-// Q3 — Avoidances. A FILTER (hard-removes items), not a re-rank. Multi-select + skippable.
-// Only allergens actually TAGGED on this menu are listed — do NOT add peanuts/tree-nuts/dairy until the
-// allergy audit tags land, or the filter would remove nothing and give an allergic diner false confidence.
 const Q3 = {
-  id: "avoid", prompt: "Avoiding anything?", type: "multi",
+  id: "craving", prompt: "What sounds good?",
   options: [
-    { label: "🦐 Shellfish", value: "shellfish" },
-    { label: "🐟 Fish",      value: "fish"      },
-    { label: "🍖 Pork",      value: "pork"      },
-    { label: "🥩 Beef",      value: "beef"      },
-    { label: "🌾 Gluten",    value: "gluten"    },
-    { label: "🫘 Soy",       value: "soy"       },
-    { label: "🥚 Eggs",      value: "eggs"      },
-    { label: "🌶️ Spicy",     value: "spicy"     },
+    { label: "🍤 Shrimp",  value: "shrimp",  tags: ["shrimp","shellfish"] },
+    { label: "🍗 Chicken", value: "chicken", tags: ["chicken"] },
+    { label: "🥩 Beef",    value: "beef",    tags: ["beef"] },
+    { label: "🐟 Fish",    value: "fish",    tags: ["fish","shellfish"] },
+    { label: "🍖 Pork",    value: "pork",    tags: ["pork"] },
+    { label: "🍽️ Any",     value: "any",     tags: [] },
   ]
 };
-const AVOID_TAGS = {
-  shellfish: ["shrimp","shellfish"], fish: ["fish"], pork: ["pork"], beef: ["beef"],
-  gluten: ["gluten"], soy: ["soy"], eggs: ["eggs"], spicy: ["spicy"],
-};
-// Q4 — Budget. Exact prices are hidden from the diner, so this uses $/$$/$$$ tiers instead of dollars.
-// Tier cutoffs for THIS menu: $ <= $15 (appetizers), $$ <= $21 (wings, fried rice + the $20.75 mains), $$$ = the beef plates.
-const PRICE_TIER = p => (p <= 15 ? 1 : (p <= 21 ? 2 : 3));
-const Q4 = {
-  id: "budget", prompt: "Budget?",
-  options: [
-    { label: "$ Budget",  value: 1 },
-    { label: "$$ Mid",    value: 2 },
-    { label: "$$$ Treat", value: 3 },
-    { label: "Any",       value: 0 },
-  ]
-};
-const STEPS = [Q2, Q4, Q3]; // craving (gate) -> hunger -> budget -> avoid (multi-select closes the flow)
+const STEPS = [Q2, Q3];
 
 /* ─── Menu data ─── */
 const MENU_ITEMS = [
@@ -473,52 +445,31 @@ const MENU_ITEMS = [
 
 /* ─── Scoring ─── */
 const HUNGER_TAGS  = { snack: ["light-hunger","quick","appetizer"], normal: ["medium-hunger"], starving: ["big-hunger","filling"] };
-const CRAVING_TAGS = { shrimp: ["shrimp","shellfish"], chicken: ["chicken"], beef: ["beef"], fish: ["fish","shellfish"], pork: ["pork"], veg: ["vegetarian"] };
-
-// Operational boost — favor items the kitchen makes fastest/easiest, independent of how well they
-// match the diner's answers. Tune values here to nudge what gets recommended. (item id -> points)
-const PREP_BOOST = { "garlic-shrimp": 6 };
+const CRAVING_TAGS = { shrimp: ["shrimp","shellfish"], chicken: ["chicken"], beef: ["beef"], fish: ["fish","shellfish"], pork: ["pork"] };
 
 function scoreItem(item) {
   let score = 0;
   // Featured baseline
   if (item.featured) score += 4;
-  // Kitchen / prep convenience — give fast, easy-to-make items more leeway to surface
-  score += PREP_BOOST[item.id] || 0;
-  // Craving (weight 3) — Q1, the entry tap
-  const cTags = CRAVING_TAGS[answers.craving] || [];
-  if (cTags.some(t => item.tags.includes(t))) score += 30;
-  // "Surprise me" craving — bump featured/popular items
-  if (answers.craving === "any" && item.featured) score += 20;
-  // Hunger (weight 2) — Q2
+  // Hunger (weight 2)
   const hTags = HUNGER_TAGS[answers.hunger] || [];
   if (hTags.some(t => item.tags.includes(t))) score += 20;
-  // Soft exclusions — the appetite preference pushes the OPPOSITE size DOWN, not just rewards matches.
-  // Tuned to -8 so a strong craving (+30) still wins when the craved protein only comes in one size.
-  if (answers.hunger === "snack"    && item.tags.includes("big-hunger"))   score -= 8; // a small bite shouldn't surface a full entree
-  if (answers.hunger === "starving" && item.tags.includes("light-hunger")) score -= 8; // starving shouldn't surface a light appetizer
-  // Budget (Q4) — soft. Prefer items at/under the chosen $ tier; gently penalize pricier ones.
-  // Prices stay hidden; only the tier preference moves the ranking. ("Any" = 0 = no effect.)
-  if (answers.budget) {
-    const tier = PRICE_TIER(item.price);
-    if (tier <= answers.budget) score += 5;
-    else score -= 8 * (tier - answers.budget);
-  }
+  // Craving (weight 3)
+  const cTags = CRAVING_TAGS[answers.craving] || [];
+  if (cTags.some(t => item.tags.includes(t))) score += 30;
+  // "Any" craving — bump featured/popular items
+  if (answers.craving === "any" && item.featured) score += 20;
+  // Priority boosts
+  if (answers.priority === "popular" && item.featured) score += 6;
+  if (answers.priority === "filling" && item.tags.includes("filling")) score += 5;
+  if (answers.priority === "lighter" && (item.tags.includes("light-hunger") || item.tags.includes("appetizer"))) score += 5;
+  // Value: cheaper items earn a bonus (max +8), but craving/hunger still dominate
+  if (answers.priority === "value") score += Math.round(8 * (23.75 - item.price) / (23.75 - 9.75));
   return score;
 }
 
-// Avoidances (Q3) hard-filter the pool before scoring. Never return an empty menu: if the filter would
-// remove everything, fall back to the full menu so the diner still sees options.
-function excludedTags() {
-  const set = new Set();
-  (answers.avoid || []).forEach(a => (AVOID_TAGS[a] || []).forEach(t => set.add(t)));
-  return set;
-}
 function getRanked() {
-  const excl = excludedTags();
-  let pool = MENU_ITEMS.filter(i => !i.tags.some(t => excl.has(t)));
-  if (!pool.length) pool = MENU_ITEMS;
-  const scored = pool.map(i => ({ item: i, score: scoreItem(i) }));
+  const scored = MENU_ITEMS.map(i => ({ item: i, score: scoreItem(i) }));
   scored.sort((a, b) => b.score - a.score || a.item.price - b.item.price);
   return scored.map(s => s.item);
 }
@@ -529,12 +480,12 @@ function renderQ() {
   wrap.innerHTML = "";
 
   if (quizStep === -1) {
-    // Q1 — craving picker (the entry gate), centered, no progress, no count
+    // Q1 — priority picker, centered, no progress, no count
     const card = document.createElement("div");
     card.className = "q1-card";
     const prompt = document.createElement("div");
     prompt.className = "q1-prompt";
-    prompt.textContent = Q1_PROMPT;
+    prompt.textContent = "What matters most?";
     const grid = document.createElement("div");
     grid.className = "q1-options";
     Q1_OPTIONS.forEach(opt => {
@@ -569,7 +520,7 @@ function renderQ() {
     return;
   }
 
-  // Q2 (hunger) / Q3 (avoid) — with progress bar
+  // Q2 / Q3 — with progress bar
   const q = STEPS[quizStep];
   const pct = ((quizStep + 1) / TOTAL_STEPS) * 100;
 
@@ -589,30 +540,6 @@ function renderQ() {
 
   const chips = document.createElement("div");
   chips.className = "q-chips";
-
-  if (q.type === "multi") {
-    // Multi-select filter (avoidances): toggle chips, live-filter the menu, confirm/skip to finish.
-    const sel = answers[q.id] || [];
-    q.options.forEach(opt => {
-      const chip = document.createElement("button");
-      chip.className = "q-chip" + (sel.includes(opt.value) ? " selected" : "");
-      chip.textContent = opt.label;
-      chip.onclick = () => toggleMulti(q.id, opt.value);
-      chips.appendChild(chip);
-    });
-    card.appendChild(track);
-    card.appendChild(prompt);
-    card.appendChild(chips);
-    const done = document.createElement("button");
-    done.className = "q-chip selected";
-    done.style.cssText = "margin-top:10px;width:100%;justify-content:center;background:var(--c-coral-deep);border:none;color:#fff;font-weight:800;";
-    done.textContent = sel.length ? "Show my picks →" : "No restrictions — show all →";
-    done.onclick = () => confirmMulti(q.id);
-    card.appendChild(done);
-    wrap.appendChild(card);
-    return;
-  }
-
   q.options.forEach(opt => {
     const chip = document.createElement("button");
     chip.className = "q-chip" + (answers[q.id] === opt.value ? " selected" : "");
@@ -633,11 +560,10 @@ function renderQ() {
 
 /* ─── Answer handlers ─── */
 function answerQ1(value) {
-  // Q1 is now the craving question (the single tap that unlocks the menu).
-  answers.craving = value;
-  quizStarted = true;
+  answers.priority = value;
+  trackEvent("sort_preference_selected", { preference: value });
   trackEvent("quiz_started", { entry_point: "smart_menu" });
-  trackEvent("quiz_answer", { question: "craving", value, step: 1 });
+  quizStarted = true;
   quizStep = 0;
   renderQ();
   renderMenu();
@@ -648,24 +574,6 @@ function answerStep(qId, value) {
   if (!quizStarted) { quizStarted = true; trackEvent("quiz_started", { entry_point: "smart_menu" }); }
   answers[qId] = value;
   trackEvent("quiz_answer", { question: qId, value, step: quizStep + 1 });
-  quizStep++;
-  renderQ();
-  renderMenu();
-  if (quizStep >= TOTAL_STEPS) logFinalRecommendation();
-}
-
-function toggleMulti(qId, value) {
-  const sel = answers[qId] || (answers[qId] = []);
-  const i = sel.indexOf(value);
-  if (i >= 0) sel.splice(i, 1); else sel.push(value);
-  trackEvent("quiz_answer", { question: qId, value, selected: sel.slice(), step: quizStep + 1 });
-  renderQ();   // refresh selected chip states
-  renderMenu(); // live filter
-}
-
-function confirmMulti(qId) {
-  if (!quizStarted) { quizStarted = true; trackEvent("quiz_started", { entry_point: "smart_menu" }); }
-  answers[qId] = answers[qId] || [];
   quizStep++;
   renderQ();
   renderMenu();
@@ -727,7 +635,7 @@ function renderMenu() {
 
     const head = document.createElement("div");
     head.className = "menu-item-head";
-    head.innerHTML = `<div class="menu-item-name">${item.name}</div>`; // price intentionally hidden in this build
+    head.innerHTML = `<div class="menu-item-name">${item.name}</div><div class="menu-item-price">$${item.price.toFixed(2)}</div>`;
 
     const desc = document.createElement("div");
     desc.className = "menu-item-desc";
@@ -810,7 +718,7 @@ function openDetail(item) {
   img.onerror = () => { imgWrap.removeChild(img); imgWrap.textContent = item.emoji; };
   imgWrap.appendChild(img);
   document.getElementById("detail-name").textContent = item.name;
-  document.getElementById("detail-price").textContent = ""; // price intentionally hidden in this build
+  document.getElementById("detail-price").textContent = "$" + item.price.toFixed(2);
   document.getElementById("detail-desc").textContent = item.description;
   const labelsEl = document.getElementById("detail-labels");
   labelsEl.innerHTML = "";
