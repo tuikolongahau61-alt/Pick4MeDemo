@@ -83,7 +83,7 @@
   .decide-sub { text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--c-ink-soft); margin-top: 9px; line-height: 1.4; }
 
   /* ── Filter bar ── */
-  .filters { padding: 12px 0 6px; flex-shrink: 0; border-bottom: 1px solid var(--c-line); background: var(--c-bg); max-height: 140px; overflow: hidden; transition: max-height 0.28s ease, padding 0.28s ease, opacity 0.18s ease, border-color 0.28s ease; }
+  .filters { padding: 12px 0 6px; flex-shrink: 0; border-bottom: 1px solid var(--c-line); background: var(--c-bg); max-height: 140px; overflow: hidden; transition: max-height 0.44s cubic-bezier(0.16,1,0.3,1), padding 0.44s cubic-bezier(0.16,1,0.3,1), opacity 0.32s ease, border-color 0.44s ease; }
   .filters.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; border-bottom-color: transparent; }
   .filter-row { display: flex; gap: 7px; overflow-x: auto; padding: 0 18px 4px; scrollbar-width: none; }
   .filter-row::-webkit-scrollbar { display: none; }
@@ -744,8 +744,9 @@ function renderFilters() {
     chip.className = "fchip" + (activeCat === c ? " active" : "");
     chip.textContent = c;
     chip.onclick = () => {
-      activeCat = c;
-      trackEvent("filter_selected", { type: "category", value: c });
+      // tapping the active category again returns to the default "All" view
+      activeCat = (activeCat === c && c !== "All") ? "All" : c;
+      trackEvent("filter_selected", { type: "category", value: activeCat });
       renderFilters(); renderMenu();
       document.getElementById("menu-scroll").scrollTop = 0;
     };
@@ -1232,10 +1233,12 @@ window.addEventListener("pagehide", () => fireEnd());
 (function () {
   const scroller = document.getElementById("menu-scroll");
   const filters = document.getElementById("filters");
-  const HIDE_AFTER = 110;   // need to be this far down before hiding kicks in
-  const TRAVEL = 70;        // sustained scroll distance in one direction before toggling
   let lastY = 0, accum = 0;
   scroller.addEventListener("scroll", () => {
+    // A category filter shortens the menu, so be much less eager to hide there.
+    const filtered = activeCat !== "All";
+    const HIDE_AFTER = filtered ? 280 : 110;   // how far down before hiding can kick in
+    const TRAVEL = filtered ? 170 : 70;        // sustained scroll distance before toggling
     const y = scroller.scrollTop;
     const delta = y - lastY;
     lastY = y;
