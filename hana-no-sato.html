@@ -257,6 +257,30 @@
   .order-close-btn { width: 100%; padding: 14px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
   .order-clear { width: 100%; padding: 10px; background: none; color: var(--c-ink-soft); border: none; font-size: 0.84rem; font-weight: 700; cursor: pointer; margin-top: 2px; }
   .order-empty { text-align: center; color: var(--c-ink-soft); font-size: 0.9rem; font-weight: 600; line-height: 1.5; padding: 30px 10px; }
+  .order-row-note { font-size: 0.74rem; font-weight: 600; color: var(--c-ink); background: #f3eede; border-radius: 8px; padding: 3px 8px; margin-top: 4px; }
+  .order-row-notebtn { margin-top: 4px; background: none; border: none; padding: 0; font-size: 0.74rem; font-weight: 800; color: var(--c-indigo); cursor: pointer; }
+
+  /* ── Item note prompt ── */
+  .note-overlay { display: none; position: fixed; inset: 0; background: rgba(29,26,22,0.5); z-index: 480; align-items: flex-end; justify-content: center; }
+  .note-overlay.show { display: flex; }
+  .note-sheet { background: #fff; border-radius: 22px 22px 0 0; padding: 18px 20px 30px; width: 390px; max-width: 100%; box-shadow: 0 -8px 40px rgba(0,0,0,0.2); animation: slideUp 0.22s ease; }
+  .note-title { font-family: var(--serif); font-size: 1.18rem; font-weight: 700; color: var(--c-ink); text-align: center; }
+  .note-sub { font-size: 0.8rem; font-weight: 600; color: var(--c-ink-soft); text-align: center; margin: 2px 0 14px; }
+  .note-textarea { width: 100%; border: 2px solid var(--c-line); border-radius: var(--radius-s); padding: 12px 14px; font-size: 0.95rem; font-family: inherit; resize: none; color: var(--c-ink); margin-bottom: 12px; }
+  .note-textarea:focus { outline: none; border-color: var(--c-indigo); }
+  .note-save { width: 100%; padding: 14px; background: var(--c-green); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 18px rgba(70,121,90,0.3); }
+  .note-skip { width: 100%; padding: 11px; background: none; color: var(--c-ink-soft); border: none; font-size: 0.86rem; font-weight: 700; cursor: pointer; margin-top: 2px; }
+
+  /* ── First-add explainer ── */
+  .intro-overlay { display: none; position: fixed; inset: 0; background: rgba(29,26,22,0.55); z-index: 500; align-items: center; justify-content: center; padding: 24px; }
+  .intro-overlay.show { display: flex; }
+  .intro-card { background: #fff; border-radius: 24px; padding: 30px 26px 24px; text-align: center; width: 332px; max-width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.28); animation: popIn 0.2s ease; }
+  @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .intro-icon { font-size: 2.6rem; margin-bottom: 10px; }
+  .intro-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; color: var(--c-ink); margin-bottom: 8px; }
+  .intro-text { font-size: 0.9rem; font-weight: 500; color: var(--c-ink-soft); line-height: 1.55; margin-bottom: 20px; }
+  .intro-text b { color: var(--c-ink); font-weight: 800; }
+  .intro-btn { width: 100%; padding: 14px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
 
   /* ── Floating feedback ── */
   .float-fb { position: fixed; bottom: 18px; left: 16px; z-index: 400; background: var(--c-ink); color: #fff; border: none; border-radius: var(--radius-pill); padding: 9px 14px; font-size: 0.76rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(29,26,22,0.28); opacity: 0.8; transition: opacity 0.2s; }
@@ -332,6 +356,28 @@
       <button class="order-close-btn" onclick="closeOrder()">Keep browsing</button>
       <button class="order-clear" onclick="clearOrder()">Clear list</button>
     </div>
+  </div>
+</div>
+
+<!-- First-add explainer -->
+<div class="intro-overlay" id="intro-overlay">
+  <div class="intro-card">
+    <div class="intro-icon">🧾</div>
+    <div class="intro-title">Saved to your order</div>
+    <div class="intro-text">This isn't checkout — it's just a running list to keep track of what you like. Add dishes as you browse, add notes like <b>"no ginger,"</b> then show the list to your server when they come by. Nothing is sent to the kitchen yet.</div>
+    <button class="intro-btn" onclick="dismissIntro()">Got it</button>
+  </div>
+</div>
+
+<!-- Item note prompt -->
+<div class="note-overlay" id="note-overlay">
+  <div class="note-sheet">
+    <div class="fb-handle"></div>
+    <div class="note-title" id="note-title">Add a note</div>
+    <div class="note-sub">Anything the kitchen should know? Optional.</div>
+    <textarea class="note-textarea" id="note-textarea" rows="3" placeholder="e.g. no ginger · extra spicy · sauce on the side"></textarea>
+    <button class="note-save" onclick="saveNote()">Save note</button>
+    <button class="note-skip" onclick="closeNote()">Skip</button>
   </div>
 </div>
 
@@ -1145,11 +1191,59 @@ function orderTotal() {
 }
 function addToOrder(id, qty) {
   qty = qty || 1;
-  const l = orderLine(id);
-  if (l) l.qty += qty; else order.push({ id, qty });
+  const existing = orderLine(id);
+  if (existing) existing.qty += qty; else order.push({ id, qty, note: "" });
   saveOrder();
   trackEvent("order_item_added", { item_id: id, qty, order_size: orderCount() });
   refreshOrderUI();
+  if (!existing) {
+    // first item ever added → explain what the list is, then ask for a note
+    if (!introSeen()) showOrderIntro(() => openNotePrompt(id));
+    else openNotePrompt(id);
+  }
+}
+
+/* ─── First-add explainer (shown once per visit) ─── */
+let _introCb = null;
+function introSeen() { return safeStorage(() => sessionStorage.getItem("pw_order_explained"), null) === "1"; }
+function showOrderIntro(cb) {
+  _introCb = cb || null;
+  trackEvent("order_intro_shown", {});
+  document.getElementById("intro-overlay").classList.add("show");
+}
+function dismissIntro() {
+  safeStorage(() => sessionStorage.setItem("pw_order_explained", "1"), null);
+  document.getElementById("intro-overlay").classList.remove("show");
+  const cb = _introCb; _introCb = null;
+  if (cb) setTimeout(cb, 200);   // let the popup finish closing before the note sheet slides up
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+/* ─── Item notes ─── */
+let noteItemId = null;
+function openNotePrompt(id) {
+  noteItemId = id;
+  const it = MENU_ITEMS.find(m => m.id === id);
+  const line = orderLine(id);
+  document.getElementById("note-title").textContent = "Note for " + (it ? it.name : "item");
+  const ta = document.getElementById("note-textarea");
+  ta.value = (line && line.note) || "";
+  document.getElementById("note-overlay").classList.add("show");
+  setTimeout(() => ta.focus(), 60);
+}
+function saveNote() {
+  const txt = document.getElementById("note-textarea").value.trim();
+  const line = orderLine(noteItemId);
+  if (line) { line.note = txt; saveOrder(); trackEvent("order_note_added", { item_id: noteItemId, has_note: !!txt }); }
+  closeNote();
+  renderOrderSheet();
+}
+function closeNote() {
+  document.getElementById("note-overlay").classList.remove("show");
+  noteItemId = null;
 }
 function setQty(id, qty) {
   const l = orderLine(id);
@@ -1197,12 +1291,16 @@ function renderOrderSheet() {
     const row = document.createElement("div");
     row.className = "order-row";
     row.innerHTML =
-      `<div class="order-row-name">${it.name}<div class="order-row-jp">${it.jp || ""}</div></div>` +
+      `<div class="order-row-name">${it.name}<div class="order-row-jp">${it.jp || ""}</div>` +
+        (l.note ? `<div class="order-row-note">📝 ${escapeHtml(l.note)}</div>` : "") +
+        `<button class="order-row-notebtn">${l.note ? "Edit note" : "＋ Add note"}</button>` +
+      `</div>` +
       `<div class="qty"><button aria-label="Remove one">−</button><span class="n">${l.qty}</span><button aria-label="Add one">＋</button></div>` +
       `<div class="order-row-price">$${(it.price * l.qty).toFixed(2)}</div>`;
     const btns = row.querySelectorAll(".qty button");
     btns[0].onclick = () => setQty(it.id, l.qty - 1);
     btns[1].onclick = () => setQty(it.id, l.qty + 1);
+    row.querySelector(".order-row-notebtn").onclick = () => openNotePrompt(it.id);
     rows.appendChild(row);
   });
   document.getElementById("order-amt").textContent = "$" + orderTotal().toFixed(2);
@@ -1253,6 +1351,12 @@ window.addEventListener("pagehide", () => fireEnd());
 /* ─── Init ─── */
 document.getElementById("order-overlay").addEventListener("click", e => {
   if (e.target === document.getElementById("order-overlay")) closeOrder();
+});
+document.getElementById("note-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("note-overlay")) closeNote();
+});
+document.getElementById("intro-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("intro-overlay")) dismissIntro();
 });
 renderFilters();
 renderMenu();
