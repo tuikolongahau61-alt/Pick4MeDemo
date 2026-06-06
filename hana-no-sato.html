@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Hana no Sato · 花の里 — Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-bg: #f5efe2;          /* washi paper */
+    --c-bg2: #efe6d4;
+    --c-ink: #1d1a16;          /* sumi ink */
+    --c-ink-soft: #6f665a;
+    --c-indigo: #25415c;       /* ai / indigo */
+    --c-indigo-deep: #182e44;
+    --c-red: #b23a2e;          /* aka / hanko seal */
+    --c-red-soft: #c75044;
+    --c-gold: #c2a05f;
+    --c-card: #fffdf7;
+    --c-line: #e3d8c2;
+    --c-green: #46795a;
+    --c-green-light: #e7f0e9;
+    --radius: 14px;
+    --radius-s: 10px;
+    --radius-pill: 999px;
+    --shadow-s: 0 4px 16px rgba(37,65,92,0.08);
+    --shadow-btn: 0 8px 20px rgba(37,65,92,0.28);
+    --serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", "Times New Roman", serif;
+    --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: #c9bda3;
+    display: flex; justify-content: center; align-items: flex-start;
+    min-height: 100vh; padding: 24px 16px;
+  }
+  .phone {
+    width: 390px; min-height: 844px; background: var(--c-bg); border-radius: 40px;
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.35), inset 0 0 0 1.5px rgba(255,255,255,0.4);
+  }
+  .screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+  .screen.active { display: flex; }
+
+  @media (max-width: 480px) {
+    body { padding: 0; align-items: stretch; }
+    .phone { width: 100%; min-height: 0; height: 100svh; border-radius: 0; box-shadow: none; }
+  }
+
+  /* ── Header / noren ── */
+  .hdr {
+    position: relative; background: var(--c-indigo); color: #fff;
+    padding: 26px 22px 20px; flex-shrink: 0; overflow: hidden;
+  }
+  /* seigaiha wave texture */
+  .hdr::before {
+    content: ""; position: absolute; inset: 0; opacity: 0.10; pointer-events: none;
+    background:
+      radial-gradient(circle at 10px 18px, transparent 6px, #fff 6px, #fff 7px, transparent 7px),
+      radial-gradient(circle at 30px 18px, transparent 6px, #fff 6px, #fff 7px, transparent 7px);
+    background-size: 40px 20px;
+  }
+  .hdr-inner { position: relative; z-index: 1; }
+  .hdr-jp { font-family: var(--serif); font-size: 0.95rem; letter-spacing: 0.22em; color: var(--c-gold); margin-bottom: 4px; }
+  .hdr-name { font-family: var(--serif); font-size: 1.85rem; font-weight: 700; letter-spacing: 0.01em; line-height: 1.1; }
+  .hdr-rule { width: 38px; height: 2px; background: var(--c-red-soft); margin: 10px 0; border-radius: 2px; }
+  .hdr-meta { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.82); line-height: 1.5; }
+  .hdr-meta .star { color: var(--c-gold); font-weight: 800; }
+
+  /* ── Help me decide block ── */
+  .decide { padding: 16px 18px 6px; flex-shrink: 0; }
+  .decide-btn {
+    width: 100%; padding: 15px 18px; background: var(--c-red); color: #fff; border: none;
+    border-radius: var(--radius); font-size: 1.06rem; font-weight: 800; cursor: pointer;
+    box-shadow: var(--shadow-btn); display: flex; align-items: center; justify-content: center; gap: 9px;
+    transition: transform 0.1s, background 0.15s;
+  }
+  .decide-btn:active { transform: scale(0.98); }
+  .decide-btn:hover { background: var(--c-red-soft); }
+  .decide-sub { text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--c-ink-soft); margin-top: 9px; line-height: 1.4; }
+
+  /* ── Filter bar ── */
+  .filters { padding: 12px 0 6px; flex-shrink: 0; border-bottom: 1px solid var(--c-line); background: var(--c-bg); }
+  .filter-row { display: flex; gap: 7px; overflow-x: auto; padding: 0 18px 4px; scrollbar-width: none; }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-row + .filter-row { padding-top: 8px; }
+  .fchip {
+    flex-shrink: 0; padding: 7px 14px; background: var(--c-card); border: 1.5px solid var(--c-line);
+    border-radius: var(--radius-pill); font-size: 0.82rem; font-weight: 700; color: var(--c-ink);
+    cursor: pointer; white-space: nowrap; transition: all 0.12s;
+  }
+  .fchip:active { transform: scale(0.95); }
+  .fchip.active { background: var(--c-indigo); border-color: var(--c-indigo); color: #fff; }
+  .fchip.diet.active { background: var(--c-green); border-color: var(--c-green); }
+
+  /* ── Menu list ── */
+  #menu-scroll { overflow-y: auto; flex: 1; }
+  .menu-list { padding: 8px 18px 90px; }
+  .sec-head { font-family: var(--serif); font-size: 1.12rem; font-weight: 700; color: var(--c-indigo); margin: 18px 0 4px; display: flex; align-items: baseline; gap: 8px; }
+  .sec-head .sec-jp { font-size: 0.72rem; font-weight: 600; color: var(--c-ink-soft); letter-spacing: 0.1em; }
+  .sec-head:first-child { margin-top: 6px; }
+  .empty-note { text-align: center; color: var(--c-ink-soft); font-size: 0.88rem; font-weight: 600; padding: 40px 20px; }
+
+  @keyframes itemEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .menu-item {
+    position: relative;
+    display: flex; gap: 12px; background: var(--c-card); border: 1.5px solid var(--c-line);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-s); cursor: pointer;
+    margin-top: 9px; transition: border-color 0.12s; animation: itemEnter 0.18s ease both;
+  }
+  .mi-add {
+    position: absolute; bottom: 8px; right: 8px; z-index: 2; width: 30px; height: 30px;
+    border-radius: 50%; border: none; background: var(--c-indigo); color: #fff; font-size: 1.15rem;
+    font-weight: 800; line-height: 1; cursor: pointer; box-shadow: 0 3px 10px rgba(37,65,92,0.35);
+    display: flex; align-items: center; justify-content: center; transition: transform 0.1s, background 0.15s;
+  }
+  .mi-add:active { transform: scale(0.86); }
+  .mi-add.added { background: var(--c-green); }
+  .menu-item:hover { border-color: var(--c-indigo); }
+  .mi-img { width: 96px; min-height: 96px; align-self: stretch; position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .mi-img .tile { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2.1rem; }
+  .mi-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .mi-body { flex: 1; padding: 10px 12px 11px 2px; min-width: 0; }
+  .mi-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .mi-name { font-size: 0.96rem; font-weight: 800; color: var(--c-ink); line-height: 1.2; }
+  .mi-jp { font-size: 0.68rem; font-weight: 600; color: var(--c-ink-soft); margin-top: 1px; }
+  .mi-price { font-size: 0.92rem; font-weight: 800; color: var(--c-red); white-space: nowrap; }
+  .mi-desc { font-size: 0.78rem; font-weight: 500; color: var(--c-ink-soft); line-height: 1.35; margin: 5px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .mi-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+  .label { display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.66rem; font-weight: 800; }
+  .label--Popular    { background: #fbeae3; color: #b23a2e; }
+  .label--Spicy      { background: #fdeede; color: #c5681a; }
+  .label--Vegetarian { background: var(--c-green-light); color: #2f6b46; }
+  .label--Light      { background: #e7f0e9; color: #3a7a55; }
+  .label--Filling    { background: #ece6f4; color: #4a3a86; }
+  .label--Sweet      { background: #fbe9f0; color: #99356b; }
+  .label--Sharing    { background: #e6eef5; color: #25415c; }
+  .label--Top        { background: var(--c-gold); color: #2a2210; }
+
+  /* gradient tiles by group */
+  .tile-ramen   { background: linear-gradient(135deg,#6a4a2f,#a9794a); }
+  .tile-udon    { background: linear-gradient(135deg,#7a6a3a,#b4a25f); }
+  .tile-bento   { background: linear-gradient(135deg,#3f5a44,#6d9168); }
+  .tile-bowls   { background: linear-gradient(135deg,#7a4632,#b07150); }
+  .tile-curry   { background: linear-gradient(135deg,#8a5a23,#c69a4f); }
+  .tile-sushi   { background: linear-gradient(135deg,#264a63,#4d86a6); }
+  .tile-small   { background: linear-gradient(135deg,#4a5a4f,#7d9384); }
+  .tile-salad   { background: linear-gradient(135deg,#46693f,#7fa867); }
+  .tile-dessert { background: linear-gradient(135deg,#7d4f6a,#b07d9c); }
+
+  /* ── Quiz modal ── */
+  #quiz { position: absolute; inset: 0; z-index: 300; background: var(--c-bg); display: none; flex-direction: column; }
+  #quiz.show { display: flex; }
+  .q-top { background: var(--c-indigo); color: #fff; padding: 16px 18px 14px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; flex-shrink: 0; }
+  .q-close { justify-self: start; background: none; border: none; color: rgba(255,255,255,0.85); font-size: 0.84rem; font-weight: 800; cursor: pointer; }
+  .q-top-title { font-family: var(--serif); font-size: 1rem; font-weight: 700; text-align: center; }
+  .q-progress-track { height: 4px; background: var(--c-line); flex-shrink: 0; }
+  .q-progress-fill { height: 4px; background: var(--c-red); transition: width 0.3s ease; width: 0; }
+  .q-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px 22px; overflow-y: auto; }
+  .q-step { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-ink-soft); margin-bottom: 10px; }
+  .q-prompt { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--c-ink); line-height: 1.25; margin-bottom: 22px; }
+  .q-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .q-opt {
+    padding: 18px 12px; background: var(--c-card); border: 2px solid var(--c-line); border-radius: var(--radius);
+    font-size: 0.95rem; font-weight: 800; color: var(--c-ink); cursor: pointer; text-align: center; line-height: 1.3;
+    display: flex; flex-direction: column; align-items: center; gap: 7px; transition: all 0.12s;
+  }
+  .q-opt .emo { font-size: 1.7rem; }
+  .q-opt:active { transform: scale(0.96); }
+  .q-opt:hover { border-color: var(--c-indigo); }
+  .q-opt.selected { border-color: var(--c-red); background: #fbeae3; }
+  .q-opt.full { grid-column: 1 / -1; flex-direction: row; justify-content: center; }
+  .q-cta { margin-top: 20px; }
+  .q-continue { width: 100%; padding: 15px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1.02rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+  .q-hint { text-align: center; font-size: 0.78rem; font-weight: 600; color: var(--c-ink-soft); margin-top: 10px; }
+
+  /* ── Results screen ── */
+  .res-top { background: var(--c-indigo); color: #fff; padding: 20px 20px 22px; flex-shrink: 0; position: relative; overflow: hidden; }
+  .res-top::before { content: ""; position: absolute; inset: 0; opacity: 0.10;
+    background: radial-gradient(circle at 10px 18px, transparent 6px, #fff 6px, #fff 7px, transparent 7px), radial-gradient(circle at 30px 18px, transparent 6px, #fff 6px, #fff 7px, transparent 7px); background-size: 40px 20px; }
+  .res-top-inner { position: relative; z-index: 1; }
+  .res-eyebrow { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-gold); }
+  .res-title { font-family: var(--serif); font-size: 1.55rem; font-weight: 700; margin: 4px 0 2px; }
+  .res-sub { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+  .res-list { overflow-y: auto; flex: 1; padding: 16px 18px 100px; }
+  .res-card { background: var(--c-card); border: 1.5px solid var(--c-line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-s); margin-bottom: 13px; cursor: pointer; transition: border-color 0.12s; }
+  .res-card:hover { border-color: var(--c-indigo); }
+  .res-card-img { width: 100%; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .res-card-img .tile { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+  .res-card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .res-rank { position: absolute; top: 10px; left: 10px; z-index: 2; background: var(--c-red); color: #fff; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-pill); box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+  .res-add { position: absolute; top: 10px; right: 10px; z-index: 2; width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--c-indigo); color: #fff; font-size: 1.35rem; font-weight: 800; line-height: 1; cursor: pointer; box-shadow: 0 3px 10px rgba(37,65,92,0.4); display: flex; align-items: center; justify-content: center; transition: transform 0.1s, background 0.15s; }
+  .res-add:active { transform: scale(0.86); }
+  .res-add.added { background: var(--c-green); }
+  .res-card-body { padding: 12px 14px 14px; }
+  .res-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .res-card-name { font-size: 1.05rem; font-weight: 800; color: var(--c-ink); }
+  .res-card-price { font-size: 0.98rem; font-weight: 800; color: var(--c-red); white-space: nowrap; }
+  .res-card-desc { font-size: 0.82rem; font-weight: 500; color: var(--c-ink-soft); line-height: 1.45; margin-top: 5px; }
+  .res-more { width: 100%; padding: 13px; margin-top: 6px; background: var(--c-card); border: 1.5px dashed var(--c-line); border-radius: var(--radius-pill); font-size: 0.92rem; font-weight: 800; color: var(--c-indigo); cursor: pointer; transition: transform 0.1s, border-color 0.12s; }
+  .res-more:hover { border-color: var(--c-indigo); }
+  .res-more:active { transform: scale(0.98); }
+  .res-why { font-size: 0.82rem; font-weight: 700; color: #7a4a16; background: #fdf1df; border: 1px solid #f0dcb8; border-radius: var(--radius-s); padding: 9px 12px; margin-top: 9px; line-height: 1.4; }
+  .res-actions { padding: 4px 18px 30px; }
+  .res-view-menu { width: 100%; padding: 15px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1.02rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+  .res-restart { width: 100%; padding: 13px; background: none; color: var(--c-ink-soft); border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 4px; }
+
+  /* ── Detail screen ── */
+  .topbar-plain { display: flex; align-items: center; padding: 14px 18px 10px; background: var(--c-bg); border-bottom: 1px solid var(--c-line); flex-shrink: 0; }
+  .topbar-back { color: var(--c-indigo); font-size: 0.9rem; font-weight: 800; background: none; border: none; cursor: pointer; }
+  .detail-scroll { display: flex; flex-direction: column; flex: 1; overflow-y: auto; }
+  .detail-img { width: 100%; height: 230px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+  .detail-img .tile { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4.6rem; }
+  .detail-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .detail-body { padding: 18px 20px 0; }
+  .detail-jp { font-family: var(--serif); font-size: 0.9rem; color: var(--c-ink-soft); letter-spacing: 0.12em; margin-bottom: 2px; }
+  .detail-name { font-family: var(--serif); font-size: 1.7rem; font-weight: 700; color: var(--c-ink); line-height: 1.15; }
+  .detail-price { font-size: 1.3rem; font-weight: 800; color: var(--c-red); white-space: nowrap; }
+  .detail-labels { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0 10px; }
+  .detail-desc { font-size: 0.95rem; font-weight: 500; color: var(--c-ink-soft); line-height: 1.55; }
+  .detail-cta { padding: 18px 20px 34px; }
+  .add-order-btn { width: 100%; padding: 16px; background: var(--c-green); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1.05rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 18px rgba(70,121,90,0.3); margin-bottom: 10px; transition: background 0.15s; }
+  .add-order-btn.added { background: #2f6b46; }
+  .detail-back-btn { width: 100%; padding: 16px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1.05rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+
+  /* ── Footer ── */
+  .footer { text-align: center; padding: 18px 0 6px; }
+  .footer a.ig { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 700; color: var(--c-indigo); text-decoration: none; }
+  .footer .pb { font-size: 0.7rem; font-weight: 700; color: var(--c-ink-soft); opacity: 0.6; margin-top: 6px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── Remember your order ── */
+  .float-order { position: fixed; bottom: 18px; right: 16px; z-index: 400; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); padding: 11px 17px; font-size: 0.84rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 18px rgba(37,65,92,0.42); display: none; align-items: center; gap: 8px; }
+  .float-order.show { display: flex; }
+  .float-order .badge { background: var(--c-red); color: #fff; border-radius: 999px; min-width: 20px; height: 20px; padding: 0 6px; font-size: 0.74rem; display: inline-flex; align-items: center; justify-content: center; }
+  .order-overlay { display: none; position: fixed; inset: 0; background: rgba(29,26,22,0.45); z-index: 460; align-items: flex-end; justify-content: center; }
+  .order-overlay.show { display: flex; }
+  .order-sheet { background: #fff; border-radius: 22px 22px 0 0; padding: 18px 20px 30px; width: 390px; max-width: 100%; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 -8px 40px rgba(0,0,0,0.18); animation: slideUp 0.22s ease; }
+  .order-title { font-family: var(--serif); font-size: 1.22rem; font-weight: 700; color: var(--c-ink); text-align: center; }
+  .order-sub { font-size: 0.8rem; font-weight: 600; color: var(--c-ink-soft); margin: 2px 0 12px; text-align: center; }
+  .order-rows { overflow-y: auto; flex: 1; }
+  .order-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--c-line); }
+  .order-row-name { flex: 1; font-size: 0.9rem; font-weight: 700; color: var(--c-ink); line-height: 1.25; min-width: 0; }
+  .order-row-jp { font-size: 0.66rem; font-weight: 600; color: var(--c-ink-soft); margin-top: 1px; }
+  .order-row-price { font-size: 0.88rem; font-weight: 800; color: var(--c-red); white-space: nowrap; min-width: 54px; text-align: right; }
+  .qty { display: flex; align-items: center; gap: 7px; }
+  .qty button { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--c-line); background: var(--c-card); font-size: 1rem; font-weight: 800; color: var(--c-indigo); cursor: pointer; line-height: 1; }
+  .qty .n { min-width: 16px; text-align: center; font-weight: 800; font-size: 0.92rem; }
+  .order-foot { padding-top: 14px; }
+  .order-total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .order-total .lbl { font-size: 0.92rem; font-weight: 800; color: var(--c-ink); }
+  .order-total .amt { font-size: 1.3rem; font-weight: 800; color: var(--c-red); }
+  .order-note { font-size: 0.72rem; font-weight: 600; color: var(--c-ink-soft); text-align: center; margin: 8px 0 12px; }
+  .order-close-btn { width: 100%; padding: 14px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+  .order-clear { width: 100%; padding: 10px; background: none; color: var(--c-ink-soft); border: none; font-size: 0.84rem; font-weight: 700; cursor: pointer; margin-top: 2px; }
+  .order-empty { text-align: center; color: var(--c-ink-soft); font-size: 0.9rem; font-weight: 600; line-height: 1.5; padding: 30px 10px; }
+
+  /* ── Floating feedback ── */
+  .float-fb { position: fixed; bottom: 18px; left: 16px; z-index: 400; background: var(--c-ink); color: #fff; border: none; border-radius: var(--radius-pill); padding: 9px 14px; font-size: 0.76rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(29,26,22,0.28); opacity: 0.8; transition: opacity 0.2s; }
+  .float-fb:hover { opacity: 1; }
+  .float-fb.hidden { opacity: 0; pointer-events: none; }
+  .fb-overlay { display: none; position: fixed; inset: 0; background: rgba(29,26,22,0.45); z-index: 450; align-items: flex-end; justify-content: center; }
+  .fb-overlay.show { display: flex; }
+  .fb-sheet { background: #fff; border-radius: 22px 22px 0 0; padding: 20px 20px 34px; width: 390px; max-width: 100%; box-shadow: 0 -8px 40px rgba(0,0,0,0.18); animation: slideUp 0.22s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .fb-handle { width: 36px; height: 4px; background: var(--c-line); border-radius: 2px; margin: 0 auto 16px; }
+  .fb-title { font-size: 1.02rem; font-weight: 800; color: var(--c-ink); margin-bottom: 4px; }
+  .fb-sub { font-size: 0.82rem; font-weight: 600; color: var(--c-ink-soft); margin-bottom: 14px; }
+  .fb-type-btn { width: 100%; padding: 13px 16px; background: #fff; border: 2px solid var(--c-line); border-radius: var(--radius); margin-bottom: 9px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px; transition: border-color 0.15s; }
+  .fb-type-btn:hover { border-color: var(--c-indigo); }
+  .fb-type-icon { font-size: 1.3rem; }
+  .fb-type-label { font-size: 0.9rem; font-weight: 800; color: var(--c-ink); }
+  .fb-type-sub { font-size: 0.74rem; font-weight: 600; color: var(--c-ink-soft); margin-top: 1px; }
+  .fb-input-wrap { display: none; }
+  .fb-input-wrap.show { display: block; }
+  .fb-back { font-size: 0.8rem; font-weight: 800; color: var(--c-indigo); background: none; border: none; cursor: pointer; margin-bottom: 12px; padding: 0; }
+  .fb-textarea { width: 100%; border: 2px solid var(--c-line); border-radius: var(--radius-s); padding: 12px 14px; font-size: 0.92rem; font-family: inherit; resize: none; color: var(--c-ink); margin-bottom: 10px; }
+  .fb-textarea:focus { outline: none; border-color: var(--c-indigo); }
+  .fb-submit { width: 100%; padding: 14px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+  .fb-thanks { display: none; text-align: center; padding: 18px 0 4px; }
+  .fb-thanks-icon { font-size: 2rem; margin-bottom: 8px; }
+  .fb-thanks-title { font-size: 1.05rem; font-weight: 800; color: var(--c-ink); margin-bottom: 4px; }
+  .fb-thanks-sub { font-size: 0.82rem; font-weight: 600; color: var(--c-ink-soft); }
+</style>
+</head>
+<body>
+
+<!-- Feedback sheet -->
+<div class="fb-overlay" id="fb-overlay">
+  <div class="fb-sheet">
+    <div class="fb-handle"></div>
+    <div id="fb-choose">
+      <div class="fb-title">Share your thoughts</div>
+      <div class="fb-sub">We read every message.</div>
+      <button class="fb-type-btn" onclick="openFbInput('feedback')">
+        <span class="fb-type-icon">💬</span>
+        <div><div class="fb-type-label">Leave feedback</div><div class="fb-type-sub">What could be better?</div></div>
+      </button>
+      <button class="fb-type-btn" onclick="openFbInput('bug')">
+        <span class="fb-type-icon">🐛</span>
+        <div><div class="fb-type-label">Report a bug</div><div class="fb-type-sub">Something broken? Tell us.</div></div>
+      </button>
+    </div>
+    <div class="fb-input-wrap" id="fb-input">
+      <button class="fb-back" onclick="backFb()">← Back</button>
+      <div class="fb-title" id="fb-input-title">Leave feedback</div>
+      <div class="fb-sub" id="fb-input-sub">What could be better?</div>
+      <textarea class="fb-textarea" id="fb-textarea" rows="4" placeholder="Type here…"></textarea>
+      <button class="fb-submit" onclick="submitFb()">Send →</button>
+    </div>
+    <div class="fb-thanks" id="fb-thanks">
+      <div class="fb-thanks-icon">🙏</div>
+      <div class="fb-thanks-title">Thank you!</div>
+      <div class="fb-thanks-sub">We appreciate you taking the time.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Order sheet -->
+<div class="order-overlay" id="order-overlay">
+  <div class="order-sheet">
+    <div class="fb-handle"></div>
+    <div class="order-title">🧾 Your order</div>
+    <div class="order-sub">Show this list to your server — no need to remember it all.</div>
+    <div class="order-rows" id="order-rows"></div>
+    <div class="order-foot" id="order-foot">
+      <div class="order-total"><span class="lbl">Estimated total</span><span class="amt" id="order-amt">$0.00</span></div>
+      <div class="order-note">Prices are estimates — your server confirms the final total.</div>
+      <button class="order-close-btn" onclick="closeOrder()">Keep browsing</button>
+      <button class="order-clear" onclick="clearOrder()">Clear list</button>
+    </div>
+  </div>
+</div>
+
+<div class="phone">
+
+  <!-- ══ SCREEN: Menu (landing) ══ -->
+  <div class="screen active" id="screen-menu">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div class="hdr-jp">花の里</div>
+        <div class="hdr-name">Hana no Sato</div>
+        <div class="hdr-rule"></div>
+        <div class="hdr-meta"><span class="star">★ 4.7</span> · Japanese home cooking · Honolulu</div>
+      </div>
+    </div>
+
+    <div class="decide">
+      <button class="decide-btn" onclick="startQuiz('landing')">✨ Help Me Decide</button>
+      <div class="decide-sub">Answer a few quick questions and get a recommendation in under 30 seconds.</div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-row" id="cat-filters"></div>
+      <div class="filter-row" id="diet-filters"></div>
+    </div>
+
+    <div id="menu-scroll">
+      <div class="menu-list" id="menu-list"></div>
+      <div class="footer">
+        <a class="ig" href="https://www.instagram.com/hananosato_hawaii/" target="_blank" rel="noopener">📷 @hananosato_hawaii</a>
+        <div class="pb">Powered by PlateUp</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: Results ══ -->
+  <div class="screen" id="screen-results">
+    <div class="res-top">
+      <div class="res-top-inner">
+        <div class="res-eyebrow">Your picks</div>
+        <div class="res-title">Here's what we'd order</div>
+        <div class="res-sub" id="res-sub">Based on your answers</div>
+      </div>
+    </div>
+    <div class="res-list" id="res-list"></div>
+    <div class="res-actions">
+      <button class="res-view-menu" onclick="goMenuFromResults()">View full menu →</button>
+      <button class="res-restart" onclick="startQuiz('retry')">↺ Start over</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: Detail ══ -->
+  <div class="screen" id="screen-detail">
+    <div class="topbar-plain">
+      <button class="topbar-back" onclick="goBack()">← Back</button>
+    </div>
+    <div class="detail-scroll">
+      <div class="detail-img" id="detail-img"></div>
+      <div class="detail-body">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div>
+            <div class="detail-jp" id="detail-jp"></div>
+            <div class="detail-name" id="detail-name"></div>
+          </div>
+          <div class="detail-price" id="detail-price"></div>
+        </div>
+        <div class="detail-labels" id="detail-labels"></div>
+        <div class="detail-desc" id="detail-desc"></div>
+      </div>
+      <div class="detail-cta">
+        <button class="add-order-btn" id="detail-add" onclick="addFromDetail()">＋ Add to my order</button>
+        <button class="detail-back-btn" onclick="goBack()">← Back to menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Quiz modal ══ -->
+  <div id="quiz">
+    <div class="q-top">
+      <button class="q-close" onclick="closeQuiz()">✕ Close</button>
+      <div class="q-top-title">花の里</div>
+      <div></div>
+    </div>
+    <div class="q-progress-track"><div class="q-progress-fill" id="q-fill"></div></div>
+    <div class="q-body" id="q-body"></div>
+  </div>
+
+  <!-- Floating feedback -->
+  <button class="float-fb" id="float-fb" onclick="openFb()">💬 Feedback</button>
+
+  <!-- Remember-your-order pill -->
+  <button class="float-order" id="float-order" onclick="openOrder()">🧾 My Order <span class="badge" id="order-badge">0</span></button>
+
+</div><!-- /phone -->
+
+<script>
+/* ─── Experiment tag ─── */
+const EXPERIMENT = "hana_smart_menu_v1";
+
+/* ─── Tracking (carried over from O'Sun Grill build) ─── */
+const API_BASE = window.PICK4ME_API_BASE || (
+  (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+    ? "http://127.0.0.1:8000" : "https://pick4me.fly.dev"
+);
+const RESTAURANT_SLUG = "hana-no-sato";
+let _viewScreenTimer = null;
+let _screenEnteredAt = Date.now();
+
+function safeStorage(fn, fallback) { try { return fn(); } catch(e) { return fallback; } }
+function getSessionId() {
+  let id = safeStorage(() => sessionStorage.getItem("pw_session_id"), null);
+  if (!id) { id = crypto.randomUUID(); safeStorage(() => sessionStorage.setItem("pw_session_id", id), null); }
+  return id;
+}
+function trackEvent(type, payload = {}) {
+  const body = JSON.stringify({
+    session_id: getSessionId(), event_type: type,
+    payload: { ...payload, experiment: EXPERIMENT },
+    client_ts: new Date().toISOString(), language: "en",
+  });
+  try {
+    fetch(`${API_BASE}/api/v1/restaurants/${RESTAURANT_SLUG}/events`, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true
+    }).catch(() => {});
+  } catch(e) {}
+}
+function trackViewScreen(s) {
+  clearTimeout(_viewScreenTimer);
+  _screenEnteredAt = Date.now();
+  _viewScreenTimer = setTimeout(() => trackEvent("view_screen", { screen: s }), 200);
+}
+function trackScreenExit() {
+  trackEvent("screen_exit", { screen: currentScreen, duration_ms: Date.now() - _screenEnteredAt });
+}
+
+/* ─── Photo loading ───
+   Demo shows polished gradient tiles. When real photos are added, drop files at
+   menu_pictures/compressed/<id>.webp and they load automatically (tile stays as fallback).
+   Flip USE_STOCK_PHOTOS to true to also try generic remote stock photos as a middle layer. */
+const USE_STOCK_PHOTOS = false;
+function paintMedia(wrapEl, item, tileFont) {
+  wrapEl.innerHTML = "";
+  const tile = document.createElement("div");
+  tile.className = "tile tile-" + item.group;
+  tile.textContent = item.emoji;
+  if (tileFont) tile.style.fontSize = tileFont;
+  wrapEl.appendChild(tile);
+  const sources = [item.image];
+  if (USE_STOCK_PHOTOS && item.stock) sources.push(item.stock);
+  let idx = 0;
+  function tryNext() {
+    if (idx >= sources.length) return;        // give up → tile remains
+    const src = sources[idx++];
+    const img = new Image();
+    img.onload = () => { wrapEl.appendChild(img); };
+    img.onerror = tryNext;
+    img.src = src;
+    img.alt = item.name;
+  }
+  tryNext();
+}
+
+/* ─── State ─── */
+let currentScreen = "menu";
+let screenHistory = [];
+let detailFrom = "menu";
+let currentDetailItem = null;
+let resultsRanked = [];
+let resultsShown = 0;
+const RES_BATCH = 4;
+
+/* ─── Generalized quiz (restaurant-agnostic axes: mood → hunger → spice → avoid) ─── */
+let answers = {};        // { mood, hunger, spice, avoid:[] }
+let quizStep = 0;
+let quizEntry = "landing";
+
+const QUIZ = [
+  {
+    id: "mood", kind: "single", step: "Question 1 of 4",
+    prompt: "What are you in the mood for?",
+    options: [
+      { label: "Noodles & broth", emo: "🍜", value: "noodles", tags: ["noodles","soup"] },
+      { label: "Rice & protein",  emo: "🍚", value: "rice",    tags: ["rice-bowl","bento"] },
+      { label: "Fried & crispy",  emo: "🍤", value: "fried",   tags: ["fried"] },
+      { label: "Sushi & raw fish",emo: "🍣", value: "raw",     tags: ["raw","sushi"] },
+      { label: "Light & fresh",   emo: "🥗", value: "light",   tags: ["light","salad"] },
+      { label: "Surprise me",     emo: "🎲", value: "any",     tags: [] },
+    ],
+  },
+  {
+    id: "hunger", kind: "single", step: "Question 2 of 4",
+    prompt: "How hungry are you?",
+    options: [
+      { label: "Just a bite", emo: "🍵", value: "snack",    tags: ["light-hunger"] },
+      { label: "A full meal", emo: "🍱", value: "normal",   tags: ["medium-hunger"] },
+      { label: "Very hungry", emo: "🍚", value: "starving", tags: ["big-hunger","filling"] },
+    ],
+  },
+  {
+    id: "spice", kind: "single", step: "Question 3 of 4",
+    prompt: "How about spice?",
+    options: [
+      { label: "Keep it mild", emo: "🟢", value: "none",  tags: [] },
+      { label: "A little kick",emo: "🟡", value: "some",  tags: [] },
+      { label: "Bring the heat",emo:"🌶️", value: "spicy", tags: ["spicy"] },
+      { label: "Any spice level",emo:"🎲", value: "any",  tags: [] },
+    ],
+  },
+  {
+    id: "avoid", kind: "multi", step: "Question 4 of 4",
+    prompt: "Anything to avoid?",
+    options: [
+      { label: "Vegetarian",   emo: "🥬", value: "vegetarian" },
+      { label: "No pork",      emo: "🚫", value: "pork" },
+      { label: "No shellfish", emo: "🦐", value: "shellfish" },
+      { label: "No raw fish",  emo: "🐟", value: "raw" },
+      { label: "Gluten-aware", emo: "🌾", value: "gluten" },
+    ],
+  },
+];
+
+/* avoid value → tags that disqualify an item (vegetarian handled separately) */
+const AVOID_TAGS = {
+  pork: ["pork"], shellfish: ["shellfish","shrimp"], raw: ["raw"], gluten: ["gluten"],
+};
+
+/* ─── Menu data ───
+   group = tile theme + filter category. price in USD (verify against in-store menu).
+   tags drive the recommender. labels are the colored badges. */
+const MENU_ITEMS = [
+  // ── Ramen ──
+  { id:"shoyu-ramen", group:"ramen", category:"Ramen", name:"Shoyu Ramen", jp:"醤油ラーメン", price:11.50, emoji:"🍜",
+    description:"Classic soy-based broth with chashu pork, green onion, and bamboo shoots.",
+    tags:["noodles","soup","pork","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"miso-ramen", group:"ramen", category:"Ramen", name:"Miso Ramen", jp:"味噌ラーメン", price:11.50, emoji:"🍜",
+    description:"Hearty fermented-soybean broth, rich and deeply savory.",
+    tags:["noodles","soup","pork","medium-hunger"], labels:[], featured:false },
+  { id:"veg-pork-ramen", group:"ramen", category:"Ramen", name:"Vegetable & Pork Ramen", jp:"野菜ラーメン", price:11.50, emoji:"🍜",
+    description:"Stir-fried vegetables and pork piled over noodles in savory broth.",
+    tags:["noodles","soup","pork","medium-hunger"], labels:[], featured:false },
+  { id:"curry-ramen", group:"ramen", category:"Ramen", name:"Curry Ramen", jp:"カレーラーメン", price:11.50, emoji:"🍜",
+    description:"Japanese curry broth ramen — warming, aromatic, and comforting.",
+    tags:["noodles","soup","curry","medium-hunger"], labels:[], featured:false },
+  { id:"tantan-ramen", group:"ramen", category:"Ramen", name:"Tan Tan Ramen", jp:"担々麺", price:13.00, emoji:"🌶️",
+    description:"Spicy sesame-chili broth with seasoned ground pork. A house favorite.",
+    tags:["noodles","soup","spicy","pork","medium-hunger"], labels:["Spicy","Popular"], featured:true },
+
+  // ── Udon & Soba ──
+  { id:"curry-udon", group:"udon", category:"Udon & Soba", name:"Curry Udon", jp:"カレーうどん", price:12.00, emoji:"🍲",
+    description:"Thick, chewy udon noodles in a savory Japanese curry broth.",
+    tags:["noodles","soup","curry","medium-hunger"], labels:[], featured:false },
+  { id:"yakiudon", group:"udon", category:"Udon & Soba", name:"Yaki Udon", jp:"焼きうどん", price:12.00, emoji:"🍳",
+    description:"Udon stir-fried with vegetables and pork in a savory sauce.",
+    tags:["noodles","fried","pork","medium-hunger"], labels:[], featured:false },
+  { id:"shrimp-tempura-udon", group:"udon", category:"Udon & Soba", name:"Shrimp Tempura Udon (Cold)", jp:"海老天うどん", price:13.00, emoji:"🍤",
+    description:"Chilled udon served alongside crisp shrimp tempura and dipping broth.",
+    tags:["noodles","shrimp","seafood","shellfish","medium-hunger"], labels:["Popular"], featured:true },
+
+  // ── Bento ──
+  { id:"grilled-salmon-bento", group:"bento", category:"Bento", name:"Grilled Salmon Bento", jp:"焼き鮭弁当", price:13.00, emoji:"🍱",
+    description:"Grilled salmon with rice, sides, and your choice of salad or miso soup. Their #1 most-loved plate.",
+    tags:["rice-bowl","bento","fish","seafood","medium-hunger"], labels:["Top","Popular"], featured:true },
+  { id:"grilled-mackerel-bento", group:"bento", category:"Bento", name:"Grilled Mackerel Bento", jp:"焼き鯖弁当", price:13.00, emoji:"🐟",
+    description:"Rich, flaky grilled mackerel with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fish","seafood","medium-hunger"], labels:[], featured:false },
+  { id:"karaage-bento", group:"bento", category:"Bento", name:"Karaage Chicken Bento", jp:"唐揚げ弁当", price:13.00, emoji:"🍗",
+    description:"Juicy Japanese fried chicken with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fried","chicken","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"pork-cutlet-bento", group:"bento", category:"Bento", name:"Pork Cutlet Bento", jp:"とんかつ弁当", price:13.00, emoji:"🍱",
+    description:"Panko-crusted tonkatsu with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fried","pork","medium-hunger"], labels:[], featured:false },
+  { id:"ginger-pork-bento", group:"bento", category:"Bento", name:"Ginger Pork Bento", jp:"生姜焼き弁当", price:13.00, emoji:"🍱",
+    description:"Pork sautéed in sweet-savory ginger sauce with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","pork","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"chicken-cutlet-bento", group:"bento", category:"Bento", name:"Chicken Cutlet Bento", jp:"チキンカツ弁当", price:13.00, emoji:"🍗",
+    description:"Crispy panko chicken cutlet with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fried","chicken","medium-hunger"], labels:[], featured:false },
+  { id:"assorted-fried-bento", group:"bento", category:"Bento", name:"Assorted Fried Bento", jp:"フライ盛り弁当", price:13.00, emoji:"🍤",
+    description:"A mix of fried favorites — fish, karaage, and shrimp — over rice with sides.",
+    tags:["rice-bowl","bento","fried","seafood","chicken","shellfish","medium-hunger"], labels:[], featured:false },
+
+  // ── Bowls ──
+  { id:"beef-bowl", group:"bowls", category:"Bowls", name:"Beef Bowl", jp:"牛丼", price:11.50, emoji:"🥩",
+    description:"Tender simmered beef and onion over rice, with miso soup.",
+    tags:["rice-bowl","beef","medium-hunger"], labels:["Popular"], featured:false },
+  { id:"mabo-don", group:"bowls", category:"Bowls", name:"Mabo Don (Tofu or Eggplant)", jp:"麻婆丼", price:12.00, emoji:"🍲",
+    description:"Spicy mabo tofu or eggplant over rice, with miso soup.",
+    tags:["rice-bowl","tofu","spicy","medium-hunger"], labels:["Spicy"], featured:false },
+  { id:"katsu-bowl", group:"bowls", category:"Bowls", name:"Katsu Bowl", jp:"カツ丼", price:14.00, emoji:"🍳",
+    description:"Pork cutlet simmered with egg and onion over rice, with miso soup.",
+    tags:["rice-bowl","fried","pork","eggs","big-hunger","filling"], labels:["Filling"], featured:false },
+  { id:"assorted-tempura-bowl", group:"bowls", category:"Bowls", name:"Assorted Tempura Bowl", jp:"天丼", price:14.00, emoji:"🍤",
+    description:"Shrimp and vegetable tempura over rice with sweet tare, and miso soup.",
+    tags:["rice-bowl","fried","seafood","shellfish","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"shrimp-tempura-bowl", group:"bowls", category:"Bowls", name:"Shrimp Tempura Bowl", jp:"海老天丼", price:14.50, emoji:"🍤",
+    description:"Five crisp shrimp tempura over rice with sweet glaze, and miso soup.",
+    tags:["rice-bowl","fried","shrimp","seafood","shellfish","medium-hunger"], labels:[], featured:false },
+  { id:"eel-bowl", group:"bowls", category:"Bowls", name:"Eel Bowl", jp:"うな丼", price:16.50, emoji:"🍱",
+    description:"Grilled eel glazed in sweet unagi sauce over rice, with miso soup.",
+    tags:["rice-bowl","eel","seafood","fish","big-hunger","filling"], labels:["Filling"], featured:false },
+
+  // ── Curry ──
+  { id:"beef-curry", group:"curry", category:"Curry", name:"Beef Curry", jp:"ビーフカレー", price:11.50, emoji:"🍛",
+    description:"Japanese curry with tender beef over rice. One of their top picks.",
+    tags:["rice-bowl","curry","beef","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"pork-cutlet-curry", group:"curry", category:"Curry", name:"Pork Cutlet Curry", jp:"カツカレー", price:14.00, emoji:"🍛",
+    description:"Crispy katsu over rich Japanese curry and rice.",
+    tags:["rice-bowl","curry","fried","pork","big-hunger","filling"], labels:["Filling","Popular"], featured:false },
+
+  // ── Sushi & Rolls ──
+  { id:"sashimi-bowl", group:"sushi", category:"Sushi & Rolls", name:"Sashimi Bowl", jp:"海鮮丼", price:21.50, emoji:"🍣",
+    description:"Assorted fresh sashimi over sushi rice, served with miso soup.",
+    tags:["raw","sushi","seafood","fish","rice-bowl","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"assorted-sashimi", group:"sushi", category:"Sushi & Rolls", name:"Assorted Sashimi Platter", jp:"刺身盛り合わせ", price:33.00, emoji:"🍣",
+    description:"Chef's selection of the day's freshest sashimi — generous enough for 2–3 to share.",
+    tags:["raw","sushi","seafood","fish","big-hunger","filling"], labels:["Sharing"], featured:false },
+  { id:"spicy-ahi-roll", group:"sushi", category:"Sushi & Rolls", name:"Spicy Ahi Roll", jp:"スパイシーアヒ", price:11.50, emoji:"🌶️",
+    description:"Fresh ahi tuna with a spicy kick, rolled to order.",
+    tags:["raw","sushi","seafood","fish","spicy"], labels:["Spicy","Popular"], featured:false },
+  { id:"california-roll", group:"sushi", category:"Sushi & Rolls", name:"California Roll", jp:"カリフォルニアロール", price:6.00, emoji:"🍣",
+    description:"Crab, avocado, and cucumber — a gentle, approachable cut roll.",
+    tags:["sushi","seafood","shellfish"], labels:[], featured:false },
+  { id:"eel-cucumber-roll", group:"sushi", category:"Sushi & Rolls", name:"Eel & Cucumber Roll", jp:"うなきゅう巻き", price:10.00, emoji:"🍣",
+    description:"Grilled eel and crisp cucumber with sweet unagi glaze.",
+    tags:["sushi","eel","seafood","fish"], labels:[], featured:false },
+  { id:"inari-sushi", group:"sushi", category:"Sushi & Rolls", name:"Inari Sushi", jp:"いなり寿司", price:8.00, emoji:"🍙",
+    description:"Sweet seasoned tofu pockets filled with sushi rice. Naturally meat-free.",
+    tags:["sushi","vegetarian","light"], labels:["Vegetarian"], featured:false },
+
+  // ── Small Plates ──
+  { id:"edamame", group:"small", category:"Small Plates", name:"Edamame", jp:"枝豆", price:5.00, emoji:"🫛",
+    description:"Boiled young soybeans dusted with sea salt.",
+    tags:["appetizer","light","vegetarian","soy","light-hunger"], labels:["Vegetarian","Light"], featured:false },
+  { id:"garlic-edamame", group:"small", category:"Small Plates", name:"Garlic Edamame", jp:"ガーリック枝豆", price:7.00, emoji:"🧄",
+    description:"Edamame tossed in fragrant garlic butter.",
+    tags:["appetizer","light","vegetarian","soy","light-hunger"], labels:["Vegetarian"], featured:false },
+  { id:"gyoza", group:"small", category:"Small Plates", name:"Gyoza (6 pcs)", jp:"餃子", price:5.00, emoji:"🥟",
+    description:"Pan-fried pork-and-vegetable dumplings, crisp on the bottom.",
+    tags:["appetizer","fried","pork","gluten","soy","light-hunger"], labels:["Popular"], featured:false },
+  { id:"takoyaki", group:"small", category:"Small Plates", name:"Takoyaki (6 pcs)", jp:"たこ焼き", price:5.00, emoji:"🐙",
+    description:"Crispy batter balls filled with tender octopus, bonito, and sauce.",
+    tags:["appetizer","seafood","shellfish","light-hunger"], labels:[], featured:false },
+  { id:"agedashi-tofu", group:"small", category:"Small Plates", name:"Agedashi Tofu", jp:"揚げ出し豆腐", price:7.00, emoji:"🍢",
+    description:"Lightly fried tofu in a warm, savory dashi broth.",
+    tags:["appetizer","fried","tofu","vegetarian","soy","light-hunger"], labels:["Vegetarian"], featured:false },
+  { id:"karaage-chicken", group:"small", category:"Small Plates", name:"Karaage Chicken", jp:"鶏の唐揚げ", price:12.50, emoji:"🍗",
+    description:"Marinated Japanese fried chicken, crisp outside and juicy within.",
+    tags:["appetizer","fried","chicken","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"shrimp-tempura", group:"small", category:"Small Plates", name:"Shrimp Tempura (5 pcs)", jp:"海老の天ぷら", price:12.50, emoji:"🍤",
+    description:"Plump shrimp in a light, airy batter, fried golden.",
+    tags:["appetizer","fried","shrimp","seafood","shellfish","light-hunger"], labels:[], featured:false },
+  { id:"vegetable-tempura", group:"small", category:"Small Plates", name:"Vegetable Tempura", jp:"野菜天ぷら", price:12.50, emoji:"🥦",
+    description:"Assorted seasonal vegetables, lightly battered and fried.",
+    tags:["appetizer","fried","vegetarian","light-hunger"], labels:["Vegetarian"], featured:false },
+  { id:"ahi-poke", group:"small", category:"Small Plates", name:"Ahi Poke", jp:"アヒポキ", price:18.00, emoji:"🐟",
+    description:"Fresh cubed ahi tuna marinated island-style in a savory blend.",
+    tags:["raw","seafood","fish","light","appetizer"], labels:["Popular"], featured:false },
+
+  // ── Salads ──
+  { id:"pork-shabu-salad", group:"salad", category:"Salads", name:"Pork Shabu Salad", jp:"豚しゃぶサラダ", price:11.00, emoji:"🥗",
+    description:"Chilled shabu pork over crisp greens with sesame dressing.",
+    tags:["salad","light","pork"], labels:["Light"], featured:false },
+  { id:"seaweed-salad", group:"salad", category:"Salads", name:"Wakame Seaweed Salad", jp:"海藻サラダ", price:11.00, emoji:"🥗",
+    description:"Marinated seaweed — refreshing, light, and clean.",
+    tags:["salad","light","vegetarian"], labels:["Vegetarian","Light"], featured:false },
+
+  // ── Dessert ──
+  { id:"mochi-ice-cream", group:"dessert", category:"Dessert", name:"Mochi Ice Cream", jp:"餅アイス", price:4.50, emoji:"🍡",
+    description:"Soft, chewy mochi wrapped around cold ice cream.",
+    tags:["dessert","light","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"matcha-ice-cream", group:"dessert", category:"Dessert", name:"Green Tea Ice Cream", jp:"抹茶アイス", price:4.50, emoji:"🍵",
+    description:"Matcha ice cream — lightly sweet and earthy.",
+    tags:["dessert","light","vegetarian"], labels:["Sweet"], featured:false },
+];
+
+/* local image path convention for when real photos are added */
+MENU_ITEMS.forEach(i => { i.image = "menu_pictures/compressed/" + i.id + ".webp"; });
+
+const CATEGORY_ORDER = ["Ramen","Udon & Soba","Bento","Bowls","Curry","Sushi & Rolls","Small Plates","Salads","Dessert"];
+const CATEGORY_JP = {
+  "Ramen":"ラーメン", "Udon & Soba":"うどん・そば", "Bento":"弁当", "Bowls":"丼",
+  "Curry":"カレー", "Sushi & Rolls":"寿司・巻物", "Small Plates":"一品料理", "Salads":"サラダ", "Dessert":"デザート"
+};
+
+/* ─── Filters ─── */
+let activeCat = "All";
+let activeDiet = new Set();
+const DIET_FILTERS = [
+  { label:"Vegetarian", value:"vegetarian" },
+  { label:"Popular",    value:"popular" },
+  { label:"Spicy",      value:"spicy" },
+];
+
+function isVegetarian(item) { return item.tags.includes("vegetarian"); }
+function matchesDiet(item) {
+  for (const d of activeDiet) {
+    if (d === "vegetarian" && !isVegetarian(item)) return false;
+    if (d === "popular" && !item.labels.includes("Popular") && !item.labels.includes("Top")) return false;
+    if (d === "spicy" && !item.tags.includes("spicy")) return false;
+  }
+  return true;
+}
+
+function renderFilters() {
+  const cats = ["All", ...CATEGORY_ORDER];
+  const catWrap = document.getElementById("cat-filters");
+  catWrap.innerHTML = "";
+  cats.forEach(c => {
+    const chip = document.createElement("button");
+    chip.className = "fchip" + (activeCat === c ? " active" : "");
+    chip.textContent = c;
+    chip.onclick = () => {
+      activeCat = c;
+      trackEvent("filter_selected", { type: "category", value: c });
+      renderFilters(); renderMenu();
+      document.getElementById("menu-scroll").scrollTop = 0;
+    };
+    catWrap.appendChild(chip);
+  });
+  const dietWrap = document.getElementById("diet-filters");
+  dietWrap.innerHTML = "";
+  DIET_FILTERS.forEach(d => {
+    const chip = document.createElement("button");
+    chip.className = "fchip diet" + (activeDiet.has(d.value) ? " active" : "");
+    chip.textContent = (d.value === "vegetarian" ? "🥬 " : d.value === "spicy" ? "🌶️ " : "⭐ ") + d.label;
+    chip.onclick = () => {
+      if (activeDiet.has(d.value)) activeDiet.delete(d.value); else activeDiet.add(d.value);
+      trackEvent("filter_selected", { type: "diet", value: d.value, on: activeDiet.has(d.value) });
+      renderFilters(); renderMenu();
+    };
+    dietWrap.appendChild(chip);
+  });
+}
+
+/* ─── Render full menu (grouped) ─── */
+function renderMenu() {
+  const container = document.getElementById("menu-list");
+  container.innerHTML = "";
+  const cats = activeCat === "All" ? CATEGORY_ORDER : [activeCat];
+  let shown = 0;
+  cats.forEach(cat => {
+    const items = MENU_ITEMS.filter(i => i.category === cat && matchesDiet(i));
+    if (!items.length) return;
+    const head = document.createElement("div");
+    head.className = "sec-head";
+    head.innerHTML = `${cat} <span class="sec-jp">${CATEGORY_JP[cat] || ""}</span>`;
+    container.appendChild(head);
+    items.forEach((item, i) => {
+      shown++;
+      container.appendChild(menuCard(item, i));
+    });
+  });
+  if (!shown) {
+    const note = document.createElement("div");
+    note.className = "empty-note";
+    note.textContent = "No items match those filters. Try clearing one.";
+    container.appendChild(note);
+  }
+  refreshOrderUI();
+}
+
+function menuCard(item, i) {
+  const card = document.createElement("div");
+  card.className = "menu-item";
+  card.style.animationDelay = (i * 16) + "ms";
+  card.onclick = () => { detailFrom = "menu"; trackEvent("menu_item_clicked", { item_id: item.id }); openDetail(item); };
+
+  const imgWrap = document.createElement("div");
+  imgWrap.className = "mi-img";
+  paintMedia(imgWrap, item, null);
+
+  const body = document.createElement("div");
+  body.className = "mi-body";
+
+  const head = document.createElement("div");
+  head.className = "mi-head";
+  head.innerHTML = `<div><div class="mi-name">${item.name}</div><div class="mi-jp">${item.jp || ""}</div></div><div class="mi-price">$${item.price.toFixed(2)}</div>`;
+
+  const desc = document.createElement("div");
+  desc.className = "mi-desc";
+  desc.textContent = item.description;
+
+  const foot = document.createElement("div");
+  foot.className = "mi-foot";
+  item.labels.forEach(l => foot.appendChild(labelEl(l)));
+
+  body.appendChild(head); body.appendChild(desc); body.appendChild(foot);
+  card.appendChild(imgWrap); card.appendChild(body);
+
+  const add = document.createElement("button");
+  add.className = "mi-add" + (orderLine(item.id) ? " added" : "");
+  add.setAttribute("data-add-id", item.id);
+  add.textContent = orderLine(item.id) ? "✓" : "＋";
+  add.title = "Add to my order";
+  add.onclick = (e) => { e.stopPropagation(); addToOrder(item.id, 1); };
+  card.appendChild(add);
+  return card;
+}
+
+function labelEl(l) {
+  const s = document.createElement("span");
+  const cls = l === "Top" ? "Top" : l === "Sharing" ? "Sharing" : l;
+  s.className = "label label--" + cls;
+  s.textContent = l === "Top" ? "★ #1 Pick" : l === "Sharing" ? "For Sharing" : l;
+  return s;
+}
+
+/* ─── Recommender (boost-scored, hard-filter avoidances) ─── */
+function excluded(item) {
+  const av = answers.avoid || [];
+  if (av.includes("vegetarian") && !isVegetarian(item)) return true;
+  for (const a of av) {
+    const tags = AVOID_TAGS[a];
+    if (tags && item.tags.some(t => tags.includes(t))) return true;
+  }
+  return false;
+}
+
+function scoreItem(item) {
+  let score = 0;
+  if (item.featured) score += 4;
+  if (item.labels.includes("Popular") || item.labels.includes("Top")) score += 3;
+
+  // Mood (strongest signal)
+  const q = QUIZ[0].options.find(o => o.value === answers.mood);
+  const moodTags = q ? q.tags : [];
+  if (moodTags.length && moodTags.some(t => item.tags.includes(t))) score += 30;
+  if (answers.mood === "any" && item.featured) score += 18;
+
+  // Hunger
+  if (answers.hunger === "snack") {
+    if (item.tags.includes("light-hunger")) score += 16;
+    if (item.tags.includes("big-hunger")) score -= 8;
+  } else if (answers.hunger === "starving") {
+    if (item.tags.includes("big-hunger") || item.tags.includes("filling")) score += 16;
+    if (item.tags.includes("light-hunger")) score -= 8;
+  } else if (answers.hunger === "normal") {
+    if (item.tags.includes("medium-hunger")) score += 10;
+  }
+
+  // Spice
+  if (answers.spice === "spicy") {
+    if (item.tags.includes("spicy")) score += 14;
+  } else if (answers.spice === "none") {
+    if (item.tags.includes("spicy")) score -= 12;
+  }
+  return score;
+}
+
+function getRanked() {
+  let pool = MENU_ITEMS.filter(i => !excluded(i));
+  if (!pool.length) pool = MENU_ITEMS.slice();
+  return pool.map(i => ({ item: i, score: scoreItem(i) }))
+             .sort((a, b) => b.score - a.score || a.item.price - b.item.price)
+             .map(s => s.item);
+}
+
+/* reason string for a pick */
+function reasonFor(item) {
+  const moodLabels = { noodles:"noodles-and-broth", rice:"rice-and-protein", fried:"crispy-fried", raw:"sushi", light:"light-and-fresh" };
+  const q = QUIZ[0].options.find(o => o.value === answers.mood);
+  if (q && q.tags.length && q.tags.some(t => item.tags.includes(t)))
+    return `Right in your ${moodLabels[answers.mood] || answers.mood} mood.`;
+  if (answers.spice === "spicy" && item.tags.includes("spicy")) return "Brings the heat you asked for.";
+  if (answers.hunger === "starving" && (item.tags.includes("filling") || item.tags.includes("big-hunger"))) return "Hearty and filling — you said you're very hungry.";
+  if (answers.hunger === "snack" && item.tags.includes("light-hunger")) return "A lighter bite, just like you wanted.";
+  if (item.labels.includes("Top")) return "Hana no Sato's #1 most-loved plate.";
+  if (item.labels.includes("Popular")) return "One of the restaurant's most popular picks.";
+  if (item.featured) return "A house favorite we think you'll love.";
+  return "A solid match for what you're after.";
+}
+
+/* ─── Quiz flow ─── */
+function startQuiz(entry) {
+  quizEntry = entry || "landing";
+  answers = { avoid: [] };
+  quizStep = 0;
+  trackEvent("quiz_started", { entry_point: quizEntry });
+  document.getElementById("quiz").classList.add("show");
+  document.getElementById("float-fb").classList.add("hidden");
+  document.getElementById("float-order").classList.remove("show");
+  renderQuizStep();
+  trackViewScreen("quiz");
+}
+function closeQuiz() {
+  trackEvent("quiz_abandoned", { step: quizStep + 1, answers_so_far: answers });
+  document.getElementById("quiz").classList.remove("show");
+  document.getElementById("float-fb").classList.remove("hidden");
+  refreshOrderUI();
+  trackViewScreen(currentScreen);
+}
+function renderQuizStep() {
+  const q = QUIZ[quizStep];
+  const body = document.getElementById("q-body");
+  document.getElementById("q-fill").style.width = ((quizStep) / QUIZ.length) * 100 + "%";
+  body.innerHTML = "";
+
+  const step = document.createElement("div"); step.className = "q-step"; step.textContent = q.step;
+  const prompt = document.createElement("div"); prompt.className = "q-prompt"; prompt.textContent = q.prompt;
+  const opts = document.createElement("div"); opts.className = "q-opts";
+  body.appendChild(step); body.appendChild(prompt); body.appendChild(opts);
+
+  q.options.forEach(opt => {
+    const b = document.createElement("button");
+    const isFull = q.kind === "single" && q.options.length % 2 === 1 && opt === q.options[q.options.length - 1];
+    b.className = "q-opt" + (isFull ? " full" : "");
+    if (q.kind === "multi" && (answers.avoid || []).includes(opt.value)) b.classList.add("selected");
+    b.innerHTML = `<span class="emo">${opt.emo}</span><span>${opt.label}</span>`;
+    b.onclick = () => q.kind === "multi" ? toggleAvoid(opt.value, b) : pickSingle(q.id, opt.value);
+    opts.appendChild(b);
+  });
+
+  if (q.kind === "multi") {
+    const cta = document.createElement("div"); cta.className = "q-cta";
+    const cont = document.createElement("button"); cont.className = "q-continue";
+    cont.textContent = "See my picks →";
+    cont.onclick = () => finishQuiz();
+    cta.appendChild(cont);
+    const hint = document.createElement("div"); hint.className = "q-hint"; hint.textContent = "Optional — skip if nothing to avoid.";
+    cta.appendChild(hint);
+    body.appendChild(cta);
+  }
+}
+function pickSingle(id, value) {
+  answers[id] = value;
+  trackEvent("quiz_answer", { question: id, value, step: quizStep + 1 });
+  quizStep++;
+  if (quizStep >= QUIZ.length) finishQuiz();
+  else renderQuizStep();
+}
+function toggleAvoid(value, btn) {
+  const av = answers.avoid || (answers.avoid = []);
+  const i = av.indexOf(value);
+  if (i >= 0) av.splice(i, 1); else av.push(value);
+  btn.classList.toggle("selected");
+  trackEvent("quiz_answer", { question: "avoid", value, selected: av.slice(), step: quizStep + 1 });
+}
+function finishQuiz() {
+  document.getElementById("q-fill").style.width = "100%";
+  const ranked = getRanked();
+  const top = ranked.slice(0, 4);
+  trackEvent("recommendation_shown", {
+    answers,
+    ranked_ids: top.map(i => i.id),
+    scores: top.map(i => ({ id: i.id, score: scoreItem(i) })),
+    top_item_id: top[0]?.id || null,
+  });
+  resultsRanked = ranked;
+  resultsShown = Math.min(RES_BATCH, ranked.length);
+  renderResults();
+  document.getElementById("quiz").classList.remove("show");
+  document.getElementById("float-fb").classList.remove("hidden");
+  goScreen("results");
+}
+
+/* ─── Results ─── */
+function resultCard(item, i) {
+  const card = document.createElement("div");
+  card.className = "res-card";
+  card.onclick = () => { detailFrom = "results"; trackEvent("result_item_clicked", { item_id: item.id, rank: i + 1 }); openDetail(item); };
+
+  const imgWrap = document.createElement("div");
+  imgWrap.className = "res-card-img";
+  paintMedia(imgWrap, item, "3rem");
+  const rank = document.createElement("div"); rank.className = "res-rank"; rank.textContent = i === 0 ? "Top pick" : "#" + (i + 1);
+  imgWrap.appendChild(rank);
+  const radd = document.createElement("button");
+  radd.className = "res-add" + (orderLine(item.id) ? " added" : "");
+  radd.setAttribute("data-add-id", item.id);
+  radd.textContent = orderLine(item.id) ? "✓" : "＋";
+  radd.title = "Add to my order";
+  radd.onclick = (e) => { e.stopPropagation(); addToOrder(item.id, 1); };
+  imgWrap.appendChild(radd);
+
+  const body = document.createElement("div"); body.className = "res-card-body";
+  const head = document.createElement("div"); head.className = "res-card-head";
+  head.innerHTML = `<div class="res-card-name">${item.name}</div><div class="res-card-price">$${item.price.toFixed(2)}</div>`;
+  const desc = document.createElement("div"); desc.className = "res-card-desc"; desc.textContent = item.description;
+  const why = document.createElement("div"); why.className = "res-why"; why.textContent = "✨ " + reasonFor(item);
+  body.appendChild(head); body.appendChild(desc); body.appendChild(why);
+
+  card.appendChild(imgWrap); card.appendChild(body);
+  return card;
+}
+function renderResults() {
+  const sub = document.getElementById("res-sub");
+  const moodTxt = { noodles:"noodles & broth", rice:"rice & protein", fried:"fried & crispy", raw:"sushi & raw fish", light:"light & fresh", any:"a bit of everything" }[answers.mood] || "your taste";
+  sub.textContent = `For a ${moodTxt} mood`;
+  const list = document.getElementById("res-list");
+  list.innerHTML = "";
+  for (let i = 0; i < resultsShown && i < resultsRanked.length; i++) list.appendChild(resultCard(resultsRanked[i], i));
+  renderMoreButton();
+  refreshOrderUI();
+}
+function renderMoreButton() {
+  const list = document.getElementById("res-list");
+  const existing = document.getElementById("res-more");
+  if (existing) existing.remove();
+  if (resultsShown >= resultsRanked.length) return;
+  const remaining = resultsRanked.length - resultsShown;
+  const btn = document.createElement("button");
+  btn.id = "res-more";
+  btn.className = "res-more";
+  btn.textContent = `＋ Show more picks (${remaining} more)`;
+  btn.onclick = loadMoreResults;
+  list.appendChild(btn);
+}
+function loadMoreResults() {
+  const list = document.getElementById("res-list");
+  const more = document.getElementById("res-more");
+  if (more) more.remove();
+  const start = resultsShown;
+  resultsShown = Math.min(resultsRanked.length, resultsShown + RES_BATCH);
+  for (let i = start; i < resultsShown; i++) list.appendChild(resultCard(resultsRanked[i], i));
+  trackEvent("recommendation_list_extended", { shown: resultsShown, total: resultsRanked.length });
+  renderMoreButton();
+  refreshOrderUI();
+}
+function goMenuFromResults() {
+  trackEvent("view_full_menu_clicked", { from_screen: "results" });
+  goScreen("menu");
+}
+
+/* ─── Navigation ─── */
+function goScreen(id) {
+  const next = document.getElementById("screen-" + id);
+  if (!next || currentScreen === id) return;
+  trackScreenExit();
+  screenHistory.push(currentScreen);
+  document.querySelectorAll(".screen.active").forEach(s => s.classList.remove("active"));
+  next.classList.add("active");
+  currentScreen = id;
+  document.getElementById("float-fb").classList.remove("hidden");
+  trackViewScreen(id);
+}
+function goBack() {
+  if (!screenHistory.length) { goScreen("menu"); return; }
+  trackScreenExit();
+  const from = currentScreen;
+  const prev = screenHistory.pop();
+  document.querySelectorAll(".screen.active").forEach(s => s.classList.remove("active"));
+  document.getElementById("screen-" + prev).classList.add("active");
+  currentScreen = prev;
+  trackEvent("back_clicked", { from_screen: from, to_screen: prev });
+  trackViewScreen(prev);
+}
+
+/* ─── Detail ─── */
+function openDetail(item) {
+  paintMedia(document.getElementById("detail-img"), item, "4.6rem");
+  document.getElementById("detail-jp").textContent = item.jp || "";
+  document.getElementById("detail-name").textContent = item.name;
+  document.getElementById("detail-price").textContent = "$" + item.price.toFixed(2);
+  document.getElementById("detail-desc").textContent = item.description;
+  const labelsEl = document.getElementById("detail-labels");
+  labelsEl.innerHTML = "";
+  item.labels.forEach(l => labelsEl.appendChild(labelEl(l)));
+  currentDetailItem = item;
+  updateDetailAdd();
+  goScreen("detail");
+}
+
+/* ─── Feedback ─── */
+let fbType = "feedback";
+function openFb() {
+  trackEvent("floating_feedback_opened", { from_screen: currentScreen });
+  document.getElementById("fb-choose").style.display = "";
+  document.getElementById("fb-input").classList.remove("show");
+  document.getElementById("fb-thanks").style.display = "none";
+  document.getElementById("fb-textarea").value = "";
+  document.getElementById("fb-overlay").classList.add("show");
+  document.getElementById("float-fb").classList.add("hidden");
+}
+function openFbInput(type) {
+  fbType = type;
+  document.getElementById("fb-input-title").textContent = type === "bug" ? "Report a bug" : "Leave feedback";
+  document.getElementById("fb-input-sub").textContent = type === "bug" ? "Something broken? Tell us." : "What could be better?";
+  document.getElementById("fb-choose").style.display = "none";
+  document.getElementById("fb-input").classList.add("show");
+  document.getElementById("fb-textarea").focus();
+}
+function backFb() {
+  document.getElementById("fb-choose").style.display = "";
+  document.getElementById("fb-input").classList.remove("show");
+}
+function submitFb() {
+  const text = document.getElementById("fb-textarea").value.trim();
+  trackEvent("feedback_submitted", { feedback_type: fbType, message: text, from_screen: currentScreen });
+  document.getElementById("fb-input").classList.remove("show");
+  document.getElementById("fb-thanks").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("fb-overlay").classList.remove("show");
+    document.getElementById("float-fb").classList.remove("hidden");
+  }, 2000);
+}
+document.getElementById("fb-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("fb-overlay")) {
+    document.getElementById("fb-overlay").classList.remove("show");
+    document.getElementById("float-fb").classList.remove("hidden");
+  }
+});
+
+/* ─── Remember your order (a read-off list, not a cart/checkout) ─── */
+let order = safeStorage(() => JSON.parse(sessionStorage.getItem("pw_order_hana")), null) || [];
+function saveOrder() { safeStorage(() => sessionStorage.setItem("pw_order_hana", JSON.stringify(order)), null); }
+function orderLine(id) { return order.find(l => l.id === id); }
+function orderCount() { return order.reduce((n, l) => n + l.qty, 0); }
+function orderTotal() {
+  return order.reduce((s, l) => { const it = MENU_ITEMS.find(m => m.id === l.id); return s + (it ? it.price * l.qty : 0); }, 0);
+}
+function addToOrder(id, qty) {
+  qty = qty || 1;
+  const l = orderLine(id);
+  if (l) l.qty += qty; else order.push({ id, qty });
+  saveOrder();
+  trackEvent("order_item_added", { item_id: id, qty, order_size: orderCount() });
+  refreshOrderUI();
+}
+function setQty(id, qty) {
+  const l = orderLine(id);
+  if (!l) return;
+  if (qty <= 0) { order = order.filter(x => x.id !== id); trackEvent("order_item_removed", { item_id: id }); }
+  else l.qty = qty;
+  saveOrder(); refreshOrderUI(); renderOrderSheet();
+}
+function clearOrder() {
+  if (!order.length) { closeOrder(); return; }
+  order = []; saveOrder(); trackEvent("order_cleared", {});
+  refreshOrderUI(); renderOrderSheet();
+}
+function refreshOrderUI() {
+  const btn = document.getElementById("float-order");
+  const c = orderCount();
+  if (c > 0) { btn.classList.add("show"); document.getElementById("order-badge").textContent = c; }
+  else btn.classList.remove("show");
+  document.querySelectorAll("[data-add-id]").forEach(b => {
+    const has = !!orderLine(b.getAttribute("data-add-id"));
+    b.classList.toggle("added", has);
+    b.textContent = has ? "✓" : "＋";
+  });
+  if (currentDetailItem) updateDetailAdd();
+}
+function openOrder() {
+  trackEvent("order_opened", { order_size: orderCount() });
+  renderOrderSheet();
+  document.getElementById("order-overlay").classList.add("show");
+}
+function closeOrder() { document.getElementById("order-overlay").classList.remove("show"); }
+function renderOrderSheet() {
+  const rows = document.getElementById("order-rows");
+  const foot = document.getElementById("order-foot");
+  rows.innerHTML = "";
+  if (!order.length) {
+    rows.innerHTML = '<div class="order-empty">Nothing added yet.<br>Tap the ＋ on any dish to start your list.</div>';
+    foot.style.display = "none";
+    return;
+  }
+  foot.style.display = "block";
+  order.forEach(l => {
+    const it = MENU_ITEMS.find(m => m.id === l.id);
+    if (!it) return;
+    const row = document.createElement("div");
+    row.className = "order-row";
+    row.innerHTML =
+      `<div class="order-row-name">${it.name}<div class="order-row-jp">${it.jp || ""}</div></div>` +
+      `<div class="qty"><button aria-label="Remove one">−</button><span class="n">${l.qty}</span><button aria-label="Add one">＋</button></div>` +
+      `<div class="order-row-price">$${(it.price * l.qty).toFixed(2)}</div>`;
+    const btns = row.querySelectorAll(".qty button");
+    btns[0].onclick = () => setQty(it.id, l.qty - 1);
+    btns[1].onclick = () => setQty(it.id, l.qty + 1);
+    rows.appendChild(row);
+  });
+  document.getElementById("order-amt").textContent = "$" + orderTotal().toFixed(2);
+}
+function updateDetailAdd() {
+  const b = document.getElementById("detail-add");
+  if (!b) return;
+  const has = currentDetailItem && orderLine(currentDetailItem.id);
+  b.textContent = has ? "✓ Added — tap to add another" : "＋ Add to my order";
+  b.classList.toggle("added", !!has);
+}
+function addFromDetail() {
+  if (!currentDetailItem) return;
+  addToOrder(currentDetailItem.id, 1);
+}
+
+/* ─── Session lifecycle ─── */
+const _t0 = Date.now();
+let _ended = false;
+function fireEnd() {
+  if (_ended) return; _ended = true;
+  trackEvent("session_end", { duration_seconds: Math.round((Date.now() - _t0) / 1000), from_screen: currentScreen });
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") fireEnd(); });
+window.addEventListener("pagehide", () => fireEnd());
+
+/* ─── Init ─── */
+document.getElementById("order-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("order-overlay")) closeOrder();
+});
+renderFilters();
+renderMenu();
+refreshOrderUI();
+trackViewScreen("menu");
+</script>
+</body>
+</html>
