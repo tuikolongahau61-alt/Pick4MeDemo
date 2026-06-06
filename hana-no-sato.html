@@ -1232,13 +1232,18 @@ window.addEventListener("pagehide", () => fireEnd());
 (function () {
   const scroller = document.getElementById("menu-scroll");
   const filters = document.getElementById("filters");
-  let lastY = 0;
+  const HIDE_AFTER = 110;   // need to be this far down before hiding kicks in
+  const TRAVEL = 70;        // sustained scroll distance in one direction before toggling
+  let lastY = 0, accum = 0;
   scroller.addEventListener("scroll", () => {
     const y = scroller.scrollTop;
-    if (Math.abs(y - lastY) < 5) return;       // ignore jitter
-    if (y > lastY && y > 60) filters.classList.add("collapsed");   // scrolling down
-    else if (y < lastY) filters.classList.remove("collapsed");     // scrolling up
+    const delta = y - lastY;
     lastY = y;
+    if ((delta > 0) !== (accum > 0)) accum = 0;   // direction changed → reset
+    accum += delta;
+    if (accum > TRAVEL && y > HIDE_AFTER) { filters.classList.add("collapsed"); accum = 0; }
+    else if (accum < -TRAVEL) { filters.classList.remove("collapsed"); accum = 0; }
+    if (y <= 4) filters.classList.remove("collapsed");
   }, { passive: true });
 })();
 
