@@ -157,7 +157,8 @@
   #quiz.show { display: flex; }
   .q-top { background: var(--c-indigo); color: #fff; padding: 16px 18px 14px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; flex-shrink: 0; }
   .q-close { justify-self: start; background: none; border: none; color: rgba(255,255,255,0.85); font-size: 0.84rem; font-weight: 800; cursor: pointer; }
-  .q-top-title { font-family: var(--serif); font-size: 1rem; font-weight: 700; text-align: center; }
+  .q-home { justify-self: end; background: none; border: none; color: rgba(255,255,255,0.85); font-size: 1.05rem; cursor: pointer; }
+  .q-top-title { font-family: var(--serif); font-size: 1rem; font-weight: 700; text-align: center; cursor: pointer; }
   .q-progress-track { height: 4px; background: var(--c-line); flex-shrink: 0; }
   .q-progress-fill { height: 4px; background: var(--c-red); transition: width 0.3s ease; width: 0; }
   .q-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px 22px; overflow-y: auto; }
@@ -205,13 +206,15 @@
   .res-more:hover { border-color: var(--c-indigo); }
   .res-more:active { transform: scale(0.98); }
   .res-why { font-size: 0.82rem; font-weight: 700; color: #7a4a16; background: #fdf1df; border: 1px solid #f0dcb8; border-radius: var(--radius-s); padding: 9px 12px; margin-top: 9px; line-height: 1.4; }
+  .res-home { position: absolute; top: 16px; right: 16px; z-index: 2; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); color: #fff; border-radius: 999px; height: 32px; padding: 0 13px; font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; }
   .res-actions { padding: 4px 18px 30px; }
   .res-view-menu { width: 100%; padding: 15px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1.02rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
   .res-restart { width: 100%; padding: 13px; background: none; color: var(--c-ink-soft); border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 4px; }
 
   /* ── Detail screen ── */
-  .topbar-plain { display: flex; align-items: center; padding: 14px 18px 10px; background: var(--c-bg); border-bottom: 1px solid var(--c-line); flex-shrink: 0; }
+  .topbar-plain { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 10px; background: var(--c-bg); border-bottom: 1px solid var(--c-line); flex-shrink: 0; }
   .topbar-back { color: var(--c-indigo); font-size: 0.9rem; font-weight: 800; background: none; border: none; cursor: pointer; }
+  .topbar-home { color: var(--c-indigo); font-size: 0.9rem; font-weight: 800; background: none; border: none; cursor: pointer; }
   .detail-scroll { display: flex; flex-direction: column; flex: 1; overflow-y: auto; }
   .detail-img { width: 100%; height: 230px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
   .detail-img .tile { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4.6rem; }
@@ -256,6 +259,7 @@
   .order-note { font-size: 0.72rem; font-weight: 600; color: var(--c-ink-soft); text-align: center; margin: 8px 0 12px; }
   .order-close-btn { width: 100%; padding: 14px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
   .order-clear { width: 100%; padding: 10px; background: none; color: var(--c-ink-soft); border: none; font-size: 0.84rem; font-weight: 700; cursor: pointer; margin-top: 2px; }
+  .order-to-default { width: 100%; padding: 13px; background: var(--c-gold); color: #2a2210; border: none; border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .order-empty { text-align: center; color: var(--c-ink-soft); font-size: 0.9rem; font-weight: 600; line-height: 1.5; padding: 30px 10px; }
   .order-row-note { font-size: 0.74rem; font-weight: 600; color: var(--c-ink); background: #f3eede; border-radius: 8px; padding: 3px 8px; margin-top: 4px; }
   .order-row-notebtn { margin-top: 4px; background: none; border: none; padding: 0; font-size: 0.74rem; font-weight: 800; color: var(--c-indigo); cursor: pointer; }
@@ -266,6 +270,11 @@
   .note-sheet { background: #fff; border-radius: 22px 22px 0 0; padding: 18px 20px 30px; width: 390px; max-width: 100%; box-shadow: 0 -8px 40px rgba(0,0,0,0.2); animation: slideUp 0.22s ease; }
   .note-title { font-family: var(--serif); font-size: 1.18rem; font-weight: 700; color: var(--c-ink); text-align: center; }
   .note-sub { font-size: 0.8rem; font-weight: 600; color: var(--c-ink-soft); text-align: center; margin: 2px 0 14px; }
+  .note-presets-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--c-ink-soft); margin-bottom: 8px; }
+  .note-presets { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .note-chip { padding: 7px 12px; background: var(--c-bg2); border: 1.5px solid var(--c-line); border-radius: var(--radius-pill); font-size: 0.82rem; font-weight: 700; color: var(--c-ink); cursor: pointer; transition: all 0.12s; }
+  .note-chip:active { transform: scale(0.95); }
+  .note-chip.sel { background: var(--c-indigo); border-color: var(--c-indigo); color: #fff; }
   .note-textarea { width: 100%; border: 2px solid var(--c-line); border-radius: var(--radius-s); padding: 12px 14px; font-size: 0.95rem; font-family: inherit; resize: none; color: var(--c-ink); margin-bottom: 12px; }
   .note-textarea:focus { outline: none; border-color: var(--c-indigo); }
   .note-save { width: 100%; padding: 14px; background: var(--c-green); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 18px rgba(70,121,90,0.3); }
@@ -281,6 +290,22 @@
   .intro-text { font-size: 0.9rem; font-weight: 500; color: var(--c-ink-soft); line-height: 1.55; margin-bottom: 20px; }
   .intro-text b { color: var(--c-ink); font-weight: 800; }
   .intro-btn { width: 100%; padding: 14px; background: var(--c-indigo); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+
+  /* ── Language switcher ── */
+  .lang-btn { position: absolute; top: 14px; right: 14px; z-index: 3; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); color: #fff; border-radius: 999px; height: 32px; padding: 0 12px; font-size: 0.82rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .lang-overlay { display: none; position: fixed; inset: 0; background: rgba(29,26,22,0.45); z-index: 520; align-items: flex-end; justify-content: center; }
+  .lang-overlay.show { display: flex; }
+  .lang-sheet { background: #fff; border-radius: 22px 22px 0 0; padding: 18px 20px 30px; width: 390px; max-width: 100%; box-shadow: 0 -8px 40px rgba(0,0,0,0.2); animation: slideUp 0.22s ease; }
+  .lang-title { font-family: var(--serif); font-size: 1.18rem; font-weight: 700; color: var(--c-ink); text-align: center; margin-bottom: 12px; }
+  .lang-opt { width: 100%; padding: 14px 16px; background: #fff; border: 2px solid var(--c-line); border-radius: var(--radius); margin-bottom: 9px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 1rem; font-weight: 800; color: var(--c-ink); }
+  .lang-opt.active { border-color: var(--c-indigo); color: var(--c-indigo); }
+  .lang-opt .chk { color: var(--c-green); }
+  /* first-visit language hint */
+  .lang-hint { position: absolute; top: 52px; right: 12px; z-index: 6; max-width: 240px; background: #fff; color: var(--c-ink); border-radius: 12px; padding: 9px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.3; box-shadow: 0 10px 30px rgba(0,0,0,0.28); opacity: 0; transform: translateY(-6px) scale(0.96); pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; cursor: pointer; }
+  .lang-hint.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .lang-hint::after { content: ""; position: absolute; top: -7px; right: 16px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 7px solid #fff; }
+  .lang-btn.pulsing { animation: langPulse 1.1s ease-in-out infinite; }
+  @keyframes langPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); } 50% { box-shadow: 0 0 0 8px rgba(255,255,255,0); } }
 
   /* ── Floating feedback ── */
   .float-fb { position: fixed; bottom: 18px; left: 16px; z-index: 400; background: var(--c-ink); color: #fff; border: none; border-radius: var(--radius-pill); padding: 9px 14px; font-size: 0.76rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(29,26,22,0.28); opacity: 0.8; transition: opacity 0.2s; }
@@ -317,28 +342,28 @@
   <div class="fb-sheet">
     <div class="fb-handle"></div>
     <div id="fb-choose">
-      <div class="fb-title">Share your thoughts</div>
-      <div class="fb-sub">We read every message.</div>
+      <div class="fb-title" data-i18n="fb_title">Share your thoughts</div>
+      <div class="fb-sub" data-i18n="fb_sub">We read every message.</div>
       <button class="fb-type-btn" onclick="openFbInput('feedback')">
         <span class="fb-type-icon">💬</span>
-        <div><div class="fb-type-label">Leave feedback</div><div class="fb-type-sub">What could be better?</div></div>
+        <div><div class="fb-type-label" data-i18n="fb_leave">Leave feedback</div><div class="fb-type-sub" data-i18n="fb_leave_sub">What could be better?</div></div>
       </button>
       <button class="fb-type-btn" onclick="openFbInput('bug')">
         <span class="fb-type-icon">🐛</span>
-        <div><div class="fb-type-label">Report a bug</div><div class="fb-type-sub">Something broken? Tell us.</div></div>
+        <div><div class="fb-type-label" data-i18n="fb_bug">Report a bug</div><div class="fb-type-sub" data-i18n="fb_bug_sub">Something broken? Tell us.</div></div>
       </button>
     </div>
     <div class="fb-input-wrap" id="fb-input">
-      <button class="fb-back" onclick="backFb()">← Back</button>
+      <button class="fb-back" onclick="backFb()" data-i18n="back">← Back</button>
       <div class="fb-title" id="fb-input-title">Leave feedback</div>
       <div class="fb-sub" id="fb-input-sub">What could be better?</div>
-      <textarea class="fb-textarea" id="fb-textarea" rows="4" placeholder="Type here…"></textarea>
-      <button class="fb-submit" onclick="submitFb()">Send →</button>
+      <textarea class="fb-textarea" id="fb-textarea" rows="4" placeholder="Type here…" data-i18n-ph="fb_placeholder"></textarea>
+      <button class="fb-submit" onclick="submitFb()" data-i18n="fb_send">Send →</button>
     </div>
     <div class="fb-thanks" id="fb-thanks">
       <div class="fb-thanks-icon">🙏</div>
-      <div class="fb-thanks-title">Thank you!</div>
-      <div class="fb-thanks-sub">We appreciate you taking the time.</div>
+      <div class="fb-thanks-title" data-i18n="fb_thanks_title">Thank you!</div>
+      <div class="fb-thanks-sub" data-i18n="fb_thanks_sub">We appreciate you taking the time.</div>
     </div>
   </div>
 </div>
@@ -347,14 +372,15 @@
 <div class="order-overlay" id="order-overlay">
   <div class="order-sheet">
     <div class="fb-handle"></div>
-    <div class="order-title">🧾 Your order</div>
-    <div class="order-sub">Show this list to your server — no need to remember it all.</div>
+    <div class="order-title" data-i18n="order_title">🧾 Your order</div>
+    <div class="order-sub" data-i18n="order_sub">Show this list to your server — no need to remember it all.</div>
     <div class="order-rows" id="order-rows"></div>
     <div class="order-foot" id="order-foot">
-      <div class="order-total"><span class="lbl">Estimated total</span><span class="amt" id="order-amt">$0.00</span></div>
-      <div class="order-note">Prices are estimates — your server confirms the final total.</div>
-      <button class="order-close-btn" onclick="closeOrder()">Keep browsing</button>
-      <button class="order-clear" onclick="clearOrder()">Clear list</button>
+      <div class="order-total"><span class="lbl" data-i18n="order_total_lbl">Estimated total</span><span class="amt" id="order-amt">$0.00</span></div>
+      <div class="order-note" data-i18n="order_disclaimer">Prices are estimates — your server confirms the final total.</div>
+      <button class="order-to-default" id="order-to-default" onclick="resetToDefaultForServer()">🌐 <span data-i18n="order_to_default">Show in English for staff</span></button>
+      <button class="order-close-btn" onclick="closeOrder()" data-i18n="order_close">Keep browsing</button>
+      <button class="order-clear" onclick="clearOrder()" data-i18n="order_clear">Clear list</button>
     </div>
   </div>
 </div>
@@ -363,9 +389,9 @@
 <div class="intro-overlay" id="intro-overlay">
   <div class="intro-card">
     <div class="intro-icon">🧾</div>
-    <div class="intro-title">Saved to your order</div>
-    <div class="intro-text">This isn't checkout — it's just a running list to keep track of what you like. Add dishes as you browse, add notes like <b>"no ginger,"</b> then show the list to your server when they come by. Nothing is sent to the kitchen yet.</div>
-    <button class="intro-btn" onclick="dismissIntro()">Got it</button>
+    <div class="intro-title" data-i18n="intro_title">Saved to your order</div>
+    <div class="intro-text" data-i18n-html="intro_text">This isn't checkout — it's just a running list to keep track of what you like. Add dishes as you browse, add notes like <b>"no ginger,"</b> then show the list to your server when they come by. Nothing is sent to the kitchen yet.</div>
+    <button class="intro-btn" onclick="dismissIntro()" data-i18n="intro_btn">Got it</button>
   </div>
 </div>
 
@@ -373,11 +399,23 @@
 <div class="note-overlay" id="note-overlay">
   <div class="note-sheet">
     <div class="fb-handle"></div>
-    <div class="note-title" id="note-title">Add a note</div>
-    <div class="note-sub">Anything the kitchen should know? Optional.</div>
-    <textarea class="note-textarea" id="note-textarea" rows="3" placeholder="e.g. no ginger · extra spicy · sauce on the side"></textarea>
-    <button class="note-save" onclick="saveNote()">Save note</button>
-    <button class="note-skip" onclick="closeNote()">Skip</button>
+    <div class="note-title" id="note-title" data-i18n="note_title">Add a note</div>
+    <div class="note-sub" data-i18n="note_sub">Anything the kitchen should know? Optional.</div>
+    <div class="note-presets-label" data-i18n="np_label">Quick add:</div>
+    <div class="note-presets" id="note-presets"></div>
+    <textarea class="note-textarea" id="note-textarea" rows="3" placeholder="e.g. no ginger · extra spicy · sauce on the side" data-i18n-ph="note_placeholder"></textarea>
+    <button class="note-save" onclick="saveNote()" data-i18n="note_save">Save note</button>
+    <button class="note-skip" onclick="closeNote()" data-i18n="note_skip">Skip</button>
+
+  </div>
+</div>
+
+<!-- Language picker -->
+<div class="lang-overlay" id="lang-overlay">
+  <div class="lang-sheet">
+    <div class="fb-handle"></div>
+    <div class="lang-title" data-i18n="lang_title">Language</div>
+    <div id="lang-options"></div>
   </div>
 </div>
 
@@ -386,17 +424,18 @@
   <!-- ══ SCREEN: Menu (landing) ══ -->
   <div class="screen active" id="screen-menu">
     <div class="hdr">
+      <button class="lang-btn" id="lang-btn" onclick="openLangSheet()" aria-label="Language">🌐 <span id="lang-btn-label">EN</span></button>
       <div class="hdr-inner">
         <div class="hdr-jp">花の里</div>
         <div class="hdr-name">Hana no Sato</div>
         <div class="hdr-rule"></div>
-        <div class="hdr-meta"><span class="star">★ 4.7</span> · Japanese home cooking · Honolulu</div>
+        <div class="hdr-meta"><span class="star">★ 4.7</span> <span data-i18n="tagline">· Japanese home cooking · Honolulu</span></div>
       </div>
     </div>
 
     <div class="decide">
-      <button class="decide-btn" onclick="startQuiz('landing')">✨ Help Me Decide</button>
-      <div class="decide-sub">Answer a few quick questions and get a recommendation in under 30 seconds.</div>
+      <button class="decide-btn" onclick="startQuiz('landing')" data-i18n="decide_btn">✨ Help Me Decide</button>
+      <div class="decide-sub" data-i18n="decide_sub">Answer a few quick questions and get a recommendation in under 30 seconds.</div>
     </div>
 
     <div class="filters" id="filters">
@@ -416,23 +455,25 @@
   <!-- ══ SCREEN: Results ══ -->
   <div class="screen" id="screen-results">
     <div class="res-top">
+      <button class="res-home" onclick="goHome()">🏠 <span data-i18n="home">Home</span></button>
       <div class="res-top-inner">
-        <div class="res-eyebrow">Your picks</div>
-        <div class="res-title">Here's what we'd order</div>
+        <div class="res-eyebrow" data-i18n="res_eyebrow">Your picks</div>
+        <div class="res-title" data-i18n="res_title">Here's what we'd order</div>
         <div class="res-sub" id="res-sub">Based on your answers</div>
       </div>
     </div>
     <div class="res-list" id="res-list"></div>
     <div class="res-actions">
-      <button class="res-view-menu" onclick="goMenuFromResults()">View full menu →</button>
-      <button class="res-restart" onclick="startQuiz('retry')">↺ Start over</button>
+      <button class="res-view-menu" onclick="goMenuFromResults()" data-i18n="res_view_menu">View full menu →</button>
+      <button class="res-restart" onclick="startQuiz('retry')" data-i18n="res_restart">↺ Start over</button>
     </div>
   </div>
 
   <!-- ══ SCREEN: Detail ══ -->
   <div class="screen" id="screen-detail">
     <div class="topbar-plain">
-      <button class="topbar-back" onclick="goBack()">← Back</button>
+      <button class="topbar-back" onclick="goBack()" data-i18n="back">← Back</button>
+      <button class="topbar-home" onclick="goHome()">🏠 <span data-i18n="home">Home</span></button>
     </div>
     <div class="detail-scroll">
       <div class="detail-img" id="detail-img"></div>
@@ -448,8 +489,8 @@
         <div class="detail-desc" id="detail-desc"></div>
       </div>
       <div class="detail-cta">
-        <button class="add-order-btn" id="detail-add" onclick="addFromDetail()">＋ Add to my order</button>
-        <button class="detail-back-btn" onclick="goBack()">← Back to menu</button>
+        <button class="add-order-btn" id="detail-add" onclick="addFromDetail()" data-i18n="detail_add">＋ Add to my order</button>
+        <button class="detail-back-btn" onclick="goBack()" data-i18n="detail_back_menu">← Back to menu</button>
       </div>
     </div>
   </div>
@@ -457,19 +498,22 @@
   <!-- ══ Quiz modal ══ -->
   <div id="quiz">
     <div class="q-top">
-      <button class="q-close" onclick="closeQuiz()">✕ Close</button>
-      <div class="q-top-title">花の里</div>
-      <div></div>
+      <button class="q-close" onclick="closeQuiz()" data-i18n="q_close">✕ Close</button>
+      <div class="q-top-title" onclick="goHome()" title="Home">花の里</div>
+      <button class="q-home" onclick="goHome()" aria-label="Home">🏠</button>
     </div>
     <div class="q-progress-track"><div class="q-progress-fill" id="q-fill"></div></div>
     <div class="q-body" id="q-body"></div>
   </div>
 
+  <!-- First-visit language hint -->
+  <div class="lang-hint" id="lang-hint" onclick="openLangSheet()">🌐 English · 日本語 · 한국어 · 中文</div>
+
   <!-- Floating feedback -->
-  <button class="float-fb" id="float-fb" onclick="openFb()">💬 Feedback</button>
+  <button class="float-fb" id="float-fb" onclick="openFb()" data-i18n="fb_float">💬 Feedback</button>
 
   <!-- Remember-your-order pill -->
-  <button class="float-order" id="float-order" onclick="openOrder()">🧾 My Order <span class="badge" id="order-badge">0</span></button>
+  <button class="float-order" id="float-order" onclick="openOrder()"><span data-i18n="order_float">🧾 My Order</span> <span class="badge" id="order-badge">0</span></button>
 
 </div><!-- /phone -->
 
@@ -496,7 +540,7 @@ function trackEvent(type, payload = {}) {
   const body = JSON.stringify({
     session_id: getSessionId(), event_type: type,
     payload: { ...payload, experiment: EXPERIMENT },
-    client_ts: new Date().toISOString(), language: "en",
+    client_ts: new Date().toISOString(), language: currentLang,
   });
   try {
     fetch(`${API_BASE}/api/v1/restaurants/${RESTAURANT_SLUG}/events`, {
@@ -538,6 +582,325 @@ function paintMedia(wrapEl, item, tileFont) {
     img.alt = item.name;
   }
   tryNext();
+}
+
+/* ════════════════ i18n ════════════════ */
+let currentLang = safeStorage(() => sessionStorage.getItem("pw_lang"), null) || "en";
+const LANGS = [
+  { code: "en", label: "English" },
+  { code: "ja", label: "日本語" },
+  { code: "ko", label: "한국어" },
+  { code: "zh", label: "中文" },
+];
+const LANG_SHORT = { en: "EN", ja: "日", ko: "한", zh: "中" };
+
+const STRINGS = {
+  en: {
+    tagline: "· Japanese home cooking · Honolulu",
+    decide_btn: "✨ Help Me Decide",
+    decide_sub: "Answer a few quick questions and get a recommendation in under 30 seconds.",
+    cat_all: "All", cat_ramen: "Ramen", cat_udon: "Udon & Soba", cat_bento: "Bento", cat_bowls: "Bowls",
+    cat_curry: "Curry", cat_sushi: "Sushi & Rolls", cat_small: "Small Plates", cat_salads: "Salads", cat_dessert: "Dessert",
+    diet_vegetarian: "Vegetarian", diet_popular: "Popular", diet_spicy: "Spicy",
+    empty_note: "No items match those filters. Try clearing one.",
+    label_Popular: "Popular", label_Spicy: "Spicy", label_Vegetarian: "Vegetarian", label_Light: "Light",
+    label_Filling: "Filling", label_Sweet: "Sweet", label_Top: "★ #1 Pick", label_Sharing: "For Sharing",
+    q_close: "✕ Close", q_step: "Question {n} of 4", q_continue: "See my picks →", q_hint: "Optional — skip if nothing to avoid.",
+    q_mood_prompt: "What are you in the mood for?",
+    q_mood_noodles: "Noodles & broth", q_mood_rice: "Rice & protein", q_mood_fried: "Fried & crispy",
+    q_mood_raw: "Sushi & raw fish", q_mood_light: "Light & fresh", q_mood_any: "Surprise me",
+    q_hunger_prompt: "How hungry are you?",
+    q_hunger_snack: "Just a bite", q_hunger_normal: "A full meal", q_hunger_starving: "Very hungry",
+    q_spice_prompt: "How about spice?",
+    q_spice_none: "Keep it mild", q_spice_some: "A little kick", q_spice_spicy: "Bring the heat", q_spice_any: "Any spice level",
+    q_avoid_prompt: "Anything to avoid?",
+    q_avoid_vegetarian: "Vegetarian", q_avoid_pork: "No pork", q_avoid_shellfish: "No shellfish", q_avoid_raw: "No raw fish", q_avoid_gluten: "Gluten-aware",
+    res_eyebrow: "Your picks", res_title: "Here's what we'd order", res_sub: "For a {mood} mood",
+    res_view_menu: "View full menu →", res_restart: "↺ Start over", res_more: "＋ Show more picks ({n} more)", res_top_pick: "Top pick",
+    moodr_noodles: "noodles & broth", moodr_rice: "rice & protein", moodr_fried: "fried & crispy",
+    moodr_raw: "sushi & raw fish", moodr_light: "light & fresh", moodr_any: "a bit of everything", moodr_default: "your taste",
+    reason_mood: "Right in your {mood} mood.", reason_spice: "Brings the heat you asked for.",
+    reason_filling: "Hearty and filling — you said you're very hungry.", reason_light: "A lighter bite, just like you wanted.",
+    reason_top: "Hana no Sato's #1 most-loved plate.", reason_popular: "One of the restaurant's most popular picks.",
+    reason_featured: "A house favorite we think you'll love.", reason_default: "A solid match for what you're after.",
+    back: "← Back", detail_back_menu: "← Back to menu", detail_add: "＋ Add to my order", detail_added: "✓ Added — tap to add another", add_tip: "Add to my order",
+    order_float: "🧾 My Order", order_title: "🧾 Your order", order_sub: "Show this list to your server — no need to remember it all.",
+    order_total_lbl: "Estimated total", order_disclaimer: "Prices are estimates — your server confirms the final total.",
+    order_close: "Keep browsing", order_clear: "Clear list",
+    order_empty: "Nothing added yet.<br>Tap the ＋ on any dish to start your list.", order_add_note: "＋ Add note", order_edit_note: "Edit note",
+    note_title: "Add a note", note_title_for: "Note for {name}", note_sub: "Anything the kitchen should know? Optional.",
+    note_placeholder: "e.g. no ginger · extra spicy · sauce on the side", note_save: "Save note", note_skip: "Skip",
+    intro_title: "Saved to your order",
+    intro_text: 'This isn\'t checkout — it\'s just a running list to keep track of what you like. Add dishes as you browse, add notes like <b>"no ginger,"</b> then show the list to your server when they come by. Nothing is sent to the kitchen yet.',
+    intro_btn: "Got it",
+    fb_float: "💬 Feedback", fb_title: "Share your thoughts", fb_sub: "We read every message.",
+    fb_leave: "Leave feedback", fb_leave_sub: "What could be better?", fb_bug: "Report a bug", fb_bug_sub: "Something broken? Tell us.",
+    fb_send: "Send →", fb_placeholder: "Type here…", fb_thanks_title: "Thank you!", fb_thanks_sub: "We appreciate you taking the time.",
+    lang_title: "Language",
+    home: "Home", order_to_default: "Show in English for staff",
+    np_label: "Quick add:", np_no_ginger: "No ginger", np_no_onion: "No onion", np_no_wasabi: "No wasabi", np_extra_spicy: "Extra spicy", np_mild: "Mild / less spicy", np_sauce_side: "Sauce on the side", np_allergy: "Allergy — please check",
+  },
+  ja: {
+    tagline: "· 日本の家庭料理 · ホノルル",
+    decide_btn: "✨ 迷ったらおまかせ",
+    decide_sub: "いくつかの質問に答えるだけで、30秒でおすすめが見つかります。",
+    cat_all: "すべて", cat_ramen: "ラーメン", cat_udon: "うどん・そば", cat_bento: "弁当", cat_bowls: "丼",
+    cat_curry: "カレー", cat_sushi: "寿司・巻物", cat_small: "一品料理", cat_salads: "サラダ", cat_dessert: "デザート",
+    diet_vegetarian: "ベジタリアン", diet_popular: "人気", diet_spicy: "辛い",
+    empty_note: "条件に合う料理がありません。フィルターを外してみてください。",
+    label_Popular: "人気", label_Spicy: "辛い", label_Vegetarian: "ベジタリアン", label_Light: "軽め",
+    label_Filling: "がっつり", label_Sweet: "甘い", label_Top: "★ 一番人気", label_Sharing: "シェア向き",
+    q_close: "✕ 閉じる", q_step: "質問 {n} / 4", q_continue: "おすすめを見る →", q_hint: "任意 — なければスキップ。",
+    q_mood_prompt: "どんな気分ですか？",
+    q_mood_noodles: "麺とスープ", q_mood_rice: "ごはんとおかず", q_mood_fried: "揚げもの",
+    q_mood_raw: "寿司・刺身", q_mood_light: "さっぱり", q_mood_any: "おまかせ",
+    q_hunger_prompt: "どのくらい空いていますか？",
+    q_hunger_snack: "軽く", q_hunger_normal: "しっかり", q_hunger_starving: "とても空いた",
+    q_spice_prompt: "辛さは？",
+    q_spice_none: "辛くない", q_spice_some: "少し辛い", q_spice_spicy: "しっかり辛い", q_spice_any: "どれでも",
+    q_avoid_prompt: "苦手なものは？",
+    q_avoid_vegetarian: "ベジタリアン", q_avoid_pork: "豚肉なし", q_avoid_shellfish: "甲殻類なし", q_avoid_raw: "生魚なし", q_avoid_gluten: "グルテン控えめ",
+    res_eyebrow: "あなたへのおすすめ", res_title: "こちらがおすすめです", res_sub: "「{mood}」の気分に",
+    res_view_menu: "メニューを全部見る →", res_restart: "↺ やり直す", res_more: "＋ もっと見る（あと{n}件）", res_top_pick: "一番のおすすめ",
+    moodr_noodles: "麺とスープ", moodr_rice: "ごはんとおかず", moodr_fried: "揚げもの",
+    moodr_raw: "寿司・刺身", moodr_light: "さっぱり", moodr_any: "色々", moodr_default: "お好み",
+    reason_mood: "「{mood}」の気分にぴったり。", reason_spice: "ご希望どおりの辛さ。",
+    reason_filling: "たっぷりで満足、空いたお腹に。", reason_light: "ご希望どおり軽めの一品。",
+    reason_top: "花の里の一番人気。", reason_popular: "お店の人気メニュー。",
+    reason_featured: "きっと気に入るおすすめの一品。", reason_default: "ご希望に合う一品。",
+    back: "← 戻る", detail_back_menu: "← メニューに戻る", detail_add: "＋ 注文リストに追加", detail_added: "✓ 追加済み — もう一つ追加", add_tip: "注文リストに追加",
+    order_float: "🧾 注文リスト", order_title: "🧾 注文リスト", order_sub: "店員さんにこのリストを見せてください。覚えなくて大丈夫です。",
+    order_total_lbl: "合計の目安", order_disclaimer: "価格は目安です。最終金額は店員さんがご確認します。",
+    order_close: "見続ける", order_clear: "リストを消す",
+    order_empty: "まだ何もありません。<br>料理の「＋」を押してリストを作りましょう。", order_add_note: "＋ メモを追加", order_edit_note: "メモを編集",
+    note_title: "メモを追加", note_title_for: "{name}のメモ", note_sub: "厨房に伝えたいことはありますか？（任意）",
+    note_placeholder: "例：生姜ぬき・辛さ増し・ソース別添え", note_save: "メモを保存", note_skip: "スキップ",
+    intro_title: "注文リストに追加しました",
+    intro_text: "これは会計ではなく、気になった料理をためておくリストです。見ながら追加して、<b>「生姜ぬき」</b>などのメモも書けます。店員さんが来たら見せてください。まだ厨房には送られません。",
+    intro_btn: "わかりました",
+    fb_float: "💬 ご意見", fb_title: "ご意見をお聞かせください", fb_sub: "すべて拝見します。",
+    fb_leave: "ご意見を送る", fb_leave_sub: "改善できる点は？", fb_bug: "不具合を報告", fb_bug_sub: "不具合があれば教えてください。",
+    fb_send: "送信 →", fb_placeholder: "ここに入力…", fb_thanks_title: "ありがとうございます！", fb_thanks_sub: "お時間をいただき感謝します。",
+    lang_title: "言語",
+    home: "ホーム", order_to_default: "店員さん用に英語で表示",
+    np_label: "かんたん追加：", np_no_ginger: "生姜ぬき", np_no_onion: "玉ねぎぬき", np_no_wasabi: "わさびぬき", np_extra_spicy: "辛さ増し", np_mild: "辛さ控えめ", np_sauce_side: "ソース別添え", np_allergy: "アレルギーあり（要確認）",
+  },
+  ko: {
+    tagline: "· 일본 가정식 · 호놀룰루",
+    decide_btn: "✨ 메뉴 추천받기",
+    decide_sub: "몇 가지 질문에 답하면 30초 안에 추천을 받을 수 있어요.",
+    cat_all: "전체", cat_ramen: "라멘", cat_udon: "우동·소바", cat_bento: "도시락", cat_bowls: "덮밥",
+    cat_curry: "카레", cat_sushi: "스시·롤", cat_small: "사이드", cat_salads: "샐러드", cat_dessert: "디저트",
+    diet_vegetarian: "채식", diet_popular: "인기", diet_spicy: "매운맛",
+    empty_note: "조건에 맞는 메뉴가 없어요. 필터를 해제해 보세요.",
+    label_Popular: "인기", label_Spicy: "매움", label_Vegetarian: "채식", label_Light: "가벼움",
+    label_Filling: "든든함", label_Sweet: "달콤", label_Top: "★ 1위 메뉴", label_Sharing: "함께 나눠요",
+    q_close: "✕ 닫기", q_step: "질문 {n} / 4", q_continue: "추천 보기 →", q_hint: "선택 — 없으면 건너뛰세요.",
+    q_mood_prompt: "어떤 게 끌리세요?",
+    q_mood_noodles: "면과 국물", q_mood_rice: "밥과 메인", q_mood_fried: "튀김",
+    q_mood_raw: "스시·회", q_mood_light: "가볍고 산뜻", q_mood_any: "알아서 추천",
+    q_hunger_prompt: "얼마나 배고프세요?",
+    q_hunger_snack: "가볍게", q_hunger_normal: "든든하게", q_hunger_starving: "아주 배고파요",
+    q_spice_prompt: "맵기는요?",
+    q_spice_none: "안 맵게", q_spice_some: "약간 맵게", q_spice_spicy: "아주 맵게", q_spice_any: "상관없어요",
+    q_avoid_prompt: "피할 재료 있나요?",
+    q_avoid_vegetarian: "채식", q_avoid_pork: "돼지고기 빼기", q_avoid_shellfish: "갑각류 빼기", q_avoid_raw: "날생선 빼기", q_avoid_gluten: "글루텐 주의",
+    res_eyebrow: "추천 메뉴", res_title: "이런 메뉴는 어떠세요", res_sub: "'{mood}' 기분에 맞춰",
+    res_view_menu: "전체 메뉴 보기 →", res_restart: "↺ 다시 하기", res_more: "＋ 더 보기 ({n}개 더)", res_top_pick: "1순위",
+    moodr_noodles: "면과 국물", moodr_rice: "밥과 메인", moodr_fried: "튀김",
+    moodr_raw: "스시·회", moodr_light: "가볍고 산뜻", moodr_any: "다양하게", moodr_default: "입맛",
+    reason_mood: "'{mood}' 기분에 딱이에요.", reason_spice: "원하신 매운맛이에요.",
+    reason_filling: "든든하게 배를 채워줘요.", reason_light: "원하신 대로 가벼워요.",
+    reason_top: "하나노사토의 1위 메뉴.", reason_popular: "가게에서 인기 많은 메뉴.",
+    reason_featured: "분명 좋아하실 추천 메뉴.", reason_default: "찾으시는 것과 잘 맞아요.",
+    back: "← 뒤로", detail_back_menu: "← 메뉴로 돌아가기", detail_add: "＋ 내 주문에 추가", detail_added: "✓ 추가됨 — 하나 더 담기", add_tip: "내 주문에 추가",
+    order_float: "🧾 내 주문", order_title: "🧾 내 주문", order_sub: "직원에게 이 목록을 보여주세요 — 외우지 않아도 돼요.",
+    order_total_lbl: "예상 합계", order_disclaimer: "가격은 예상이며 최종 금액은 직원이 확인합니다.",
+    order_close: "계속 둘러보기", order_clear: "목록 비우기",
+    order_empty: "아직 비어 있어요.<br>메뉴의 ＋를 눌러 목록을 시작하세요.", order_add_note: "＋ 메모 추가", order_edit_note: "메모 수정",
+    note_title: "메모 추가", note_title_for: "{name} 메모", note_sub: "주방에 전달할 내용이 있나요? (선택)",
+    note_placeholder: "예: 생강 빼기 · 더 맵게 · 소스 따로", note_save: "메모 저장", note_skip: "건너뛰기",
+    intro_title: "내 주문에 담았어요",
+    intro_text: "결제가 아니라 마음에 드는 메뉴를 모아두는 목록이에요. 둘러보며 담고 <b>'생강 빼기'</b> 같은 메모도 적을 수 있어요. 직원이 오면 보여주세요. 아직 주방으로 전송되지 않습니다.",
+    intro_btn: "알겠어요",
+    fb_float: "💬 의견", fb_title: "의견을 들려주세요", fb_sub: "모든 메시지를 읽습니다.",
+    fb_leave: "의견 남기기", fb_leave_sub: "더 좋아질 점은?", fb_bug: "오류 신고", fb_bug_sub: "문제가 있나요? 알려주세요.",
+    fb_send: "보내기 →", fb_placeholder: "여기에 입력…", fb_thanks_title: "감사합니다!", fb_thanks_sub: "시간 내주셔서 감사합니다.",
+    lang_title: "언어",
+    home: "홈", order_to_default: "직원용으로 영어로 표시",
+    np_label: "빠른 추가:", np_no_ginger: "생강 빼기", np_no_onion: "양파 빼기", np_no_wasabi: "와사비 빼기", np_extra_spicy: "더 맵게", np_mild: "덜 맵게", np_sauce_side: "소스 따로", np_allergy: "알레르기 있음(확인 요청)",
+  },
+  zh: {
+    tagline: "· 日式家常菜 · 檀香山",
+    decide_btn: "✨ 帮我挑选",
+    decide_sub: "回答几个简单问题，30秒内获得推荐。",
+    cat_all: "全部", cat_ramen: "拉面", cat_udon: "乌冬·荞麦面", cat_bento: "便当", cat_bowls: "盖饭",
+    cat_curry: "咖喱", cat_sushi: "寿司·卷物", cat_small: "小菜", cat_salads: "沙拉", cat_dessert: "甜点",
+    diet_vegetarian: "素食", diet_popular: "人气", diet_spicy: "辣",
+    empty_note: "没有符合筛选的菜品，试试取消一个筛选。",
+    label_Popular: "人气", label_Spicy: "辣", label_Vegetarian: "素食", label_Light: "清淡",
+    label_Filling: "管饱", label_Sweet: "甜", label_Top: "★ 招牌第一", label_Sharing: "适合分享",
+    q_close: "✕ 关闭", q_step: "第 {n} 题 / 共 4 题", q_continue: "查看推荐 →", q_hint: "可选 — 没有就跳过。",
+    q_mood_prompt: "想吃点什么？",
+    q_mood_noodles: "面与汤", q_mood_rice: "米饭与主菜", q_mood_fried: "炸物",
+    q_mood_raw: "寿司·生鱼", q_mood_light: "清爽", q_mood_any: "帮我选",
+    q_hunger_prompt: "有多饿？",
+    q_hunger_snack: "吃一点", q_hunger_normal: "正餐", q_hunger_starving: "非常饿",
+    q_spice_prompt: "辣度呢？",
+    q_spice_none: "不辣", q_spice_some: "微辣", q_spice_spicy: "重辣", q_spice_any: "都可以",
+    q_avoid_prompt: "有忌口吗？",
+    q_avoid_vegetarian: "素食", q_avoid_pork: "不要猪肉", q_avoid_shellfish: "不要贝类", q_avoid_raw: "不要生鱼", q_avoid_gluten: "注意麸质",
+    res_eyebrow: "为您推荐", res_title: "我们会点这些", res_sub: "为“{mood}”的心情",
+    res_view_menu: "查看完整菜单 →", res_restart: "↺ 重新开始", res_more: "＋ 显示更多（还有{n}个）", res_top_pick: "首选",
+    moodr_noodles: "面与汤", moodr_rice: "米饭与主菜", moodr_fried: "炸物",
+    moodr_raw: "寿司·生鱼", moodr_light: "清爽", moodr_any: "各式各样", moodr_default: "您的口味",
+    reason_mood: "正合“{mood}”的心情。", reason_spice: "够辣，正合您意。",
+    reason_filling: "份量足，适合很饿的时候。", reason_light: "清淡小食，正合您意。",
+    reason_top: "花之里的招牌人气第一。", reason_popular: "店里的人气之选。",
+    reason_featured: "我们觉得您会喜欢的招牌菜。", reason_default: "与您的需求很契合。",
+    back: "← 返回", detail_back_menu: "← 返回菜单", detail_add: "＋ 加入我的点单", detail_added: "✓ 已加入 — 再加一份", add_tip: "加入我的点单",
+    order_float: "🧾 我的点单", order_title: "🧾 我的点单", order_sub: "把这份清单给服务员看 — 不用全记住。",
+    order_total_lbl: "预计总计", order_disclaimer: "价格为预估，最终金额以服务员为准。",
+    order_close: "继续浏览", order_clear: "清空清单",
+    order_empty: "还没有内容。<br>点任意菜品的 ＋ 开始你的清单。", order_add_note: "＋ 添加备注", order_edit_note: "修改备注",
+    note_title: "添加备注", note_title_for: "{name} 备注", note_sub: "有什么要告诉厨房的吗？（可选）",
+    note_placeholder: "例：不要姜 · 多加辣 · 酱汁分开", note_save: "保存备注", note_skip: "跳过",
+    intro_title: "已加入我的点单",
+    intro_text: "这不是结账，只是一份记录你喜欢的菜的清单。边看边添加，还能写<b>“不要姜”</b>之类的备注，服务员来时给他们看即可。目前不会发送到厨房。",
+    intro_btn: "知道了",
+    fb_float: "💬 反馈", fb_title: "欢迎反馈", fb_sub: "我们会阅读每一条。",
+    fb_leave: "留下反馈", fb_leave_sub: "哪里可以更好？", fb_bug: "报告问题", fb_bug_sub: "有故障？告诉我们。",
+    fb_send: "发送 →", fb_placeholder: "在此输入…", fb_thanks_title: "谢谢！", fb_thanks_sub: "感谢您抽空反馈。",
+    lang_title: "语言",
+    home: "首页", order_to_default: "用英文显示给服务员",
+    np_label: "快速添加：", np_no_ginger: "不要姜", np_no_onion: "不要洋葱", np_no_wasabi: "不要芥末", np_extra_spicy: "多加辣", np_mild: "少辣", np_sauce_side: "酱汁分开", np_allergy: "有过敏（请确认）",
+  },
+};
+
+/* Per-dish translations. jad = JA description; ko/zh have name (n) + description (d).
+   JA names reuse each item's `jp`. English falls through to item.name/description. */
+const ITEM_I18N = {
+  "shoyu-ramen": { jad:"チャーシュー、ねぎ、メンマ入りの定番しょうゆスープ。", kon:"쇼유 라멘", kod:"차슈, 파, 멘마를 올린 정통 간장 국물.", zhn:"酱油拉面", zhd:"经典酱油汤底，配叉烧、葱花和笋干。" },
+  "miso-ramen": { jad:"コクのある味噌スープ、深い旨み。", kon:"미소 라멘", kod:"진하고 깊은 맛의 미소 국물.", zhn:"味噌拉面", zhd:"浓郁鲜香的味噌汤底。" },
+  "veg-pork-ramen": { jad:"炒め野菜と豚肉をのせた旨みスープの麺。", kon:"야채 돼지고기 라멘", kod:"볶은 야채와 돼지고기를 올린 라멘.", zhn:"蔬菜猪肉拉面", zhd:"炒蔬菜与猪肉铺在汤面上。" },
+  "curry-ramen": { jad:"温まる香り豊かな和風カレースープのラーメン。", kon:"카레 라멘", kod:"향긋하고 따뜻한 일본식 카레 국물 라멘.", zhn:"咖喱拉面", zhd:"暖心浓香的日式咖喱汤拉面。" },
+  "tantan-ramen": { jad:"辛口の胡麻チリスープに味付き挽き肉。お店の人気。", kon:"탄탄멘", kod:"매콤한 참깨 칠리 국물에 양념 다진 고기. 인기 메뉴.", zhn:"担担面", zhd:"香辣芝麻辣汤配调味肉末，店内人气。" },
+  "curry-udon": { jad:"もちもちのうどんを和風カレースープで。", kon:"카레 우동", kod:"쫄깃한 우동을 일본식 카레 국물에.", zhn:"咖喱乌冬", zhd:"弹牙乌冬配日式咖喱汤底。" },
+  "yakiudon": { jad:"野菜と豚肉を炒めた香ばしいうどん。", kon:"야키우동", kod:"야채와 돼지고기를 볶은 우동.", zhn:"炒乌冬", zhd:"蔬菜与猪肉同炒的香口乌冬。" },
+  "shrimp-tempura-udon": { jad:"冷たいうどんにサクサクの海老天。", kon:"새우튀김 우동 (차가운)", kod:"시원한 우동에 바삭한 새우튀김.", zhn:"虾天妇罗乌冬（冷）", zhd:"冰凉乌冬配酥脆炸虾。" },
+  "grilled-salmon-bento": { jad:"焼き鮭にごはん、サラダか味噌汁付き。一番人気の弁当。", kon:"연어구이 도시락", kod:"연어구이에 밥, 샐러드 또는 미소국. 1위 메뉴.", zhn:"烤三文鱼便当", zhd:"烤三文鱼配米饭、沙拉或味噌汤，招牌第一。" },
+  "grilled-mackerel-bento": { jad:"脂ののった焼き鯖にごはんとおかず。", kon:"고등어구이 도시락", kod:"기름진 고등어구이에 밥과 반찬.", zhn:"烤鲭鱼便当", zhd:"肥美烤鲭鱼配米饭与小菜。" },
+  "karaage-bento": { jad:"ジューシーな鶏の唐揚げにごはんとおかず。", kon:"가라아게 도시락", kod:"육즙 가득한 일본식 닭튀김에 밥과 반찬.", zhn:"唐扬鸡便当", zhd:"多汁日式炸鸡配米饭与小菜。" },
+  "pork-cutlet-bento": { jad:"サクサクのとんかつにごはんとおかず。", kon:"돈카츠 도시락", kod:"바삭한 돈카츠에 밥과 반찬.", zhn:"炸猪排便当", zhd:"酥脆炸猪排配米饭与小菜。" },
+  "ginger-pork-bento": { jad:"甘辛い生姜だれの豚肉にごはんとおかず。", kon:"생강 돼지고기 도시락", kod:"새콤달콤 생강 소스 돼지고기에 밥과 반찬.", zhn:"姜烧猪肉便当", zhd:"甜咸姜汁猪肉配米饭与小菜。" },
+  "chicken-cutlet-bento": { jad:"サクサクのチキンカツにごはんとおかず。", kon:"치킨카츠 도시락", kod:"바삭한 치킨카츠에 밥과 반찬.", zhn:"炸鸡排便当", zhd:"酥脆炸鸡排配米饭与小菜。" },
+  "assorted-fried-bento": { jad:"魚・唐揚げ・海老など揚げ物の盛り合わせにごはん。", kon:"모둠 튀김 도시락", kod:"생선·가라아게·새우 등 모둠 튀김에 밥.", zhn:"什锦炸物便当", zhd:"鱼、炸鸡、虾等炸物拼盘配米饭。" },
+  "beef-bowl": { jad:"甘辛く煮た牛肉と玉ねぎをごはんに。味噌汁付き。", kon:"규동", kod:"달짝지근하게 졸인 소고기와 양파 덮밥. 미소국 포함.", zhn:"牛肉盖饭", zhd:"甜咸炖牛肉与洋葱盖饭，附味噌汤。" },
+  "mabo-don": { jad:"辛い麻婆豆腐または茄子の丼。味噌汁付き。", kon:"마파덮밥 (두부 또는 가지)", kod:"매콤한 마파두부 또는 가지 덮밥. 미소국 포함.", zhn:"麻婆盖饭（豆腐或茄子）", zhd:"香辣麻婆豆腐或茄子盖饭，附味噌汤。" },
+  "katsu-bowl": { jad:"とんかつを卵でとじた丼。味噌汁付き。", kon:"가츠동", kod:"돈카츠를 계란으로 감싼 덮밥. 미소국 포함.", zhn:"猪排盖饭", zhd:"炸猪排与鸡蛋同煮的盖饭，附味噌汤。" },
+  "assorted-tempura-bowl": { jad:"海老と野菜の天ぷらを甘いタレでごはんに。味噌汁付き。", kon:"모둠 튀김 덮밥", kod:"새우와 야채 튀김을 달콤한 소스로 덮밥. 미소국 포함.", zhn:"什锦天妇罗盖饭", zhd:"虾与蔬菜天妇罗配甜酱盖饭，附味噌汤。" },
+  "shrimp-tempura-bowl": { jad:"海老天5本を甘ダレでごはんに。味噌汁付き。", kon:"새우튀김 덮밥", kod:"바삭한 새우튀김 5개를 달콤한 소스로 덮밥. 미소국 포함.", zhn:"炸虾盖饭", zhd:"五只酥脆炸虾配甜酱盖饭，附味噌汤。" },
+  "eel-bowl": { jad:"甘いタレの焼きうなぎをごはんに。味噌汁付き。", kon:"장어덮밥", kod:"달콤한 소스의 구운 장어 덮밥. 미소국 포함.", zhn:"鳗鱼盖饭", zhd:"甜酱烤鳗鱼盖饭，附味噌汤。" },
+  "beef-curry": { jad:"柔らかい牛肉の和風カレー。人気の一品。", kon:"비프 카레", kod:"부드러운 소고기 일본식 카레. 인기 메뉴.", zhn:"牛肉咖喱", zhd:"嫩牛肉日式咖喱饭，人气之选。" },
+  "pork-cutlet-curry": { jad:"サクサクのカツをのせた和風カレー。", kon:"가츠 카레", kod:"바삭한 돈카츠를 올린 일본식 카레.", zhn:"猪排咖喱", zhd:"酥脆炸猪排配日式咖喱饭。" },
+  "sashimi-bowl": { jad:"新鮮な刺身を酢飯に。味噌汁付き。", kon:"사시미 덮밥", kod:"신선한 모둠 회를 초밥 위에. 미소국 포함.", zhn:"刺身盖饭", zhd:"新鲜刺身铺在寿司饭上，附味噌汤。" },
+  "assorted-sashimi": { jad:"旬の刺身をシェフがセレクト。2〜3人でシェアに。", kon:"모둠 사시미", kod:"셰프가 고른 신선한 회. 2~3인이 나눠 먹기 좋아요.", zhn:"什锦刺身拼盘", zhd:"主厨精选当日鲜鱼，适合2-3人分享。" },
+  "spicy-ahi-roll": { jad:"新鮮なまぐろをピリ辛に仕立てた巻物。", kon:"스파이시 아히 롤", kod:"신선한 참치를 매콤하게 만 롤.", zhn:"香辣金枪鱼卷", zhd:"新鲜金枪鱼调味微辣，现卷。" },
+  "california-roll": { jad:"カニ・アボカド・きゅうりの食べやすい巻物。", kon:"캘리포니아 롤", kod:"게살·아보카도·오이의 부담 없는 롤.", zhn:"加州卷", zhd:"蟹肉、牛油果与黄瓜，温和易入口。" },
+  "eel-cucumber-roll": { jad:"焼きうなぎときゅうりに甘いタレ。", kon:"장어 오이 롤", kod:"구운 장어와 오이에 달콤한 소스.", zhn:"鳗鱼黄瓜卷", zhd:"烤鳗鱼配爽脆黄瓜与甜酱。" },
+  "inari-sushi": { jad:"甘く味付けした油揚げに酢飯。お肉なし。", kon:"유부초밥", kod:"달콤한 유부에 초밥. 고기 없음.", zhn:"稻荷寿司", zhd:"甜味豆皮包寿司饭，纯素无肉。" },
+  "edamame": { jad:"塩を振った枝豆。", kon:"에다마메", kod:"소금을 뿌린 풋콩.", zhn:"毛豆", zhd:"撒上海盐的水煮毛豆。" },
+  "garlic-edamame": { jad:"ガーリックバターで和えた枝豆。", kon:"갈릭 에다마메", kod:"마늘 버터에 버무린 풋콩.", zhn:"蒜香毛豆", zhd:"蒜香黄油拌毛豆。" },
+  "gyoza": { jad:"豚肉と野菜の焼き餃子。底はカリッと。", kon:"교자 (6개)", kod:"돼지고기와 야채를 넣은 군만두.", zhn:"煎饺（6个）", zhd:"猪肉蔬菜馅，底部煎得焦脆。" },
+  "takoyaki": { jad:"たこ入りの生地を焼いた、かつお節とソース。", kon:"타코야키 (6개)", kod:"문어가 든 반죽 볼에 가쓰오부시와 소스.", zhn:"章鱼烧（6个）", zhd:"章鱼馅面糊球，配木鱼花与酱汁。" },
+  "agedashi-tofu": { jad:"揚げた豆腐を温かい出汁で。", kon:"아게다시 두부", kod:"살짝 튀긴 두부를 따뜻한 다시 국물에.", zhn:"炸豆腐", zhd:"轻炸豆腐浸于温热高汤。" },
+  "karaage-chicken": { jad:"下味をつけた鶏の唐揚げ、外はサクサク中はジューシー。", kon:"가라아게", kod:"양념한 일본식 닭튀김, 겉은 바삭 속은 촉촉.", zhn:"唐扬鸡", zhd:"腌制日式炸鸡，外酥里嫩。" },
+  "shrimp-tempura": { jad:"軽い衣でカラッと揚げた海老。", kon:"새우튀김 (5개)", kod:"가볍고 바삭하게 튀긴 새우.", zhn:"炸虾天妇罗（5只）", zhd:"轻薄面衣，炸至金黄。" },
+  "vegetable-tempura": { jad:"旬の野菜を軽い衣で揚げた天ぷら。", kon:"야채튀김", kod:"제철 야채를 가볍게 튀긴 텐푸라.", zhn:"蔬菜天妇罗", zhd:"时令蔬菜轻裹面衣油炸。" },
+  "ahi-poke": { jad:"新鮮なまぐろを島風に味付けしたポキ。", kon:"아히 포케", kod:"신선한 참치를 하와이식으로 양념한 포케.", zhn:"金枪鱼Poke", zhd:"新鲜金枪鱼以夏威夷风味腌制。" },
+  "pork-shabu-salad": { jad:"冷しゃぶ豚を野菜にのせ胡麻ドレッシングで。", kon:"돼지 샤브 샐러드", kod:"차가운 샤브 돼지고기를 채소에 올려 참깨 드레싱.", zhn:"猪肉涮沙拉", zhd:"冷涮猪肉铺在蔬菜上，配芝麻酱。" },
+  "seaweed-salad": { jad:"味付け海藻、さっぱり軽やか。", kon:"미역 샐러드", kod:"양념 미역, 상큼하고 가벼워요.", zhn:"海藻沙拉", zhd:"调味海藻，清爽爽口。" },
+  "mochi-ice-cream": { jad:"やわらかい餅でアイスを包んで。", kon:"모찌 아이스크림", kod:"쫄깃한 모찌로 감싼 아이스크림.", zhn:"麻糬冰淇淋", zhd:"软糯麻糬包裹冰淇淋。" },
+  "matcha-ice-cream": { jad:"ほんのり甘い抹茶アイス。", kon:"녹차 아이스크림", kod:"은은하게 단 말차 아이스크림.", zhn:"抹茶冰淇淋", zhd:"微甜抹茶冰淇淋。" },
+};
+
+function t(key, params) {
+  let s = (STRINGS[currentLang] && STRINGS[currentLang][key]);
+  if (s == null) s = STRINGS.en[key];
+  if (s == null) s = key;
+  if (params) for (const k in params) s = s.replace("{" + k + "}", params[k]);
+  return s;
+}
+const CAT_KEY = { "Ramen":"ramen", "Udon & Soba":"udon", "Bento":"bento", "Bowls":"bowls", "Curry":"curry", "Sushi & Rolls":"sushi", "Small Plates":"small", "Salads":"salads", "Dessert":"dessert" };
+function catLabel(cat) { return cat === "All" ? t("cat_all") : t("cat_" + (CAT_KEY[cat] || cat)); }
+function itemName(item) {
+  if (currentLang === "en") return item.name;
+  if (currentLang === "ja") return item.jp || item.name;
+  const e = ITEM_I18N[item.id];
+  return (e && e[currentLang + "n"]) || item.name;
+}
+function itemSub(item) { return currentLang === "ja" ? "" : (item.jp || ""); }
+function itemDesc(item) {
+  if (currentLang === "en") return item.description;
+  const e = ITEM_I18N[item.id];
+  if (!e) return item.description;
+  if (currentLang === "ja") return e.jad || item.description;
+  return e[currentLang + "d"] || item.description;
+}
+function applyStrings() {
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.getAttribute("data-i18n")); });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.getAttribute("data-i18n-html")); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph"))); });
+  const lbl = document.getElementById("lang-btn-label");
+  if (lbl) lbl.textContent = LANG_SHORT[currentLang] || "EN";
+}
+function renderLangOptions() {
+  const box = document.getElementById("lang-options");
+  box.innerHTML = "";
+  LANGS.forEach(l => {
+    const b = document.createElement("button");
+    b.className = "lang-opt" + (currentLang === l.code ? " active" : "");
+    b.innerHTML = `<span>${l.label}</span>` + (currentLang === l.code ? '<span class="chk">✓</span>' : "");
+    b.onclick = () => setLang(l.code);
+    box.appendChild(b);
+  });
+}
+function openLangSheet() { dismissLangHint(); renderLangOptions(); document.getElementById("lang-overlay").classList.add("show"); }
+function closeLangSheet() { document.getElementById("lang-overlay").classList.remove("show"); }
+
+/* first-visit nudge toward the language switcher */
+let _hintTimer = null;
+function maybeShowLangHint() {
+  if (safeStorage(() => sessionStorage.getItem("pw_lang_hinted"), null) === "1") return;
+  setTimeout(() => {
+    document.getElementById("lang-hint").classList.add("show");
+    document.getElementById("lang-btn").classList.add("pulsing");
+    safeStorage(() => sessionStorage.setItem("pw_lang_hinted", "1"), null);
+    _hintTimer = setTimeout(dismissLangHint, 5200);
+  }, 700);
+}
+function dismissLangHint() {
+  clearTimeout(_hintTimer);
+  document.getElementById("lang-hint").classList.remove("show");
+  document.getElementById("lang-btn").classList.remove("pulsing");
+}
+function setLang(code) {
+  if (!STRINGS[code]) return;
+  currentLang = code;
+  safeStorage(() => sessionStorage.setItem("pw_lang", code), null);
+  trackEvent("language_changed", { lang: code, from_screen: currentScreen });
+  applyLang();
+  closeLangSheet();
+}
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  applyStrings();
+  renderFilters();
+  renderMenu();
+  if (resultsRanked.length) renderResults();
+  if (document.getElementById("quiz").classList.contains("show")) renderQuizStep();
+  if (currentScreen === "detail" && currentDetailItem) fillDetail(currentDetailItem);
+  if (document.getElementById("order-overlay").classList.contains("show")) renderOrderSheet();
 }
 
 /* ─── State ─── */
@@ -788,7 +1151,7 @@ function renderFilters() {
   cats.forEach(c => {
     const chip = document.createElement("button");
     chip.className = "fchip" + (activeCat === c ? " active" : "");
-    chip.textContent = c;
+    chip.textContent = catLabel(c);
     chip.onclick = () => {
       // tapping the active category again returns to the default "All" view
       activeCat = (activeCat === c && c !== "All") ? "All" : c;
@@ -803,7 +1166,7 @@ function renderFilters() {
   DIET_FILTERS.forEach(d => {
     const chip = document.createElement("button");
     chip.className = "fchip diet" + (activeDiet.has(d.value) ? " active" : "");
-    chip.textContent = (d.value === "vegetarian" ? "🥬 " : d.value === "spicy" ? "🌶️ " : "⭐ ") + d.label;
+    chip.textContent = (d.value === "vegetarian" ? "🥬 " : d.value === "spicy" ? "🌶️ " : "⭐ ") + t("diet_" + d.value);
     chip.onclick = () => {
       if (activeDiet.has(d.value)) activeDiet.delete(d.value); else activeDiet.add(d.value);
       trackEvent("filter_selected", { type: "diet", value: d.value, on: activeDiet.has(d.value) });
@@ -824,7 +1187,7 @@ function renderMenu() {
     if (!items.length) return;
     const head = document.createElement("div");
     head.className = "sec-head";
-    head.innerHTML = `${cat} <span class="sec-jp">${CATEGORY_JP[cat] || ""}</span>`;
+    head.innerHTML = `${catLabel(cat)} <span class="sec-jp">${currentLang === "ja" ? "" : (CATEGORY_JP[cat] || "")}</span>`;
     container.appendChild(head);
     items.forEach((item, i) => {
       shown++;
@@ -834,7 +1197,7 @@ function renderMenu() {
   if (!shown) {
     const note = document.createElement("div");
     note.className = "empty-note";
-    note.textContent = "No items match those filters. Try clearing one.";
+    note.textContent = t("empty_note");
     container.appendChild(note);
   }
   refreshOrderUI();
@@ -855,11 +1218,11 @@ function menuCard(item, i) {
 
   const head = document.createElement("div");
   head.className = "mi-head";
-  head.innerHTML = `<div><div class="mi-name">${item.name}</div><div class="mi-jp">${item.jp || ""}</div></div><div class="mi-price">$${item.price.toFixed(2)}</div>`;
+  head.innerHTML = `<div><div class="mi-name">${itemName(item)}</div><div class="mi-jp">${itemSub(item)}</div></div><div class="mi-price">$${item.price.toFixed(2)}</div>`;
 
   const desc = document.createElement("div");
   desc.className = "mi-desc";
-  desc.textContent = item.description;
+  desc.textContent = itemDesc(item);
 
   const foot = document.createElement("div");
   foot.className = "mi-foot";
@@ -872,7 +1235,7 @@ function menuCard(item, i) {
   add.className = "mi-add" + (orderLine(item.id) ? " added" : "");
   add.setAttribute("data-add-id", item.id);
   add.textContent = orderLine(item.id) ? "✓" : "＋";
-  add.title = "Add to my order";
+  add.title = t("add_tip");
   add.onclick = (e) => { e.stopPropagation(); addToOrder(item.id, 1); };
   card.appendChild(add);
   return card;
@@ -882,7 +1245,7 @@ function labelEl(l) {
   const s = document.createElement("span");
   const cls = l === "Top" ? "Top" : l === "Sharing" ? "Sharing" : l;
   s.className = "label label--" + cls;
-  s.textContent = l === "Top" ? "★ #1 Pick" : l === "Sharing" ? "For Sharing" : l;
+  s.textContent = t("label_" + l);
   return s;
 }
 
@@ -938,17 +1301,16 @@ function getRanked() {
 
 /* reason string for a pick */
 function reasonFor(item) {
-  const moodLabels = { noodles:"noodles-and-broth", rice:"rice-and-protein", fried:"crispy-fried", raw:"sushi", light:"light-and-fresh" };
   const q = QUIZ[0].options.find(o => o.value === answers.mood);
-  if (q && q.tags.length && q.tags.some(t => item.tags.includes(t)))
-    return `Right in your ${moodLabels[answers.mood] || answers.mood} mood.`;
-  if (answers.spice === "spicy" && item.tags.includes("spicy")) return "Brings the heat you asked for.";
-  if (answers.hunger === "starving" && (item.tags.includes("filling") || item.tags.includes("big-hunger"))) return "Hearty and filling — you said you're very hungry.";
-  if (answers.hunger === "snack" && item.tags.includes("light-hunger")) return "A lighter bite, just like you wanted.";
-  if (item.labels.includes("Top")) return "Hana no Sato's #1 most-loved plate.";
-  if (item.labels.includes("Popular")) return "One of the restaurant's most popular picks.";
-  if (item.featured) return "A house favorite we think you'll love.";
-  return "A solid match for what you're after.";
+  if (q && q.tags.length && q.tags.some(tag => item.tags.includes(tag)))
+    return t("reason_mood", { mood: t("moodr_" + answers.mood) });
+  if (answers.spice === "spicy" && item.tags.includes("spicy")) return t("reason_spice");
+  if (answers.hunger === "starving" && (item.tags.includes("filling") || item.tags.includes("big-hunger"))) return t("reason_filling");
+  if (answers.hunger === "snack" && item.tags.includes("light-hunger")) return t("reason_light");
+  if (item.labels.includes("Top")) return t("reason_top");
+  if (item.labels.includes("Popular")) return t("reason_popular");
+  if (item.featured) return t("reason_featured");
+  return t("reason_default");
 }
 
 /* ─── Quiz flow ─── */
@@ -976,8 +1338,8 @@ function renderQuizStep() {
   document.getElementById("q-fill").style.width = ((quizStep) / QUIZ.length) * 100 + "%";
   body.innerHTML = "";
 
-  const step = document.createElement("div"); step.className = "q-step"; step.textContent = q.step;
-  const prompt = document.createElement("div"); prompt.className = "q-prompt"; prompt.textContent = q.prompt;
+  const step = document.createElement("div"); step.className = "q-step"; step.textContent = t("q_step", { n: quizStep + 1 });
+  const prompt = document.createElement("div"); prompt.className = "q-prompt"; prompt.textContent = t("q_" + q.id + "_prompt");
   const opts = document.createElement("div"); opts.className = "q-opts";
   body.appendChild(step); body.appendChild(prompt); body.appendChild(opts);
 
@@ -986,7 +1348,7 @@ function renderQuizStep() {
     const isFull = q.kind === "single" && q.options.length % 2 === 1 && opt === q.options[q.options.length - 1];
     b.className = "q-opt" + (isFull ? " full" : "");
     if (q.kind === "multi" && (answers.avoid || []).includes(opt.value)) b.classList.add("selected");
-    b.innerHTML = `<span class="emo">${opt.emo}</span><span>${opt.label}</span>`;
+    b.innerHTML = `<span class="emo">${opt.emo}</span><span>${t("q_" + q.id + "_" + opt.value)}</span>`;
     b.onclick = () => q.kind === "multi" ? toggleAvoid(opt.value, b) : pickSingle(q.id, opt.value);
     opts.appendChild(b);
   });
@@ -994,10 +1356,10 @@ function renderQuizStep() {
   if (q.kind === "multi") {
     const cta = document.createElement("div"); cta.className = "q-cta";
     const cont = document.createElement("button"); cont.className = "q-continue";
-    cont.textContent = "See my picks →";
+    cont.textContent = t("q_continue");
     cont.onclick = () => finishQuiz();
     cta.appendChild(cont);
-    const hint = document.createElement("div"); hint.className = "q-hint"; hint.textContent = "Optional — skip if nothing to avoid.";
+    const hint = document.createElement("div"); hint.className = "q-hint"; hint.textContent = t("q_hint");
     cta.appendChild(hint);
     body.appendChild(cta);
   }
@@ -1043,7 +1405,7 @@ function resultCard(item, i) {
   const imgWrap = document.createElement("div");
   imgWrap.className = "res-card-img";
   paintMedia(imgWrap, item, "3rem");
-  const rank = document.createElement("div"); rank.className = "res-rank"; rank.textContent = i === 0 ? "Top pick" : "#" + (i + 1);
+  const rank = document.createElement("div"); rank.className = "res-rank"; rank.textContent = i === 0 ? t("res_top_pick") : "#" + (i + 1);
   imgWrap.appendChild(rank);
   const radd = document.createElement("button");
   radd.className = "res-add" + (orderLine(item.id) ? " added" : "");
@@ -1055,8 +1417,8 @@ function resultCard(item, i) {
 
   const body = document.createElement("div"); body.className = "res-card-body";
   const head = document.createElement("div"); head.className = "res-card-head";
-  head.innerHTML = `<div class="res-card-name">${item.name}</div><div class="res-card-price">$${item.price.toFixed(2)}</div>`;
-  const desc = document.createElement("div"); desc.className = "res-card-desc"; desc.textContent = item.description;
+  head.innerHTML = `<div class="res-card-name">${itemName(item)}</div><div class="res-card-price">$${item.price.toFixed(2)}</div>`;
+  const desc = document.createElement("div"); desc.className = "res-card-desc"; desc.textContent = itemDesc(item);
   const why = document.createElement("div"); why.className = "res-why"; why.textContent = "✨ " + reasonFor(item);
   body.appendChild(head); body.appendChild(desc); body.appendChild(why);
 
@@ -1065,8 +1427,8 @@ function resultCard(item, i) {
 }
 function renderResults() {
   const sub = document.getElementById("res-sub");
-  const moodTxt = { noodles:"noodles & broth", rice:"rice & protein", fried:"fried & crispy", raw:"sushi & raw fish", light:"light & fresh", any:"a bit of everything" }[answers.mood] || "your taste";
-  sub.textContent = `For a ${moodTxt} mood`;
+  const moodTxt = answers.mood ? t("moodr_" + answers.mood) : t("moodr_default");
+  sub.textContent = t("res_sub", { mood: moodTxt });
   const list = document.getElementById("res-list");
   list.innerHTML = "";
   for (let i = 0; i < resultsShown && i < resultsRanked.length; i++) list.appendChild(resultCard(resultsRanked[i], i));
@@ -1082,7 +1444,7 @@ function renderMoreButton() {
   const btn = document.createElement("button");
   btn.id = "res-more";
   btn.className = "res-more";
-  btn.textContent = `＋ Show more picks (${remaining} more)`;
+  btn.textContent = t("res_more", { n: remaining });
   btn.onclick = loadMoreResults;
   list.appendChild(btn);
 }
@@ -1125,21 +1487,35 @@ function goBack() {
   trackEvent("back_clicked", { from_screen: from, to_screen: prev });
   trackViewScreen(prev);
 }
+function goHome() {
+  trackEvent("home_clicked", { from_screen: currentScreen });
+  document.getElementById("quiz").classList.remove("show");
+  closeOrder();
+  screenHistory = [];
+  document.querySelectorAll(".screen.active").forEach(s => s.classList.remove("active"));
+  document.getElementById("screen-menu").classList.add("active");
+  currentScreen = "menu";
+  document.getElementById("float-fb").classList.remove("hidden");
+  document.getElementById("filters").classList.remove("collapsed");
+  document.getElementById("menu-scroll").scrollTop = 0;
+  refreshOrderUI();
+  trackViewScreen("menu");
+}
 
 /* ─── Detail ─── */
-function openDetail(item) {
+function fillDetail(item) {
   paintMedia(document.getElementById("detail-img"), item, "4.6rem");
-  document.getElementById("detail-jp").textContent = item.jp || "";
-  document.getElementById("detail-name").textContent = item.name;
+  document.getElementById("detail-jp").textContent = itemSub(item);
+  document.getElementById("detail-name").textContent = itemName(item);
   document.getElementById("detail-price").textContent = "$" + item.price.toFixed(2);
-  document.getElementById("detail-desc").textContent = item.description;
+  document.getElementById("detail-desc").textContent = itemDesc(item);
   const labelsEl = document.getElementById("detail-labels");
   labelsEl.innerHTML = "";
   item.labels.forEach(l => labelsEl.appendChild(labelEl(l)));
   currentDetailItem = item;
   updateDetailAdd();
-  goScreen("detail");
 }
+function openDetail(item) { fillDetail(item); goScreen("detail"); }
 
 /* ─── Feedback ─── */
 let fbType = "feedback";
@@ -1154,8 +1530,8 @@ function openFb() {
 }
 function openFbInput(type) {
   fbType = type;
-  document.getElementById("fb-input-title").textContent = type === "bug" ? "Report a bug" : "Leave feedback";
-  document.getElementById("fb-input-sub").textContent = type === "bug" ? "Something broken? Tell us." : "What could be better?";
+  document.getElementById("fb-input-title").textContent = type === "bug" ? t("fb_bug") : t("fb_leave");
+  document.getElementById("fb-input-sub").textContent = type === "bug" ? t("fb_bug_sub") : t("fb_leave_sub");
   document.getElementById("fb-choose").style.display = "none";
   document.getElementById("fb-input").classList.add("show");
   document.getElementById("fb-textarea").focus();
@@ -1192,7 +1568,7 @@ function orderTotal() {
 function addToOrder(id, qty) {
   qty = qty || 1;
   const existing = orderLine(id);
-  if (existing) existing.qty += qty; else order.push({ id, qty, note: "" });
+  if (existing) existing.qty += qty; else order.push({ id, qty, note: "", presets: [] });
   saveOrder();
   trackEvent("order_item_added", { item_id: id, qty, order_size: orderCount() });
   refreshOrderUI();
@@ -1223,12 +1599,47 @@ function escapeHtml(s) {
 }
 
 /* ─── Item notes ─── */
+const NOTE_PRESETS = ["no_ginger", "no_onion", "no_wasabi", "extra_spicy", "mild", "sauce_side", "allergy"];
+// Which dishes prominently use each ingredient (so "no X" only shows where X is actually in the dish).
+const GINGER_ITEMS = new Set(["ginger-pork-bento", "gyoza", "karaage-bento", "karaage-chicken", "beef-bowl", "yakiudon"]);
+const ONION_ITEMS  = new Set(["beef-bowl", "katsu-bowl", "mabo-don", "beef-curry", "pork-cutlet-curry", "curry-ramen", "curry-udon", "yakiudon", "veg-pork-ramen", "ginger-pork-bento"]);
+// A chip shows for an item only if its rule returns true. "allergy" is universal.
+const PRESET_RULES = {
+  allergy:     () => true,
+  no_ginger:   (it) => GINGER_ITEMS.has(it.id),
+  no_onion:    (it) => ONION_ITEMS.has(it.id),
+  no_wasabi:   (it) => it.group === "sushi" || it.tags.includes("raw"),
+  mild:        (it) => it.tags.includes("spicy"),
+  extra_spicy: (it) => ["ramen", "udon", "bento", "bowls", "curry"].includes(it.group) || it.tags.includes("fried"),
+  sauce_side:  (it) => it.group === "curry" || it.group === "salad" || it.tags.includes("curry") || it.tags.includes("fried") || it.tags.includes("eel") || ["ginger-pork-bento", "mabo-don", "spicy-ahi-roll", "beef-bowl"].includes(it.id),
+};
 let noteItemId = null;
+let _notePresetSel = new Set();
+function lineHasNote(l) { return !!(l && (l.note || (l.presets && l.presets.length))); }
+function applicablePresets(item) {
+  if (!item) return NOTE_PRESETS.slice();
+  // include any already-selected preset so it can still be toggled off
+  return NOTE_PRESETS.filter(k => (PRESET_RULES[k] && PRESET_RULES[k](item)) || _notePresetSel.has(k));
+}
+function renderNotePresets() {
+  const box = document.getElementById("note-presets");
+  box.innerHTML = "";
+  const item = MENU_ITEMS.find(m => m.id === noteItemId);
+  applicablePresets(item).forEach(k => {
+    const c = document.createElement("button");
+    c.className = "note-chip" + (_notePresetSel.has(k) ? " sel" : "");
+    c.textContent = t("np_" + k);
+    c.onclick = () => { if (_notePresetSel.has(k)) _notePresetSel.delete(k); else _notePresetSel.add(k); c.classList.toggle("sel"); };
+    box.appendChild(c);
+  });
+}
 function openNotePrompt(id) {
   noteItemId = id;
   const it = MENU_ITEMS.find(m => m.id === id);
   const line = orderLine(id);
-  document.getElementById("note-title").textContent = "Note for " + (it ? it.name : "item");
+  document.getElementById("note-title").textContent = it ? t("note_title_for", { name: itemName(it) }) : t("note_title");
+  _notePresetSel = new Set((line && line.presets) || []);
+  renderNotePresets();
   const ta = document.getElementById("note-textarea");
   ta.value = (line && line.note) || "";
   document.getElementById("note-overlay").classList.add("show");
@@ -1237,7 +1648,12 @@ function openNotePrompt(id) {
 function saveNote() {
   const txt = document.getElementById("note-textarea").value.trim();
   const line = orderLine(noteItemId);
-  if (line) { line.note = txt; saveOrder(); trackEvent("order_note_added", { item_id: noteItemId, has_note: !!txt }); }
+  if (line) {
+    line.note = txt;
+    line.presets = Array.from(_notePresetSel);
+    saveOrder();
+    trackEvent("order_note_added", { item_id: noteItemId, has_note: lineHasNote(line), presets: line.presets });
+  }
   closeNote();
   renderOrderSheet();
 }
@@ -1275,25 +1691,34 @@ function openOrder() {
   document.getElementById("order-overlay").classList.add("show");
 }
 function closeOrder() { document.getElementById("order-overlay").classList.remove("show"); }
+function resetToDefaultForServer() {
+  trackEvent("order_show_server", { from_lang: currentLang });
+  setLang("en");   // revert the whole menu to the default language so staff can read the list
+}
 function renderOrderSheet() {
   const rows = document.getElementById("order-rows");
   const foot = document.getElementById("order-foot");
   rows.innerHTML = "";
   if (!order.length) {
-    rows.innerHTML = '<div class="order-empty">Nothing added yet.<br>Tap the ＋ on any dish to start your list.</div>';
+    rows.innerHTML = '<div class="order-empty">' + t("order_empty") + '</div>';
     foot.style.display = "none";
     return;
   }
   foot.style.display = "block";
+  document.getElementById("order-to-default").style.display = currentLang === "en" ? "none" : "flex";
   order.forEach(l => {
     const it = MENU_ITEMS.find(m => m.id === l.id);
     if (!it) return;
     const row = document.createElement("div");
     row.className = "order-row";
+    const noteParts = [];
+    (l.presets || []).forEach(k => noteParts.push(t("np_" + k)));
+    if (l.note) noteParts.push(escapeHtml(l.note));
+    const noteText = noteParts.join(" · ");
     row.innerHTML =
-      `<div class="order-row-name">${it.name}<div class="order-row-jp">${it.jp || ""}</div>` +
-        (l.note ? `<div class="order-row-note">📝 ${escapeHtml(l.note)}</div>` : "") +
-        `<button class="order-row-notebtn">${l.note ? "Edit note" : "＋ Add note"}</button>` +
+      `<div class="order-row-name">${itemName(it)}<div class="order-row-jp">${itemSub(it)}</div>` +
+        (noteText ? `<div class="order-row-note">📝 ${noteText}</div>` : "") +
+        `<button class="order-row-notebtn">${lineHasNote(l) ? t("order_edit_note") : t("order_add_note")}</button>` +
       `</div>` +
       `<div class="qty"><button aria-label="Remove one">−</button><span class="n">${l.qty}</span><button aria-label="Add one">＋</button></div>` +
       `<div class="order-row-price">$${(it.price * l.qty).toFixed(2)}</div>`;
@@ -1309,7 +1734,7 @@ function updateDetailAdd() {
   const b = document.getElementById("detail-add");
   if (!b) return;
   const has = currentDetailItem && orderLine(currentDetailItem.id);
-  b.textContent = has ? "✓ Added — tap to add another" : "＋ Add to my order";
+  b.textContent = has ? t("detail_added") : t("detail_add");
   b.classList.toggle("added", !!has);
 }
 function addFromDetail() {
@@ -1358,9 +1783,15 @@ document.getElementById("note-overlay").addEventListener("click", e => {
 document.getElementById("intro-overlay").addEventListener("click", e => {
   if (e.target === document.getElementById("intro-overlay")) dismissIntro();
 });
+document.getElementById("lang-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("lang-overlay")) closeLangSheet();
+});
+document.documentElement.lang = currentLang;
+applyStrings();
 renderFilters();
 renderMenu();
 refreshOrderUI();
+maybeShowLangHint();
 trackViewScreen("menu");
 </script>
 </body>
