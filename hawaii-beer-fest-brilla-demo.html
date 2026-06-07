@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Hawaii Beer Fest 2026 — Find your pour</title>
+<meta name="description" content="Too many beers, too little time? Answer 5 quick questions and we'll build your tasting plan for Hawaii Beer Fest 2026 in under 30 seconds." />
+<meta name="theme-color" content="#140d29" />
+<meta property="og:title" content="Hawaii Beer Fest 2026 — Find your pour in under 30 seconds" />
+<meta property="og:description" content="100+ beers, ciders & seltzers. Not sure where to start? We'll build your tasting plan." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#140d29; --bg2:#1d1340;
+    --ink:#fdf6ec; --muted:#b6a9d6; --faint:#8b7fb0;
+    --card:rgba(255,255,255,.055); --card2:rgba(255,255,255,.085);
+    --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.16);
+    --coral:#ff6b5c; --mango:#ff9f1c; --gold:#ffd23f;
+    --teal:#1ec8b6; --violet:#8c7bff; --green:#5ed17a; --ocean:#2bb4ff;
+    --sun:linear-gradient(135deg,#ff6b5c 0%,#ff9f1c 52%,#ffd23f 100%);
+    --sun-soft:linear-gradient(135deg,rgba(255,107,92,.18),rgba(255,210,63,.14));
+    --radius:20px; --radius-sm:14px;
+    --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+    --maxw:480px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink); background:var(--bg);
+    background-image:
+      radial-gradient(1200px 520px at 78% -8%, rgba(255,159,28,.30), transparent 60%),
+      radial-gradient(900px 480px at 12% 2%, rgba(255,107,92,.22), transparent 55%),
+      radial-gradient(800px 600px at 50% 120%, rgba(30,200,182,.14), transparent 60%),
+      linear-gradient(180deg,#1a1136 0%, var(--bg) 42%, #100a20 100%);
+    background-attachment:fixed;
+    min-height:100vh; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.f-display{font-family:'Outfit',system-ui,sans-serif;letter-spacing:-.02em;margin:0}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  img{max-width:100%;display:block}
+  a{color:inherit}
+
+  /* shell */
+  .app{max-width:var(--maxw);margin:0 auto;min-height:100vh;position:relative;
+       padding-bottom:calc(78px + env(safe-area-inset-bottom));overflow-x:hidden}
+  .topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+          gap:10px;padding:12px 16px calc(12px);
+          background:linear-gradient(180deg,rgba(20,13,41,.92),rgba(20,13,41,.55) 70%,transparent);
+          backdrop-filter:blur(10px)}
+  .brandmark{display:flex;align-items:center;gap:9px;font-family:'Outfit';font-weight:800;font-size:15px;letter-spacing:-.01em}
+  .logo-badge{width:30px;height:30px;border-radius:9px;background:var(--sun);display:grid;place-items:center;
+              box-shadow:0 6px 16px -6px rgba(255,159,28,.8)}
+  .logo-badge svg{width:17px;height:17px}
+  .topbar .by{font-family:'Inter';font-weight:500;color:var(--faint);font-size:11px;margin-top:1px}
+  .pill-21{font-size:11px;font-weight:700;color:var(--gold);border:1px solid rgba(255,210,63,.4);
+           border-radius:999px;padding:4px 9px;background:rgba(255,210,63,.08);white-space:nowrap}
+
+  .view{display:none;animation:rise .42s cubic-bezier(.2,.7,.2,1)}
+  .view.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.view,.view.active{animation:none}*{transition:none!important}}
+
+  .pad{padding:0 16px}
+  .section-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mango)}
+  .muted{color:var(--muted)} .faint{color:var(--faint)}
+
+  /* hero */
+  .hero{position:relative;padding:8px 16px 18px;overflow:hidden}
+  .hero-art{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .hero-inner{position:relative;z-index:1}
+  .hero-kicker{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
+    color:var(--ink);background:rgba(255,255,255,.08);border:1px solid var(--line2);
+    padding:6px 12px;border-radius:999px;margin-bottom:14px}
+  .hero-kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(30,200,182,.18)}
+  .hero h1{font-size:38px;line-height:1.02;font-weight:800}
+  .hero h1 .grad{background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-sub{margin:12px 0 0;color:var(--muted);font-size:15.5px;max-width:33ch}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .fact{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink);
+        background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px}
+  .fact svg{width:14px;height:14px;opacity:.9;flex:none}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 4px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 10px;text-align:center}
+  .stat b{display:block;font-family:'Outfit';font-weight:800;font-size:25px;line-height:1;
+          background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{display:block;font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;letter-spacing:.01em}
+
+  /* the brilla value card / CTAs */
+  .decide-card{margin:20px 16px 6px;padding:20px;border-radius:var(--radius);
+    background:
+      radial-gradient(120% 120% at 0% 0%, rgba(255,159,28,.16), transparent 55%),
+      var(--card2);
+    border:1px solid var(--line2);box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .decide-card .spark{position:absolute;right:-30px;top:-30px;width:140px;height:140px;
+    background:radial-gradient(circle,rgba(255,210,63,.35),transparent 65%);filter:blur(6px)}
+  .decide-card h2{font-size:23px;font-weight:800;position:relative}
+  .decide-card p{margin:9px 0 0;color:var(--muted);font-size:14.5px;position:relative}
+  .cta{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+       font-family:'Outfit';font-weight:700;font-size:16.5px;border-radius:14px;padding:16px;
+       transition:transform .12s ease, box-shadow .2s ease}
+  .cta:active{transform:scale(.978)}
+  .cta-primary{background:var(--sun);color:#2a1300;box-shadow:0 14px 30px -12px rgba(255,159,28,.9);margin-top:18px}
+  .cta-primary svg{width:19px;height:19px}
+  .cta-secondary{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid var(--line2);margin-top:10px}
+  .cta-ghost{background:transparent;border:1px solid var(--line2);color:var(--ink)}
+  .timehint{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;font-size:12px;color:var(--faint)}
+
+  /* how it works */
+  .how{display:grid;gap:10px;margin-top:10px}
+  .how-step{display:flex;gap:13px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+            border-radius:var(--radius-sm);padding:13px 14px}
+  .how-num{flex:none;width:28px;height:28px;border-radius:9px;background:var(--sun-soft);border:1px solid var(--line2);
+           display:grid;place-items:center;font-family:'Outfit';font-weight:800;font-size:14px;color:var(--gold)}
+  .how-step b{font-family:'Outfit';font-size:14.5px}
+  .how-step p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+
+  .block-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:26px 0 12px}
+  .block-title h3{font-size:19px;font-weight:800}
+  .link-btn{font-size:13px;font-weight:700;color:var(--gold)}
+
+  /* quiz */
+  .quiz-wrap{padding:14px 16px 4px;min-height:70vh;display:flex;flex-direction:column}
+  .progress{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .progress .bar{flex:1;height:7px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+  .progress .fill{height:100%;width:20%;background:var(--sun);border-radius:999px;transition:width .35s cubic-bezier(.2,.7,.2,1)}
+  .progress .count{font-size:12px;font-weight:700;color:var(--faint);white-space:nowrap}
+  .qhead{margin:22px 0 6px}
+  .qhead .section-eyebrow{margin-bottom:10px;display:block}
+  .qhead h2{font-size:27px;font-weight:800;line-height:1.1}
+  .qhead p{margin:8px 0 0;color:var(--muted);font-size:14px}
+  .options{display:grid;gap:11px;margin-top:20px}
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+       background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:15px 16px;
+       transition:transform .12s ease, border-color .15s, background .15s}
+  .opt:active{transform:scale(.985)}
+  .opt:hover{border-color:rgba(255,159,28,.5)}
+  .opt.sel{border-color:transparent;background:var(--sun);color:#2a1300}
+  .opt .emoji{font-size:24px;flex:none;width:30px;text-align:center}
+  .opt .otxt{font-family:'Outfit';font-weight:700;font-size:16px}
+  .opt .odesc{font-size:12.5px;font-weight:500;color:var(--muted)}
+  .opt.sel .odesc{color:rgba(42,19,0,.7)}
+  .opt .chk{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--line2);flex:none;
+            display:grid;place-items:center}
+  .opt.sel .chk{border-color:#2a1300;background:#2a1300}
+  .opt.sel .chk svg{width:12px;height:12px;color:var(--gold)}
+  .opt .chk svg{display:none} .opt.sel .chk svg{display:block}
+  .quiz-nav{display:flex;gap:10px;margin-top:auto;padding:18px 0 8px}
+  .qback{flex:none;padding:14px 18px;border-radius:13px;border:1px solid var(--line2);background:rgba(255,255,255,.04);
+         font-weight:700;font-family:'Outfit';color:var(--muted)}
+  .qskip{flex:1;padding:14px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+         color:var(--faint);font-weight:600;font-size:13.5px}
+
+  /* results */
+  .results-head{padding:18px 16px 6px}
+  .results-head h2{font-size:28px;font-weight:800}
+  .results-head h2 .grad{background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .results-head p{margin:8px 0 0;color:var(--muted);font-size:14.5px}
+  .rec{margin:14px 16px;border-radius:var(--radius);background:var(--card2);border:1px solid var(--line2);
+       overflow:hidden;box-shadow:var(--shadow)}
+  .rec-top{display:flex;gap:13px;padding:16px 16px 12px;align-items:flex-start}
+  .rank{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+        font-family:'Outfit';font-weight:800;font-size:18px;color:#2a1300;background:var(--sun)}
+  .rec-2 .rank{background:linear-gradient(135deg,#cfd6e6,#9aa6c4);color:#1a2030}
+  .rec-3 .rank{background:linear-gradient(135deg,#e6a877,#c87b45);color:#2a1300}
+  .rec-vendor{flex:1;min-width:0}
+  .rec-vendor .vn{display:flex;align-items:center;gap:9px}
+  .mono{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;
+        font-family:'Outfit';font-weight:800;font-size:13px;color:#10121f}
+  .rec-vendor h3{font-size:14px;font-weight:700;color:var(--muted);font-family:'Inter';letter-spacing:0}
+  .rec-beer{font-family:'Outfit';font-weight:800;font-size:21px;line-height:1.12;margin:10px 0 0;padding:0 16px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;padding:10px 16px 0}
+  .chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:5px 10px;border:1px solid var(--line2);
+        background:rgba(255,255,255,.05);color:var(--ink)}
+  .chip.abv{color:var(--gold);border-color:rgba(255,210,63,.35);background:rgba(255,210,63,.08)}
+  .chip.cat{color:#10121f}
+  .why{margin:13px 16px 0;padding:12px 13px;border-radius:13px;background:var(--sun-soft);border:1px solid var(--line2)}
+  .why .wrow{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink)}
+  .why .wrow+.wrow{margin-top:7px}
+  .why .wrow svg{width:15px;height:15px;flex:none;margin-top:2px;color:var(--gold)}
+  .rec-foot{display:flex;align-items:center;gap:10px;padding:14px 16px 16px}
+  .loc{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .loc .pin{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid var(--line2);
+            display:grid;place-items:center;font-size:11px;font-family:'Outfit';font-weight:800;color:var(--gold)}
+  .savebtn{margin-left:auto;display:flex;align-items:center;gap:7px;font-weight:700;font-family:'Outfit';font-size:13.5px;
+           border:1px solid var(--line2);border-radius:11px;padding:9px 14px;background:rgba(255,255,255,.05);transition:.15s}
+  .savebtn svg{width:16px;height:16px}
+  .savebtn.saved{background:var(--sun);color:#2a1300;border-color:transparent}
+  .savebtn:active{transform:scale(.96)}
+  .results-actions{padding:6px 16px 22px;display:grid;gap:10px}
+
+  /* vendors */
+  .search{display:flex;align-items:center;gap:10px;margin:6px 16px 4px;background:var(--card2);
+          border:1px solid var(--line2);border-radius:14px;padding:12px 14px}
+  .search svg{width:18px;height:18px;color:var(--faint);flex:none}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-size:15px;font-family:inherit}
+  .search input::placeholder{color:var(--faint)}
+  .filters{display:flex;gap:8px;overflow-x:auto;padding:12px 16px 6px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .fchip{white-space:nowrap;font-size:13px;font-weight:700;font-family:'Outfit';padding:8px 14px;border-radius:999px;
+         border:1px solid var(--line2);background:rgba(255,255,255,.04);color:var(--muted);transition:.15s}
+  .fchip.on{background:var(--sun);color:#2a1300;border-color:transparent}
+  .vcount{padding:6px 16px 2px;font-size:12.5px;color:var(--faint);font-weight:600}
+  .vcard{margin:10px 16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);padding:15px;
+         box-shadow:0 12px 26px -20px rgba(0,0,0,.8)}
+  .vcard-head{display:flex;gap:13px;align-items:center}
+  .vcard .mono{width:46px;height:46px;border-radius:13px;font-size:18px}
+  .vcard h3{font-size:17.5px;font-weight:800}
+  .vmeta{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:12px;font-weight:600}
+  .cat-dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .vloc{margin-left:auto;flex:none;align-self:flex-start;display:flex;align-items:center;gap:5px;font-size:11.5px;
+        font-weight:700;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--line2);
+        border-radius:999px;padding:5px 10px}
+  .vblurb{margin:11px 0 0;font-size:13.5px;color:var(--muted)}
+  .beerlist{margin-top:12px;display:grid;gap:8px}
+  .beer{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.035);border:1px solid var(--line);
+        border-radius:12px;padding:10px 12px}
+  .beer .bi{min-width:0;flex:1}
+  .beer .bn{font-family:'Outfit';font-weight:700;font-size:14.5px;line-height:1.15}
+  .beer .bs{font-size:12px;color:var(--faint);margin-top:2px}
+  .beer .babv{font-size:11px;font-weight:800;color:var(--gold);flex:none}
+  .heart{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);background:rgba(255,255,255,.05);
+         display:grid;place-items:center;transition:.15s}
+  .heart svg{width:17px;height:17px;color:var(--muted)}
+  .heart.on{background:var(--sun);border-color:transparent}
+  .heart.on svg{color:#2a1300;fill:#2a1300}
+  .heart:active{transform:scale(.92)}
+
+  /* map */
+  .map-intro{padding:16px 16px 4px}
+  .map-intro h2{font-size:24px;font-weight:800}
+  .map-intro p{margin:7px 0 0;color:var(--muted);font-size:14px}
+  .map-stage{position:relative;margin:14px 16px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line2);
+             aspect-ratio:3/4;background:#0e1b16;box-shadow:var(--shadow)}
+  .map-stage svg.bg{position:absolute;inset:0;width:100%;height:100%}
+  .pin{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;
+       display:grid;place-items:center;font-family:'Outfit';font-weight:800;font-size:13px;color:#0c1018;
+       border:2px solid rgba(255,255,255,.85);box-shadow:0 4px 10px rgba(0,0,0,.5);transition:transform .15s;z-index:2}
+  .pin:active{transform:translate(-50%,-50%) scale(.9)}
+  .pin.saved::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--gold);opacity:.9}
+  .pin.hl{animation:pulse 1.1s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,210,63,.7)}100%{box-shadow:0 0 0 16px rgba(255,210,63,0)}}
+  .map-pop{position:absolute;left:0;right:0;bottom:0;z-index:5;margin:10px;padding:13px 14px;border-radius:14px;
+           background:rgba(18,12,36,.96);border:1px solid var(--line2);backdrop-filter:blur(8px);
+           transform:translateY(140%);transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+  .map-pop.show{transform:none}
+  .map-pop .mp-top{display:flex;align-items:center;gap:11px}
+  .map-pop h4{font-size:16px;font-weight:800}
+  .map-pop .mp-meta{font-size:12px;color:var(--muted);margin-top:1px}
+  .map-pop .mp-act{margin-left:auto;display:flex;gap:8px}
+  .mini-btn{font-size:12.5px;font-weight:700;font-family:'Outfit';border-radius:10px;padding:8px 12px;
+            border:1px solid var(--line2);background:rgba(255,255,255,.06)}
+  .mini-btn.solid{background:var(--sun);color:#2a1300;border-color:transparent}
+  .legend{display:flex;flex-wrap:wrap;gap:9px 14px;padding:6px 18px 10px}
+  .legend span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:600}
+  .legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+  /* plan */
+  .plan-head{padding:18px 16px 4px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .plan-head h2{font-size:25px;font-weight:800}
+  .plan-head p{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
+  .plan-head .cnt{font-family:'Outfit';font-weight:800;font-size:13px;color:var(--gold);
+                  background:rgba(255,210,63,.1);border:1px solid rgba(255,210,63,.3);border-radius:999px;padding:6px 12px;white-space:nowrap}
+  .plan-item{display:flex;align-items:center;gap:12px;margin:10px 16px;padding:13px 14px;border-radius:15px;
+             background:var(--card);border:1px solid var(--line)}
+  .plan-item .pnum{flex:none;width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.06);
+                   border:1px solid var(--line2);display:grid;place-items:center;font-family:'Outfit';font-weight:800;
+                   font-size:12px;color:var(--gold)}
+  .plan-item .pinfo{flex:1;min-width:0}
+  .plan-item .pbn{font-family:'Outfit';font-weight:700;font-size:15px;line-height:1.15}
+  .plan-item .pvn{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .rm{flex:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--line2);background:rgba(255,255,255,.04);
+      display:grid;place-items:center;color:var(--faint)}
+  .rm svg{width:15px;height:15px}
+  .plan-actions{padding:12px 16px 20px;display:grid;gap:10px}
+  .empty{margin:30px 16px;padding:30px 22px;text-align:center;border-radius:var(--radius);
+         background:var(--card);border:1px dashed var(--line2)}
+  .empty .em{font-size:42px}
+  .empty h3{font-size:20px;font-weight:800;margin-top:10px}
+  .empty p{margin:8px 0 18px;color:var(--muted);font-size:14px}
+
+  .disclaimer{margin:8px 16px 8px;padding:0 2px;font-size:11px;color:var(--faint);line-height:1.5}
+  .foot{padding:18px 16px 26px;text-align:center;color:var(--faint);font-size:11.5px}
+  .foot .bb{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--muted)}
+
+  /* bottom nav */
+  .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:var(--maxw);z-index:50;
+       display:grid;grid-template-columns:repeat(4,1fr);
+       background:linear-gradient(180deg,rgba(20,13,41,.6),rgba(16,10,32,.96));
+       backdrop-filter:blur(14px);border-top:1px solid var(--line);
+       padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+  .nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:12px;color:var(--faint);
+              font-size:10.5px;font-weight:700;font-family:'Outfit';position:relative}
+  .nav button svg{width:22px;height:22px}
+  .nav button.on{color:var(--ink)}
+  .nav button.on svg{color:var(--gold)}
+  .nav .badge{position:absolute;top:2px;right:50%;margin-right:-22px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+              background:var(--coral);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;line-height:1}
+  .nav .badge.hide{display:none}
+
+  .toast{position:fixed;left:50%;bottom:96px;z-index:80;
+         background:rgba(20,13,41,.97);border:1px solid var(--line2);color:var(--ink);
+         padding:11px 16px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow);
+         transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;pointer-events:none;max-width:88%}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brandmark">
+      <span class="logo-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.9 6.9 17.7 8.1 12 3.9 8.3l5.6-.6z" fill="#2a1300"/></svg>
+      </span>
+      <div>
+        Hawaii Beer Fest
+        <div class="by">tasting guide · by Brilla</div>
+      </div>
+    </div>
+    <span class="pill-21">21+ · Jun 27</span>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <section id="view-home" class="view active">
+    <div class="hero">
+      <svg class="hero-art" viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ff9f1c" stop-opacity=".0"/>
+            <stop offset="1" stop-color="#ff6b5c" stop-opacity=".0"/>
+          </linearGradient>
+          <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#ffd23f" stop-opacity=".55"/>
+            <stop offset="60%" stop-color="#ff9f1c" stop-opacity=".18"/>
+            <stop offset="100%" stop-color="#ff6b5c" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="380" cy="60" r="130" fill="url(#sun)"/>
+        <g fill="#0e0a1e" opacity=".55">
+          <path d="M0 300 Q120 235 240 268 T480 250 V300 Z"/>
+        </g>
+        <g opacity=".5" fill="#1ec8b6">
+          <circle cx="60" cy="40" r="1.6"/><circle cx="120" cy="22" r="1.2"/><circle cx="200" cy="50" r="1.4"/>
+          <circle cx="300" cy="30" r="1.2"/><circle cx="440" cy="120" r="1.4"/><circle cx="30" cy="120" r="1.2"/>
+        </g>
+      </svg>
+      <div class="hero-inner">
+        <span class="hero-kicker"><span class="dot"></span>7th Annual · Bishop Museum Great Lawn</span>
+        <h1>Too many beers.<br><span class="grad">Find your pour.</span></h1>
+        <p class="hero-sub">100+ craft beers, ciders &amp; seltzers in one night. We'll point you to the three you shouldn't miss.</p>
+        <div class="facts">
+          <span class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Sat, Jun 27, 2026</span>
+          <span class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.2 7-11a7 7 0 10-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Honolulu, HI</span>
+          <span class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>5–9 PM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>100+</b><span>Beers, ciders &amp; seltzers</span></div>
+      <div class="stat"><b>40+</b><span>Breweries pouring</span></div>
+      <div class="stat"><b>9</b><span>Food trucks</span></div>
+    </div>
+
+    <div class="decide-card">
+      <div class="spark" aria-hidden="true"></div>
+      <h2>Not sure where to start?</h2>
+      <p>Answer 5 quick questions and we'll build your tasting plan — so you spend the night drinking, not deciding.</p>
+      <button class="cta cta-primary" data-action="start-quiz">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l3.5 8L5 21M12 3v18M19 3l-3.5 8L19 21"/></svg>
+        Help Me Decide
+      </button>
+      <button class="cta cta-secondary" data-nav="vendors">Browse Vendors</button>
+      <div class="timehint">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        About 30 seconds · 5 quick taps · no sign-up
+      </div>
+    </div>
+
+    <div class="pad">
+      <div class="block-title"><h3>How it works</h3></div>
+      <div class="how">
+        <div class="how-step"><span class="how-num">1</span><div><b>Tell us your taste</b><p>Five taps about what you like and how adventurous you're feeling.</p></div></div>
+        <div class="how-step"><span class="how-num">2</span><div><b>Get your Top 3 Stops</b><p>Specific beers at specific booths — with why each one fits you.</p></div></div>
+        <div class="how-step"><span class="how-num">3</span><div><b>Build your festival plan</b><p>Save your picks and follow the map. Done deciding, start tasting.</p></div></div>
+      </div>
+
+      <div class="block-title"><h3>This year's lineup</h3><button class="link-btn" data-nav="vendors">See all →</button></div>
+      <p class="muted" style="font-size:13.5px;margin:-4px 0 0">Local Hawaii brewers, mainland craft legends, world-class imports, ciders &amp; seltzers — all in one lawn.</p>
+    </div>
+
+    <p class="disclaimer">Independent concept demo created by <b>Brilla</b> to explore how festival-goers could decide what to try. Not an official Hawaii Beer Fest app. Breweries, beers &amp; details are illustrative and subject to change. Please drink responsibly — 21+.</p>
+    <div class="foot"><span class="bb">Built by Brilla</span><br>The recommendation is the product.</div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="view-quiz" class="view">
+    <div class="quiz-wrap">
+      <div class="progress">
+        <div class="bar"><div class="fill" id="qfill"></div></div>
+        <span class="count" id="qcount">1 / 5</span>
+      </div>
+      <div class="qhead">
+        <span class="section-eyebrow" id="qeyebrow">Your taste</span>
+        <h2 id="qtitle">Question</h2>
+        <p id="qdesc"></p>
+      </div>
+      <div class="options" id="qoptions"></div>
+      <div class="quiz-nav">
+        <button class="qback" id="qback" data-action="quiz-back">← Back</button>
+        <button class="qskip" data-action="quiz-skip">No preference — skip</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="view-results" class="view">
+    <div class="results-head">
+      <span class="section-eyebrow">Your festival game plan</span>
+      <h2 style="margin-top:8px">Your <span class="grad">Top 3 Stops</span></h2>
+      <p id="results-sub">Start here. Tap the heart to save a pour to your plan, then follow the map.</p>
+    </div>
+    <div id="rec-list"></div>
+    <div class="results-actions">
+      <button class="cta cta-secondary" data-action="more-stops">🎲 Show me 3 different stops</button>
+      <button class="cta cta-ghost" data-action="restart-quiz">↺ Retake the quiz</button>
+      <button class="cta cta-primary" data-nav="plan" style="margin-top:4px">View My Festival Plan</button>
+    </div>
+    <div class="foot">The recommendation is the product. The menu is supporting information.</div>
+  </section>
+
+  <!-- ============ VENDORS ============ -->
+  <section id="view-vendors" class="view">
+    <div style="padding:16px 16px 2px"><span class="section-eyebrow">Discover</span><h2 style="font-size:24px;font-weight:800;margin-top:8px">Vendor Directory</h2></div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      <input id="vsearch" type="search" placeholder="Search breweries, beers, or styles…" autocomplete="off"/>
+    </div>
+    <div class="filters" id="vfilters"></div>
+    <div class="vcount" id="vcount"></div>
+    <div id="vendor-list"></div>
+    <div class="foot">Booths &amp; pours are illustrative for this concept demo.</div>
+  </section>
+
+  <!-- ============ MAP ============ -->
+  <section id="view-map" class="view">
+    <div class="map-intro">
+      <span class="section-eyebrow">Get around</span>
+      <h2 style="margin-top:8px">Festival Map</h2>
+      <p>Bishop Museum Great Lawn. Tap a numbered booth to see what's pouring. Your saved stops glow gold.</p>
+    </div>
+    <div class="map-stage" id="map-stage">
+      <svg class="bg" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="lawn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#16332a"/><stop offset="1" stop-color="#0f241d"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="400" fill="url(#lawn)"/>
+        <g stroke="#ffffff" stroke-opacity=".05" stroke-width="1">
+          <path d="M0 100H300M0 200H300M0 300H300M75 0V400M150 0V400M225 0V400"/>
+        </g>
+        <!-- stage -->
+        <rect x="95" y="14" width="110" height="30" rx="6" fill="#2a1c12" stroke="#ff9f1c" stroke-opacity=".5"/>
+        <text x="150" y="33" text-anchor="middle" fill="#ffd23f" font-family="Outfit,sans-serif" font-size="12" font-weight="700">MAIN STAGE</text>
+        <!-- food court -->
+        <rect x="12" y="300" width="58" height="86" rx="8" fill="#241a33" stroke="#8c7bff" stroke-opacity=".4"/>
+        <text x="41" y="338" text-anchor="middle" fill="#cdbcff" font-family="Outfit,sans-serif" font-size="9" font-weight="700">FOOD</text>
+        <text x="41" y="350" text-anchor="middle" fill="#cdbcff" font-family="Outfit,sans-serif" font-size="9" font-weight="700">TRUCKS</text>
+        <!-- entrance -->
+        <rect x="110" y="372" width="80" height="22" rx="6" fill="#12241d" stroke="#1ec8b6" stroke-opacity=".5"/>
+        <text x="150" y="387" text-anchor="middle" fill="#7fe9dc" font-family="Outfit,sans-serif" font-size="10" font-weight="700">ENTRANCE</text>
+        <!-- water -->
+        <circle cx="245" cy="335" r="13" fill="#10243a" stroke="#2bb4ff" stroke-opacity=".5"/>
+        <text x="245" y="339" text-anchor="middle" fill="#9ad6ff" font-family="Outfit,sans-serif" font-size="8" font-weight="700">H₂O</text>
+      </svg>
+      <div id="pins"></div>
+      <div class="map-pop" id="map-pop">
+        <div class="mp-top">
+          <span class="mono" id="mp-mono"></span>
+          <div style="min-width:0">
+            <h4 id="mp-name"></h4>
+            <div class="mp-meta" id="mp-meta"></div>
+          </div>
+          <div class="mp-act">
+            <button class="mini-btn" id="mp-view">Details</button>
+            <button class="mini-btn solid" id="mp-save">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#1ec8b6"></i>Local Hawaii</span>
+      <span><i style="background:#8c7bff"></i>Mainland craft</span>
+      <span><i style="background:#ffd23f"></i>Imports</span>
+      <span><i style="background:#ff6b5c"></i>Seltzer &amp; variety</span>
+      <span><i style="background:#5ed17a"></i>Cider</span>
+    </div>
+  </section>
+
+  <!-- ============ PLAN ============ -->
+  <section id="view-plan" class="view">
+    <div class="plan-head">
+      <div>
+        <span class="section-eyebrow">Your night, sorted</span>
+        <h2 style="margin-top:8px">My Festival Plan</h2>
+        <p id="plan-sub">The pours you saved, in one place.</p>
+      </div>
+      <span class="cnt" id="plan-count">0 saved</span>
+    </div>
+    <div id="plan-list"></div>
+    <div class="plan-actions" id="plan-actions"></div>
+    <div class="foot">Go from “too many choices” to “I know exactly where I'm headed.”</div>
+  </section>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav">
+    <button data-nav="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</button>
+    <button data-nav="vendors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>Vendors</button>
+    <button data-nav="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4L3 7v13l6-3 6 3 6-3V4l-6 3-6-3z"/><path d="M9 4v13M15 7v13"/></svg>Map</button>
+    <button data-nav="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-4-7 4V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>My Plan<span class="badge hide" id="nav-badge">0</span></button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* =========================================================================
+   Brilla × Hawaii Beer Fest — concept demo
+   Pure data + recommendation logic first (testable), DOM bootstrap last.
+   ========================================================================= */
+
+/* ---------- category meta ---------- */
+const CATS = {
+  local:    {label:"Local Hawaii",     color:"#1ec8b6"},
+  mainland: {label:"Mainland craft",   color:"#8c7bff"},
+  import:   {label:"Import",           color:"#ffd23f"},
+  variety:  {label:"Seltzer & variety",color:"#ff6b5c"},
+  cider:    {label:"Cider",            color:"#5ed17a"}
+};
+
+/* ---------- vendors + beverages ----------
+   tags drive matching. helper flags (local/award/strong/unique/easy/popular/
+   signature) are derived from tags at flatten time. */
+const VENDORS = [
+  {id:"kona", name:"Kona Brewing Co.", cat:"local", origin:"Big Island", loc:1, x:22, y:17,
+   blurb:"Hawaii's iconic island brewery — sunshine in a glass since 1994.",
+   beers:[
+     {name:"Big Wave Golden Ale", style:"Golden Ale", abv:4.4, tags:["light","easy","smooth","refreshing","tropical","local","popular","classic"]},
+     {name:"Longboard Island Lager", style:"Helles Lager", abv:4.6, tags:["lager","crisp","light","refreshing","easy","local","classic","popular"]},
+     {name:"Hanalei Island IPA", style:"Fruited IPA", abv:4.5, tags:["ipa","fruity","tropical","citrus","refreshing","local","easy"]}
+   ]},
+  {id:"maui", name:"Maui Brewing Co.", cat:"local", origin:"Maui", loc:2, x:43, y:14,
+   blurb:"Bold island flavors brewed on the Valley Isle.",
+   beers:[
+     {name:"Bikini Blonde Lager", style:"Helles Lager", abv:5.1, tags:["lager","crisp","smooth","light","easy","local","classic"]},
+     {name:"Coconut Hiwa Porter", style:"Toasted-Coconut Porter", abv:6.0, tags:["stout","porter","roasty","malty","bold","local","unique","signature"]},
+     {name:"Big Swell IPA", style:"IPA", abv:6.8, tags:["ipa","hoppy","citrus","bold","local"]}
+   ]},
+  {id:"aloha", name:"Aloha Beer Co.", cat:"local", origin:"Oahu · Kakaako", loc:3, x:64, y:18,
+   blurb:"Honolulu's hometown brewery and beer garden.",
+   beers:[
+     {name:"Aloha Lager", style:"Pale Lager", abv:5.0, tags:["lager","crisp","easy","light","local","classic"]},
+     {name:"Cocoweizen", style:"Chocolate Hefeweizen", abv:5.5, tags:["wheat","sweet","smooth","chocolate","unique","local","signature"]},
+     {name:"Hop Lei IPA", style:"IPA", abv:6.5, tags:["ipa","hoppy","tropical","citrus","local"]}
+   ]},
+  {id:"lanikai", name:"Lanikai Brewing Co.", cat:"local", origin:"Oahu · Kailua", loc:4, x:81, y:27,
+   blurb:"Adventure-driven, ocean-inspired Kailua craft.",
+   beers:[
+     {name:"Pillbox Porter", style:"Porter", abv:5.5, tags:["stout","porter","roasty","malty","smooth","bold","local"]},
+     {name:"Moku Imperial IPA", style:"Double IPA", abv:8.5, tags:["ipa","hoppy","strong","bold","local","adventurous","unique"]}
+   ]},
+  {id:"beerlab", name:"Beer Lab HI", cat:"local", origin:"Oahu · Honolulu", loc:5, x:19, y:33,
+   blurb:"Cult-favorite hazy IPAs and wild fruited sours.",
+   beers:[
+     {name:"Hugfish Hazy IPA", style:"Hazy IPA", abv:6.8, tags:["ipa","hazy","fruity","tropical","hoppy","smooth","local","unique","popular","signature"]},
+     {name:"Smoothie Sour: Lilikoi", style:"Fruited Sour", abv:5.5, tags:["sour","tart","fruity","tropical","sweet","refreshing","local","unique","adventurous"]}
+   ]},
+  {id:"ola", name:"Ola Brewing", cat:"local", origin:"Big Island · Kona", loc:6, x:40, y:33,
+   blurb:"Big Island craft, made farm-to-bottle.",
+   beers:[
+     {name:"Hawaiian Lager", style:"Lager", abv:5.0, tags:["lager","crisp","easy","light","local","classic"]},
+     {name:"Pakalolo Pale Ale", style:"Pale Ale", abv:5.5, tags:["pale","hoppy","citrus","balanced","local"]}
+   ]},
+  {id:"kohola", name:"Kohola Brewery", cat:"local", origin:"Maui · Lahaina", loc:7, x:61, y:33,
+   blurb:"Small-batch, surf-inspired ales from West Maui.",
+   beers:[
+     {name:"Red Sand Amber Ale", style:"Amber Ale", abv:5.5, tags:["amber","malty","smooth","balanced","local","signature"]},
+     {name:"Talk Story Tropical IPA", style:"IPA", abv:6.5, tags:["ipa","tropical","fruity","hoppy","local"]}
+   ]},
+  {id:"kolea", name:"Kolea Brewing", cat:"local", origin:"Oahu", loc:8, x:79, y:43,
+   blurb:"Fresh Oahu newcomer with crushable everyday brews.",
+   beers:[
+     {name:"Kolea Pilsner", style:"Pilsner", abv:4.8, tags:["lager","pilsner","crisp","light","refreshing","easy","local"]},
+     {name:"Sunset Hazy IPA", style:"Hazy IPA", abv:6.5, tags:["ipa","hazy","juicy","tropical","fruity","local"]}
+   ]},
+  {id:"nectar", name:"Nectar Hard Seltzer", cat:"variety", origin:"Hawaii-made", loc:9, x:29, y:49,
+   blurb:"Hawaii's own hard seltzer — real island fruit, light & clean.",
+   beers:[
+     {name:"Pineapple Hard Seltzer", style:"Hard Seltzer", abv:5.0, tags:["seltzer","light","crisp","fruity","tropical","refreshing","easy","local","gluten_free"]},
+     {name:"Lilikoi Hard Seltzer", style:"Hard Seltzer", abv:5.0, tags:["seltzer","fruity","tart","tropical","refreshing","light","local","gluten_free"]}
+   ]},
+  {id:"ballast", name:"Ballast Point", cat:"mainland", origin:"San Diego, CA", loc:10, x:52, y:50,
+   blurb:"San Diego icons — home of the legendary Sculpin.",
+   beers:[
+     {name:"Sculpin IPA", style:"IPA", abv:7.0, tags:["ipa","hoppy","citrus","bold","award_winning","classic","popular","signature"]},
+     {name:"Grapefruit Sculpin", style:"Fruited IPA", abv:7.0, tags:["ipa","fruity","citrus","hoppy","refreshing","award_winning"]},
+     {name:"Victory at Sea", style:"Imperial Porter", abv:10.0, tags:["stout","porter","roasty","coffee","strong","bold","award_winning","unique"]}
+   ]},
+  {id:"deschutes", name:"Deschutes Brewery", cat:"mainland", origin:"Bend, OR", loc:11, x:72, y:55,
+   blurb:"Pacific Northwest pioneers since 1988.",
+   beers:[
+     {name:"Fresh Squeezed IPA", style:"IPA", abv:6.4, tags:["ipa","citrus","juicy","hoppy","popular","classic"]},
+     {name:"Black Butte Porter", style:"Porter", abv:5.5, tags:["stout","porter","roasty","chocolate","smooth","classic","award_winning"]}
+   ]},
+  {id:"dogfish", name:"Dogfish Head", cat:"mainland", origin:"Milton, DE", loc:12, x:24, y:60,
+   blurb:"Off-centered ales for off-centered people.",
+   beers:[
+     {name:"60 Minute IPA", style:"IPA", abv:6.0, tags:["ipa","hoppy","balanced","classic","popular","award_winning"]},
+     {name:"SeaQuench Ale", style:"Session Sour", abv:4.9, tags:["sour","tart","lime","refreshing","crisp","sessionable","light","unique"]}
+   ]},
+  {id:"bells", name:"Bell's Brewery", cat:"mainland", origin:"Comstock, MI", loc:13, x:45, y:62,
+   blurb:"Midwest legends — makers of the iconic Two Hearted.",
+   beers:[
+     {name:"Two Hearted Ale", style:"American IPA", abv:7.0, tags:["ipa","hoppy","citrus","balanced","award_winning","classic","popular","signature"]},
+     {name:"Oberon Ale", style:"American Wheat", abv:5.8, tags:["wheat","citrus","smooth","easy","refreshing","light"]}
+   ]},
+  {id:"boulevard", name:"Boulevard Brewing", cat:"mainland", origin:"Kansas City, MO", loc:14, x:65, y:68,
+   blurb:"Belgian-inspired craft from the heartland.",
+   beers:[
+     {name:"Tank 7 Farmhouse Ale", style:"Saison", abv:8.5, tags:["belgian","saison","fruity","spicy","strong","bold","award_winning","unique","adventurous"]},
+     {name:"Unfiltered Wheat", style:"Wheat Ale", abv:4.4, tags:["wheat","light","citrus","easy","refreshing","sessionable"]}
+   ]},
+  {id:"goldenroad", name:"Golden Road Brewing", cat:"mainland", origin:"Los Angeles, CA", loc:15, x:84, y:62,
+   blurb:"Bright, fruit-forward, easy-going LA beers.",
+   beers:[
+     {name:"Mango Cart", style:"Fruited Wheat", abv:4.0, tags:["wheat","fruity","tropical","light","easy","refreshing","popular","sweet"]},
+     {name:"Wolf Pup Session IPA", style:"Session IPA", abv:4.5, tags:["ipa","light","citrus","sessionable","easy"]}
+   ]},
+  {id:"trappist", name:"Belgian Trappist Cellar", cat:"import", origin:"Belgium", loc:16, x:30, y:74,
+   blurb:"World-class abbey ales — Chimay & Rochefort.",
+   beers:[
+     {name:"Chimay Blue (Grande Réserve)", style:"Belgian Strong Dark", abv:9.0, tags:["belgian","dark","malty","strong","bold","complex","award_winning","classic","unique"]},
+     {name:"Rochefort 10", style:"Belgian Quad", abv:11.3, tags:["belgian","dark","strong","bold","complex","rich","award_winning","unique","adventurous"]}
+   ]},
+  {id:"paradise", name:"Paradise Beverages", cat:"cider", origin:"Variety booth", loc:17, x:52, y:78,
+   blurb:"Tropical ciders, familiar lagers & canned cocktails.",
+   beers:[
+     {name:"Tropical Guava Cider", style:"Hard Cider", abv:5.0, tags:["cider","fruity","sweet","tropical","refreshing","gluten_free","easy"]},
+     {name:"Estrella Jalisco", style:"Mexican Lager", abv:4.5, tags:["lager","crisp","light","easy","familiar","classic","refreshing"]},
+     {name:"Cutwater Tequila Margarita", style:"Canned Cocktail", abv:12.5, tags:["cocktail","fruity","lime","strong","sweet","unique"]}
+   ]},
+  {id:"variety", name:"Hard Variety Bar", cat:"variety", origin:"White Claw · Truly · Twisted Tea", loc:18, x:72, y:80,
+   blurb:"The familiar crowd-pleasers — grab-and-go seltzers & teas.",
+   beers:[
+     {name:"White Claw Mango", style:"Hard Seltzer", abv:5.0, tags:["seltzer","light","fruity","tropical","refreshing","easy","familiar","gluten_free","popular"]},
+     {name:"Twisted Tea Original", style:"Hard Iced Tea", abv:5.0, tags:["tea","sweet","easy","familiar","refreshing"]},
+     {name:"Truly Wild Berry", style:"Hard Seltzer", abv:5.0, tags:["seltzer","fruity","light","easy","familiar","refreshing","gluten_free"]}
+   ]}
+];
+
+/* flatten beers with backrefs + derived helper flags */
+const BEERS = [];
+VENDORS.forEach(v=>{
+  v.beers.forEach((b,i)=>{
+    BEERS.push(Object.assign({}, b, {
+      id: v.id+"-"+i,
+      vendorId: v.id, vendorName: v.name, cat: v.cat, loc: v.loc,
+      local: b.tags.includes("local"),
+      award: b.tags.includes("award_winning"),
+      strong: b.tags.includes("strong"),
+      unique: b.tags.includes("unique"),
+      easy: b.tags.includes("easy"),
+      popular: b.tags.includes("popular"),
+      signature: b.tags.includes("signature")
+    }));
+  });
+});
+const beerById = id => BEERS.find(b=>b.id===id);
+const vendorById = id => VENDORS.find(v=>v.id===id);
+
+/* ---------- quiz definition ----------
+   each option carries `w` = tag weight contributions (negatives = penalties) */
+const QUESTIONS = [
+  {key:"experience", eyebrow:"Your taste", q:"How well do you know craft beer?",
+   desc:"No wrong answer — it just helps us calibrate.",
+   options:[
+     {value:"new",   emoji:"🌱", label:"New to it", desc:"Keep it smooth and easy", w:{easy:3,light:2,smooth:2,refreshing:1,popular:1,strong:-3,sour:-2,hoppy:-1,complex:-1}},
+     {value:"casual",emoji:"🍺", label:"Casual drinker", desc:"I know what I like", w:{easy:2,refreshing:2,popular:1,light:1,smooth:1}},
+     {value:"into",  emoji:"🍻", label:"Pretty into it", desc:"Bring on the good stuff", w:{hoppy:1,local:1,unique:1,bold:1,ipa:1}},
+     {value:"nerd",  emoji:"🤓", label:"Beer nerd", desc:"Show me the rare & wild", w:{unique:2,complex:2,bold:1,adventurous:1,award_winning:1,strong:1}}
+   ]},
+  {key:"style", eyebrow:"Go-to pour", q:"What do you usually drink?",
+   desc:"Pick the one that feels most like you.",
+   options:[
+     {value:"ipa",   emoji:"🌿", label:"IPA", desc:"Hoppy & aromatic", w:{ipa:4,hoppy:2,citrus:1}},
+     {value:"lager", emoji:"🍺", label:"Lager / Pilsner", desc:"Crisp & clean", w:{lager:4,crisp:2,light:1,pilsner:1}},
+     {value:"sour",  emoji:"🍋", label:"Sour", desc:"Tart & funky", w:{sour:4,tart:2,fruity:1}},
+     {value:"stout", emoji:"☕", label:"Stout / Porter", desc:"Dark & roasty", w:{stout:4,porter:2,roasty:2,malty:1}},
+     {value:"cider", emoji:"🍏", label:"Cider", desc:"Fruity & gluten-free", w:{cider:4,fruity:2,sweet:1,refreshing:1,gluten_free:1}},
+     {value:"seltzer",emoji:"🥤", label:"Seltzer / something easy", desc:"Light & sippable", w:{seltzer:3,light:2,easy:2,refreshing:2,fruity:1}},
+     {value:"open",  emoji:"🤷", label:"I don't know", desc:"Surprise me", w:{popular:2,easy:1,local:1}}
+   ]},
+  {key:"mood", eyebrow:"Right now", q:"What sounds best right now?",
+   desc:"Go with your gut.",
+   options:[
+     {value:"crisp", emoji:"💧", label:"Crisp & refreshing", desc:"", w:{crisp:3,refreshing:3,light:2,lager:1,pilsner:1,seltzer:1}, mood:"crisp & refreshing", moodTags:["crisp","refreshing","light"]},
+     {value:"hoppy", emoji:"🌶️", label:"Hoppy & bold", desc:"", w:{hoppy:3,bold:2,ipa:2,citrus:1}, mood:"hoppy & bold", moodTags:["hoppy","bold","ipa"]},
+     {value:"fruity",emoji:"🍓", label:"Fruity & tart", desc:"", w:{fruity:3,tart:2,tropical:1,sour:1,refreshing:1}, mood:"fruity & tart", moodTags:["fruity","tart","tropical","sour"]},
+     {value:"roasty",emoji:"🍫", label:"Rich & roasty", desc:"", w:{roasty:3,malty:2,stout:2,porter:1,bold:1,chocolate:1,coffee:1}, mood:"rich & roasty", moodTags:["roasty","malty","stout","porter"]},
+     {value:"light", emoji:"🌤️", label:"Light & easy", desc:"", w:{light:3,easy:3,sessionable:2,smooth:1}, mood:"light & easy", moodTags:["light","easy","sessionable","smooth"]}
+   ]},
+  {key:"adventure", eyebrow:"Your style", q:"How adventurous are you feeling?",
+   desc:"We'll dial the picks up or down.",
+   options:[
+     {value:"safe",    emoji:"🛟", label:"Play it safe", desc:"Crowd-pleasers, please", w:{classic:2,popular:2,easy:1,familiar:1,unique:-2,adventurous:-2,sour:-2,strong:-2,complex:-1}},
+     {value:"mid",     emoji:"⚖️", label:"Somewhere in the middle", desc:"A little of both", w:{balanced:1,popular:1}},
+     {value:"surprise",emoji:"🎲", label:"Surprise me", desc:"Push my limits", w:{unique:3,adventurous:3,bold:1,complex:1}}
+   ]},
+  {key:"goal", eyebrow:"Tonight's mission", q:"What are you hoping to discover today?",
+   desc:"This shapes your Top 3.",
+   options:[
+     {value:"local", emoji:"🌺", label:"Local Hawaii favorites", desc:"", w:{local:4,signature:1}},
+     {value:"unique",emoji:"✨", label:"Unique flavors", desc:"", w:{unique:3,adventurous:2,complex:1}},
+     {value:"award", emoji:"🏆", label:"Award-winning beers", desc:"", w:{award_winning:4,signature:2,classic:1}},
+     {value:"easy",  emoji:"😎", label:"Easy drinking", desc:"", w:{easy:3,light:2,sessionable:2,refreshing:1,smooth:1}},
+     {value:"strong",emoji:"🔥", label:"Something strong", desc:"", w:{strong:4,bold:2,complex:1}}
+   ]}
+];
+
+/* ---------- profile + scoring (pure) ---------- */
+function buildProfile(answers){
+  // answers: {experience, style, mood, adventure, goal} -> option value or null(skip)
+  const weights = {};
+  let mood=null, moodTags=[];
+  QUESTIONS.forEach(q=>{
+    const val = answers[q.key];
+    if(!val) return;
+    const opt = q.options.find(o=>o.value===val);
+    if(!opt) return;
+    for(const t in opt.w){ weights[t] = (weights[t]||0) + opt.w[t]; }
+    if(opt.mood){ mood=opt.mood; moodTags=opt.moodTags||[]; }
+  });
+  return {
+    weights, answers,
+    style: answers.style && answers.style!=="open" ? answers.style : null,
+    mood, moodTags,
+    wantLocal:  answers.goal==="local",
+    wantUnique: answers.goal==="unique",
+    wantAward:  answers.goal==="award",
+    wantEasy:   answers.goal==="easy" || answers.experience==="new" || answers.experience==="casual",
+    wantStrong: answers.goal==="strong",
+    adventurous: answers.adventure==="surprise" || answers.goal==="unique",
+    beginner: answers.experience==="new",
+    jitter: answers.adventure==="surprise"
+  };
+}
+
+function scoreBeer(beer, p){
+  let s = 0;
+  const w = p.weights;
+  for(const t of beer.tags){ if(w[t]) s += w[t]; }
+  // reinforce the user's named go-to style so an exact match leads
+  if(p.style && beer.tags.includes(p.style)) s += 4;
+  // light quality prior so good beers float when the profile is sparse
+  s += (beer.popular?0.4:0) + (beer.signature?0.3:0) + (beer.award?0.2:0);
+  if(p.jitter) s += Math.random()*3;
+  return s;
+}
+
+function reasonsFor(beer, p){
+  const r = [];
+  const has = t => beer.tags.includes(t);
+  const styleLines = {
+    ipa:"You said IPAs are your go-to — this one's a standout.",
+    lager:"A crisp lager, right in line with what you usually drink.",
+    sour:"Tart and funky, just like the sours you love.",
+    stout:"Dark and roasty — your kind of pour.",
+    cider:"A fruit-forward cider, exactly your lane.",
+    seltzer:"Light and easy, the kind of sipper you reached for."
+  };
+  if(p.style && has(p.style) && styleLines[p.style]) r.push(styleLines[p.style]);
+  if(p.mood && p.moodTags.some(has)) r.push('Matches your "'+p.mood+'" mood right now.');
+  if(p.wantLocal && beer.local) r.push("A local Hawaii favorite — brewed right here in the islands.");
+  if(p.wantAward && beer.award) r.push("Award-winning and worth seeking out.");
+  if(p.wantStrong && beer.strong) r.push("Big, bold and strong — exactly what you asked for.");
+  if(p.adventurous && beer.unique) r.push("A little off the beaten path — fun to discover.");
+  if((p.wantEasy||p.beginner) && beer.easy) r.push("Smooth and easy-drinking — a reliable crowd-pleaser.");
+  // de-dupe + cap at 2
+  const out=[]; for(const x of r){ if(!out.includes(x)) out.push(x); if(out.length===2) break; }
+  if(out.length===0) out.push("A strong match for the taste you described.");
+  return out;
+}
+
+function recommend(p, opts){
+  opts = opts || {};
+  const exclude = opts.exclude || new Set();
+  const n = opts.n || 3;
+  const scored = BEERS
+    .filter(b=>!exclude.has(b.id))
+    .map(b=>({b, s:scoreBeer(b,p)}))
+    .sort((a,b)=> b.s - a.s);
+  const picks = [];
+  const usedVendors = new Set();
+  // pass 1: best per distinct vendor
+  for(const {b,s} of scored){
+    if(picks.length>=n) break;
+    if(usedVendors.has(b.vendorId)) continue;
+    picks.push(Object.assign({}, b, {_score:s, _reasons:reasonsFor(b,p)}));
+    usedVendors.add(b.vendorId);
+  }
+  // pass 2: relax vendor diversity if needed
+  if(picks.length<n){
+    for(const {b,s} of scored){
+      if(picks.length>=n) break;
+      if(picks.find(x=>x.id===b.id)) continue;
+      picks.push(Object.assign({}, b, {_score:s, _reasons:reasonsFor(b,p)}));
+    }
+  }
+  return picks;
+}
+
+/* expose for offline tests (node) and debugging */
+globalThis.__BRILLA__ = { VENDORS, BEERS, QUESTIONS, buildProfile, scoreBeer, recommend, reasonsFor };
+
+/* =========================================================================
+   DOM / app bootstrap — only runs in a browser
+   ========================================================================= */
+if (typeof document !== "undefined") {
+(function(){
+  "use strict";
+
+  /* ---------- state + persistence ---------- */
+  const STORE_KEY = "brilla_hbf_plan_v1";
+  let plan = loadPlan();            // array of beer ids
+  let answers = {};                 // quiz answers
+  let step = 0;                     // quiz step index
+  let lastProfile = null;
+  let shownIds = new Set();         // for "3 more"
+  let currentResults = [];
+
+  function loadPlan(){
+    try{ const raw = localStorage.getItem(STORE_KEY); return raw? JSON.parse(raw): []; }
+    catch(e){ return []; }
+  }
+  function savePlan(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(plan)); }catch(e){}
+    updatePlanBadges();
+  }
+  const inPlan = id => plan.includes(id);
+  function toggleSave(id, label){
+    if(inPlan(id)){ plan = plan.filter(x=>x!==id); toast((label||"Removed")+" removed from your plan"); }
+    else { plan.push(id); toast("Saved to My Festival Plan ✓"); }
+    savePlan();
+    refreshSaveStates();
+  }
+
+  /* ---------- tiny helpers ---------- */
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const el = (tag, cls, html) => { const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; };
+  const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const initials = name => name.replace(/[^A-Za-z ]/g,"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+  const catColor = cat => (CATS[cat]||{}).color || "#ffd23f";
+  let toastTimer=null;
+  function toast(msg){
+    const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),1900);
+  }
+  const HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-4-7 4V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>';
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>';
+
+  /* ---------- navigation ---------- */
+  const VIEWS = ["home","quiz","results","vendors","map","plan"];
+  function showView(name, opts){
+    VIEWS.forEach(v=>{ const s=$("#view-"+v); if(s) s.classList.toggle("active", v===name); });
+    $$(".nav button[data-nav]").forEach(b=> b.classList.toggle("on", b.dataset.nav===name));
+    window.scrollTo({top:0, behavior: (opts&&opts.noscroll)?"auto":"auto"});
+    if(name==="vendors") renderVendors();
+    if(name==="map") renderMap();
+    if(name==="plan") renderPlan();
+  }
+
+  /* ---------- HOME / lineup preview ---------- */
+  // (home is static markup; nothing to render dynamically)
+
+  /* ---------- QUIZ ---------- */
+  function startQuiz(){ answers={}; step=0; showView("quiz"); renderQuiz(); }
+  function renderQuiz(){
+    const q = QUESTIONS[step];
+    $("#qfill").style.width = ((step+1)/QUESTIONS.length*100)+"%";
+    $("#qcount").textContent = (step+1)+" / "+QUESTIONS.length;
+    $("#qeyebrow").textContent = q.eyebrow;
+    $("#qtitle").textContent = q.q;
+    $("#qdesc").textContent = q.desc||"";
+    $("#qback").style.visibility = step===0 ? "hidden":"visible";
+    const box = $("#qoptions"); box.innerHTML="";
+    q.options.forEach(o=>{
+      const sel = answers[q.key]===o.value;
+      const b = el("button","opt"+(sel?" sel":""));
+      b.innerHTML =
+        '<span class="emoji">'+o.emoji+'</span>'+
+        '<span style="min-width:0"><span class="otxt">'+esc(o.label)+'</span>'+
+        (o.desc?'<br><span class="odesc">'+esc(o.desc)+'</span>':'')+'</span>'+
+        '<span class="chk">'+CHECK+'</span>';
+      b.addEventListener("click", ()=>{ answers[q.key]=o.value; advance(); });
+      box.appendChild(b);
+    });
+  }
+  function advance(){
+    // brief highlight then move on (auto-advance = fast 30s flow)
+    renderQuiz();
+    setTimeout(()=>{
+      if(step < QUESTIONS.length-1){ step++; renderQuiz(); }
+      else finishQuiz();
+    }, 180);
+  }
+  function quizBack(){ if(step>0){ step--; renderQuiz(); } }
+  function quizSkip(){ const q=QUESTIONS[step]; answers[q.key]=null; if(step<QUESTIONS.length-1){ step++; renderQuiz(); } else finishQuiz(); }
+
+  function finishQuiz(){
+    lastProfile = buildProfile(answers);
+    shownIds = new Set();
+    currentResults = recommend(lastProfile, {n:3});
+    currentResults.forEach(b=>shownIds.add(b.id));
+    renderResults();
+    showView("results");
+  }
+
+  /* ---------- RESULTS ---------- */
+  function renderResults(){
+    const list = $("#rec-list"); list.innerHTML="";
+    const sub = $("#results-sub");
+    sub.textContent = summarize(lastProfile) + " Tap the heart to save a pour, then follow the map.";
+    currentResults.forEach((b,idx)=>{
+      const v = vendorById(b.vendorId);
+      const saved = inPlan(b.id);
+      const card = el("div","rec rec-"+(idx+1));
+      card.innerHTML =
+        '<div class="rec-top">'+
+          '<span class="rank">'+(idx+1)+'</span>'+
+          '<div class="rec-vendor"><div class="vn">'+
+            '<span class="mono" style="background:'+catColor(b.cat)+'">'+initials(v.name)+'</span>'+
+            '<h3>'+esc(v.name)+'</h3></div></div>'+
+        '</div>'+
+        '<div class="rec-beer">'+esc(b.name)+'</div>'+
+        '<div class="chips">'+
+          '<span class="chip cat" style="background:'+catColor(b.cat)+'">'+esc((CATS[b.cat]||{}).label||b.cat)+'</span>'+
+          '<span class="chip">'+esc(b.style)+'</span>'+
+          '<span class="chip abv">'+b.abv.toFixed(1)+'% ABV</span>'+
+        '</div>'+
+        '<div class="why">'+ b._reasons.map(r=>
+            '<div class="wrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg><span>'+esc(r)+'</span></div>'
+          ).join('') +'</div>'+
+        '<div class="rec-foot">'+
+          '<button class="loc" data-map="'+b.vendorId+'"><span class="pin">'+b.loc+'</span>Stop '+b.loc+' · view on map</button>'+
+          '<button class="savebtn'+(saved?" saved":"")+'" data-save="'+b.id+'" data-label="'+esc(b.name)+'">'+
+            (saved?CHECK+" Saved":HEART+" Save")+'</button>'+
+        '</div>';
+      list.appendChild(card);
+    });
+  }
+  function summarize(p){
+    const a=p.answers; const bits=[];
+    const styleLabel={ipa:"IPAs",lager:"lagers",sour:"sours",stout:"stouts",cider:"cider",seltzer:"easy sippers"}[a.style];
+    if(styleLabel) bits.push("You're into "+styleLabel);
+    if(p.mood) bits.push("feeling "+p.mood);
+    if(a.goal){ const g={local:"chasing local favorites",unique:"after unique flavors",award:"hunting award-winners",easy:"keeping it easy",strong:"going strong"}[a.goal]; if(g) bits.push(g); }
+    if(bits.length===0) return "Here's where we'd start.";
+    return "Based on your taste — "+bits.join(", ")+" — here's where we'd start.";
+  }
+  function moreStops(){
+    let next = recommend(lastProfile, {n:3, exclude:shownIds});
+    if(next.length<3){ shownIds=new Set(); next = recommend(lastProfile,{n:3}); toast("Looped back to your best matches"); }
+    next.forEach(b=>shownIds.add(b.id));
+    currentResults = next;
+    renderResults();
+    window.scrollTo({top:0});
+  }
+
+  /* ---------- VENDORS ---------- */
+  let vFilter="all", vQuery="";
+  const FILTERS=[["all","All"],["local","Local Hawaii"],["mainland","Mainland"],["import","Imports"],["cider","Cider"],["variety","Seltzer & more"]];
+  function renderFilters(){
+    const box=$("#vfilters"); box.innerHTML="";
+    FILTERS.forEach(([val,label])=>{
+      const c=el("button","fchip"+(vFilter===val?" on":""), esc(label));
+      c.addEventListener("click",()=>{ vFilter=val; renderVendors(); });
+      box.appendChild(c);
+    });
+  }
+  function renderVendors(){
+    renderFilters();
+    const q=vQuery.trim().toLowerCase();
+    const list=$("#vendor-list"); list.innerHTML="";
+    let shown=0;
+    VENDORS.forEach(v=>{
+      if(vFilter!=="all" && v.cat!==vFilter) return;
+      const hay=(v.name+" "+v.origin+" "+v.blurb+" "+v.beers.map(b=>b.name+" "+b.style+" "+b.tags.join(" ")).join(" ")).toLowerCase();
+      if(q && !hay.includes(q)) return;
+      shown++;
+      const card=el("div","vcard");
+      card.innerHTML=
+        '<div class="vcard-head">'+
+          '<span class="mono" style="background:'+catColor(v.cat)+'">'+initials(v.name)+'</span>'+
+          '<div style="flex:1;min-width:0"><h3>'+esc(v.name)+'</h3>'+
+            '<div class="vmeta"><span class="cat-dot" style="background:'+catColor(v.cat)+'"></span>'+
+            '<span class="muted">'+esc((CATS[v.cat]||{}).label||v.cat)+' · '+esc(v.origin)+'</span></div></div>'+
+          '<span class="vloc" data-map="'+v.id+'"><span class="pin" style="all:unset">📍</span> Stop '+v.loc+'</span>'+
+        '</div>'+
+        '<p class="vblurb">'+esc(v.blurb)+'</p>'+
+        '<div class="beerlist">'+ v.beers.map((b,i)=>{
+          const id=v.id+"-"+i; const saved=inPlan(id);
+          return '<div class="beer"><div class="bi"><div class="bn">'+esc(b.name)+'</div>'+
+            '<div class="bs">'+esc(b.style)+' · '+b.abv.toFixed(1)+'% ABV</div></div>'+
+            '<button class="heart'+(saved?" on":"")+'" data-save="'+id+'" data-label="'+esc(b.name)+'" aria-label="Save '+esc(b.name)+'">'+HEART+'</button></div>';
+        }).join('') +'</div>';
+      list.appendChild(card);
+    });
+    $("#vcount").textContent = shown+" "+(shown===1?"booth":"booths")+(q||vFilter!=="all"?" matching":"")+" · tap a beer's heart to save it";
+    if(shown===0){ list.appendChild(el("div","empty",'<div class="em">🔍</div><h3>No matches</h3><p>Try a different search or filter.</p>')); }
+  }
+
+  /* ---------- MAP ---------- */
+  let mapHighlight=null;
+  function renderMap(){
+    const pins=$("#pins"); pins.innerHTML="";
+    VENDORS.forEach(v=>{
+      const saved = v.beers.some((b,i)=>inPlan(v.id+"-"+i));
+      const p=el("button","pin"+(saved?" saved":"")+(mapHighlight===v.id?" hl":""));
+      p.style.left=v.x+"%"; p.style.top=v.y+"%";
+      p.style.background=catColor(v.cat);
+      p.textContent=v.loc;
+      p.setAttribute("aria-label",v.name);
+      p.addEventListener("click",()=>openMapPop(v.id));
+      pins.appendChild(p);
+    });
+    if(mapHighlight){ openMapPop(mapHighlight); }
+  }
+  function openMapPop(id){
+    const v=vendorById(id); if(!v) return;
+    const pop=$("#map-pop");
+    $("#mp-mono").style.background=catColor(v.cat);
+    $("#mp-mono").textContent=initials(v.name);
+    $("#mp-name").textContent=v.name;
+    $("#mp-meta").textContent=(CATS[v.cat]||{}).label+" · "+v.beers.length+" pours · Stop "+v.loc;
+    const saveBtn=$("#mp-save");
+    const anySaved = v.beers.some((b,i)=>inPlan(v.id+"-"+i));
+    saveBtn.textContent = anySaved? "Saved ✓" : "Save top pour";
+    saveBtn.onclick=()=>{ toggleSave(v.id+"-0", v.beers[0].name); renderMap(); openMapPop(id); };
+    $("#mp-view").onclick=()=>{ vQuery=v.name; vFilter="all"; $("#vsearch").value=v.name; showView("vendors"); };
+    pop.classList.add("show");
+  }
+  function highlightOnMap(vendorId){ mapHighlight=vendorId; showView("map"); setTimeout(()=>{ mapHighlight=null; },2600); }
+
+  /* ---------- PLAN ---------- */
+  function renderPlan(){
+    const list=$("#plan-list"); list.innerHTML="";
+    const actions=$("#plan-actions"); actions.innerHTML="";
+    $("#plan-count").textContent = plan.length+" saved";
+    if(plan.length===0){
+      $("#plan-sub").textContent="Nothing saved yet.";
+      list.appendChild(el("div","empty",
+        '<div class="em">🍺</div><h3>Your plan is empty</h3>'+
+        '<p>Take the 30-second quiz and we\'ll suggest your first three stops.</p>'+
+        '<button class="cta cta-primary" data-action="start-quiz" style="margin-top:0">Help Me Decide</button>'));
+      bind(list);
+      return;
+    }
+    $("#plan-sub").textContent="Your route for the night — "+plan.length+" "+(plan.length===1?"pour":"pours")+" across "+new Set(plan.map(id=>beerById(id)&&beerById(id).vendorId)).size+" stops.";
+    // order by map location for a natural walking route
+    const items = plan.map(beerById).filter(Boolean).sort((a,b)=>a.loc-b.loc);
+    items.forEach(b=>{
+      const row=el("div","plan-item");
+      row.innerHTML=
+        '<span class="pnum">'+b.loc+'</span>'+
+        '<div class="pinfo"><div class="pbn">'+esc(b.name)+'</div>'+
+          '<div class="pvn">'+esc(b.vendorName)+' · '+esc(b.style)+' · '+b.abv.toFixed(1)+'%</div></div>'+
+        '<button class="rm" data-map="'+b.vendorId+'" aria-label="Show on map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.2 7-11a7 7 0 10-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></button>'+
+        '<button class="rm" data-save="'+b.id+'" data-label="'+esc(b.name)+'" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+      list.appendChild(row);
+    });
+    const share=el("button","cta cta-primary","📋 Copy my plan to share");
+    share.style.marginTop="0";
+    share.addEventListener("click", sharePlan);
+    const clear=el("button","cta cta-ghost","Clear plan");
+    clear.addEventListener("click", ()=>{ if(plan.length){ plan=[]; savePlan(); renderPlan(); toast("Plan cleared"); } });
+    actions.appendChild(share); actions.appendChild(clear);
+  }
+  function sharePlan(){
+    const items = plan.map(beerById).filter(Boolean).sort((a,b)=>a.loc-b.loc);
+    const text = "🍺 My Hawaii Beer Fest plan:\n"+ items.map(b=>"• Stop "+b.loc+" — "+b.name+" @ "+b.vendorName).join("\n")+"\n\nBuilt with Brilla";
+    if(navigator.share){ navigator.share({title:"My Hawaii Beer Fest plan", text}).catch(()=>{}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>toast("Plan copied to clipboard ✓")).catch(()=>toast("Couldn't copy")); }
+    else toast("Sharing not supported here");
+  }
+
+  /* ---------- save-state refresh across views ---------- */
+  function refreshSaveStates(){
+    // results
+    $$('[data-save]').forEach(btn=>{
+      const id=btn.dataset.save; const saved=inPlan(id);
+      if(btn.classList.contains("savebtn")){ btn.classList.toggle("saved",saved); btn.innerHTML=(saved?CHECK+" Saved":HEART+" Save"); }
+      else if(btn.classList.contains("heart")){ btn.classList.toggle("on",saved); }
+    });
+    updatePlanBadges();
+  }
+  function updatePlanBadges(){
+    const b=$("#nav-badge");
+    b.textContent=plan.length;
+    b.classList.toggle("hide", plan.length===0);
+  }
+
+  /* ---------- global event delegation ---------- */
+  document.addEventListener("click",(e)=>{
+    const nav=e.target.closest("[data-nav]");
+    if(nav){ showView(nav.dataset.nav); return; }
+    const act=e.target.closest("[data-action]");
+    if(act){
+      const a=act.dataset.action;
+      if(a==="start-quiz") startQuiz();
+      else if(a==="quiz-back") quizBack();
+      else if(a==="quiz-skip") quizSkip();
+      else if(a==="more-stops") moreStops();
+      else if(a==="restart-quiz") startQuiz();
+      return;
+    }
+    const sv=e.target.closest("[data-save]");
+    if(sv){ toggleSave(sv.dataset.save, sv.dataset.label); return; }
+    const mp=e.target.closest("[data-map]");
+    if(mp){ highlightOnMap(mp.dataset.map); return; }
+  });
+  $("#vsearch").addEventListener("input",(e)=>{ vQuery=e.target.value; renderVendors(); });
+
+  /* ---------- init ---------- */
+  updatePlanBadges();
+  showView("home");
+})();
+}
+</script>
+</body>
+</html>
