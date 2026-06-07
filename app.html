@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Brilla</title>
+<meta name="theme-color" content="#140d29" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="brilla.css" />
+</head>
+<body>
+<div id="root" class="app"><div class="loading">Loading…</div></div>
+
+<script src="brilla-engine.js"></script>
+<script>
+  // Resolve which experience to load from ?event=<id> (default: hawaii-beer-fest)
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var id = (params.get("event") || "hawaii-beer-fest").toLowerCase().replace(/[^a-z0-9-]/g, "");
+    if (!id) id = "hawaii-beer-fest";
+    Brilla._pending = id;                 // engine starts as soon as the data registers
+    var s = document.createElement("script");
+    s.src = "data/" + id + ".js";
+    s.onerror = function () {
+      document.getElementById("root").innerHTML =
+        '<div class="loading" style="text-align:center;padding:24px">Couldn’t load experience “' + id + '”.<br><a class="backlink" href="index.html">← Back to Brilla</a></div>';
+    };
+    document.head.appendChild(s);
+  })();
+</script>
+</body>
+</html>
