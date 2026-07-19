@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PlateUp — What should I order?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --p-bg:#fdf5ec; --p-bg2:#f1e6d6; --p-ink:#2a2421; --p-ink-soft:#6e5f52;
+    --p-accent:#14857a; --p-accent2:#e23c6b; --p-card:#fffaf3; --p-line:#e7d9c6;
+    --p-good:#2fa36a; --p-good-bg:#e3f4ea;
+    --p-display:"Fredoka",system-ui,sans-serif; --p-script:"Pacifico",cursive;
+    --p-hub:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
+    --p-hdr-bg:#211d1b; --p-hdr-ink:#fff; --p-hdr-kicker:#f0b33b; --p-hdr-name:#e23c6b; --p-hdr-rule:#14857a;
+    --p-sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN",sans-serif;
+    --radius:16px; --radius-s:11px; --pill:999px;
+    --shadow-s:0 4px 16px rgba(0,0,0,0.08); --shadow-btn:0 10px 24px rgba(0,0,0,0.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  button{font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  :focus-visible{outline:3px solid var(--p-accent);outline-offset:2px;border-radius:6px}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+  body{font-family:var(--p-sans);background:radial-gradient(1100px 620px at 16% 8%,#efe6d6 0%,transparent 58%),#e3d6c0;min-height:100vh;color:var(--p-ink)}
+  .stage{min-height:100vh;display:flex;justify-content:center;align-items:center;gap:48px;padding:28px 20px}
+  .pitch{display:none}
+  @media(min-width:940px){
+    .pitch{display:flex;flex-direction:column;width:360px;flex-shrink:0}
+    .pitch-kick{font-family:var(--p-hub);font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:.72rem;color:var(--p-accent)}
+    .pitch-h{font-family:var(--p-hub);font-size:2.5rem;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin:8px 0 12px}
+    .pitch-p{font-size:1.02rem;color:var(--p-ink-soft);line-height:1.55;margin-bottom:22px;max-width:330px}
+    .pitch-foot{margin-top:22px;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--p-ink-soft);opacity:.6}
+  }
+  #app{width:392px;min-height:844px;flex-shrink:0;background:var(--p-bg);border-radius:40px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.32),inset 0 0 0 1.5px rgba(255,255,255,.4);transition:background .3s}
+  @media(max-width:480px){.stage{padding:0;gap:0}#app{width:100%;min-height:0;height:100svh;border-radius:0;box-shadow:none}}
+  .screen{display:none;flex-direction:column;flex:1;overflow:hidden}
+  .screen.active{display:flex}
+  .scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+  /* ---- hub ---- */
+  .hub-hero{background:var(--p-accent);color:#fff;padding:54px 24px 30px;text-align:center;flex-shrink:0}
+  .hub-logo{font-family:var(--p-hub);font-size:2.1rem;font-weight:800;letter-spacing:-.02em}
+  .hub-tag{font-size:.82rem;font-weight:600;opacity:.85;margin-top:4px}
+  .hub-loc{display:inline-block;margin-top:12px;font-size:.74rem;font-weight:700;letter-spacing:.04em;background:rgba(255,255,255,.16);padding:5px 13px;border-radius:var(--pill)}
+  .hub-body{padding:18px 18px 30px;display:flex;flex-direction:column;gap:13px}
+  .hub-label{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--p-ink-soft)}
+  .rcard{display:flex;align-items:stretch;width:100%;text-align:left;color:inherit;background:var(--p-card);border:1.5px solid var(--p-line);border-radius:var(--radius);padding:0;cursor:pointer;transition:transform .1s,border-color .15s;box-shadow:var(--shadow-s);overflow:hidden}
+  .rcard:active{transform:scale(.98)}
+  .rcard-ph{position:relative;width:98px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}
+  .rcard-letter{font-family:var(--p-hub);font-size:1.35rem;font-weight:700;opacity:.75;letter-spacing:.02em}
+  .rcard-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .rcard-main{flex:1;min-width:0;padding:12px 10px 12px 14px}
+  .rcard-name{font-family:var(--p-hub);font-size:1.06rem;font-weight:800;line-height:1.2;letter-spacing:-.01em}
+  .rcard-rate{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:.84rem;font-weight:800}
+  .rcard-rate .rc-c{color:var(--p-ink-soft);font-weight:600;white-space:nowrap}
+  .stars{position:relative;display:inline-block;font-size:.92rem;line-height:1;letter-spacing:1.5px}
+  .stars-bg{color:#d8cbb6}
+  .stars-fill{position:absolute;top:0;left:0;overflow:hidden;color:#f0a32e;white-space:nowrap;pointer-events:none}
+  .rcard-meta{font-size:.8rem;font-weight:600;color:var(--p-ink-soft);margin-top:4px}
+  .rcard-known{font-size:.8rem;color:var(--p-ink);margin-top:5px;line-height:1.35}
+  .rcard-known b{font-weight:800}
+  .rcard-badge{display:inline-block;margin-top:7px;font-size:.7rem;font-weight:800;letter-spacing:.02em;padding:3px 10px;border-radius:var(--pill);background:var(--p-good-bg);color:var(--p-good)}
+  .rcard-go{align-self:center;padding:0 12px 0 2px;font-size:1.3rem;color:var(--p-ink-soft);flex-shrink:0}
+  .hub-note{margin-top:6px;font-size:.8rem;color:var(--p-ink-soft);text-align:center;line-height:1.5}
+  .link-btn{background:none;border:none;color:var(--p-accent);font-weight:800;cursor:pointer;font-size:.85rem;text-decoration:underline;padding:8px}
+  .hub-contact{display:flex;justify-content:center;gap:10px;margin-top:10px}
+  .hub-contact a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 24px;border:2px solid var(--p-line);border-radius:var(--pill);background:var(--p-card);color:var(--p-ink);font-family:var(--p-hub);font-weight:800;font-size:.88rem;text-decoration:none;box-shadow:var(--shadow-s)}
+  .hub-contact a:active{transform:scale(.97)}
+  /* ---- topbar ---- */
+  .top{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--p-accent);color:#fff;flex-shrink:0}
+  .top-back{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;line-height:1}
+  .top-title{font-family:var(--p-display);font-weight:700;font-size:1.08rem;line-height:1.05}
+  .top-sub{font-size:.64rem;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.05em}
+  .top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .top-btn{background:rgba(255,255,255,.18);border:none;color:#fff;font-weight:700;font-size:.82rem;padding:7px 12px;border-radius:var(--pill);cursor:pointer;display:flex;align-items:center;gap:5px}
+  /* ---- decide CTA ---- */
+  .decide{padding:16px 18px 8px;flex-shrink:0}
+  .decide-btn{width:100%;padding:15px;background:var(--p-accent2);color:#fff;border:none;border-radius:var(--radius);font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow-btn);display:flex;align-items:center;justify-content:center;gap:8px}
+  .decide-btn:active{transform:scale(.98)}
+  .decide-sub{text-align:center;font-size:.8rem;font-weight:600;color:var(--p-ink-soft);margin-top:8px}
+  /* ---- inline quiz card (O'Sun-style: open on the menu) ---- */
+  .mq{padding:14px 18px 4px;flex-shrink:0}
+  .mq-card{background:var(--p-card);border:2px solid var(--p-line);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow-s)}
+  .mq-eyebrow{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--p-accent)}
+  .mq-prompt{font-family:var(--p-display);font-size:1.12rem;font-weight:700;margin:4px 0 12px;line-height:1.2}
+  .mq-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mq-opts>.mq-opt:last-child:nth-child(odd){grid-column:1/-1;justify-content:center}
+  .mq-opt{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 10px;background:var(--p-bg2);border:2px solid var(--p-line);border-radius:var(--radius-s);font-size:.9rem;font-weight:700;color:var(--p-ink);cursor:pointer;text-align:center;line-height:1.2}
+  .mq-opt:active{transform:scale(.97)}
+  .mq-emo{font-size:1.2rem;flex-shrink:0}
+  .mq-foot{text-align:center;font-size:.8rem;font-weight:600;color:var(--p-ink-soft);margin-top:10px}
+  .mq-back{margin-top:6px;background:none;border:none;color:var(--p-ink-soft);font-weight:700;font-size:.82rem;cursor:pointer;padding:10px 8px;margin-left:-8px}
+  .mq-done{display:flex;align-items:center;gap:10px}
+  .mq-done .mq-sub2{font-size:.8rem;font-weight:600;color:var(--p-ink-soft);margin-top:2px}
+  .mq-restart{margin-left:auto;background:var(--p-bg2);border:1.5px solid var(--p-line);border-radius:var(--pill);min-height:38px;padding:9px 16px;font-weight:700;font-size:.82rem;color:var(--p-ink);cursor:pointer;flex-shrink:0}
+  .mq-thumbs{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:10px;font-size:.82rem;font-weight:700;color:var(--p-ink-soft)}
+  .mq-thumb{background:var(--p-card);border:1.5px solid var(--p-line);border-radius:var(--pill);min-height:38px;padding:8px 18px;font-size:.9rem;font-weight:700;color:var(--p-ink);cursor:pointer}
+  .why-banner{background:var(--p-good-bg);color:var(--p-good);font-weight:800;font-size:.82rem;padding:8px 12px;border-radius:var(--radius-s) var(--radius-s) 0 0;margin-bottom:-2px}
+  .item-top{border-color:var(--p-accent)!important;border-width:2px}
+  /* ---- filters ---- */
+  .filters{display:flex;gap:7px;overflow-x:auto;padding:10px 18px;flex-shrink:0;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .fchip{flex-shrink:0;min-height:38px;padding:9px 16px;background:var(--p-card);border:1.5px solid var(--p-line);border-radius:var(--pill);font-size:.82rem;font-weight:700;color:var(--p-ink);cursor:pointer;white-space:nowrap}
+  .fchip.on{background:var(--p-accent);border-color:var(--p-accent);color:#fff}
+  /* ---- menu list ---- */
+  .list{padding:4px 16px 24px}
+  /* ===== Most Ordered strip ===== */
+  .mo{padding:14px 18px 2px}
+  .mo-title{font-family:var(--p-display);font-weight:700;font-size:1.02rem;color:var(--p-ink);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .mo-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .mo-row::-webkit-scrollbar{display:none}
+  .mo-card{flex-shrink:0;width:142px;background:var(--p-card);border:1.5px solid var(--p-line);border-radius:var(--radius-s);overflow:hidden;box-shadow:var(--shadow-s)}
+  .mo-img{position:relative;width:100%;height:84px;overflow:hidden}
+  .mo-img img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover}
+  .mo-badge{position:absolute;top:6px;left:6px;z-index:2;background:rgba(0,0,0,.55);color:#fff;font-size:.6rem;font-weight:800;letter-spacing:.03em;padding:2px 7px;border-radius:var(--pill)}
+  .mo-add{position:absolute;bottom:6px;right:6px;z-index:2;width:34px;height:34px;border-radius:50%;border:none;background:var(--p-accent);color:#fff;font-size:1.15rem;font-weight:800;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .mo-add::after{content:"";position:absolute;inset:-6px}
+  .mo-add:active{transform:scale(.86)}
+  .mo-add.added{background:var(--p-good)}
+  .mo-body{padding:8px 10px 10px}
+  .mo-name{font-size:.82rem;font-weight:700;color:var(--p-ink);line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.05em}
+  .mo-price{font-size:.82rem;font-weight:800;color:var(--p-accent2);margin-top:3px}
+  .cat-h{font-family:var(--p-display);font-size:.92rem;font-weight:700;color:var(--p-ink-soft);text-transform:uppercase;letter-spacing:.06em;margin:16px 4px 8px}
+  .item{display:flex;gap:12px;align-items:flex-start;background:var(--p-card);border:1.5px solid var(--p-line);border-radius:var(--radius-s);padding:12px 13px;margin-bottom:9px;position:relative}
+  .item-emo{font-size:1.7rem;flex-shrink:0;line-height:1.1}
+  .item-main{flex:1;min-width:0}
+  .item-name{font-weight:700;font-size:.98rem;line-height:1.2}
+  .item-desc{font-size:.8rem;color:var(--p-ink-soft);margin-top:3px;line-height:1.35}
+  .item-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+  .badge{font-size:.66rem;font-weight:800;padding:2px 7px;border-radius:var(--pill);background:var(--p-good-bg);color:var(--p-good)}
+  .badge.pop{background:#fff2d9;color:#b5791b}
+  .item-r{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+  .item-price{font-weight:800;font-size:.95rem;color:var(--p-accent2)}
+  .add{width:30px;height:30px;border-radius:50%;border:none;background:var(--p-accent);color:#fff;font-size:1.2rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
+  .add:active{transform:scale(.9)}
+  /* ---- quiz ---- */
+  .quiz-wrap{padding:22px 20px;flex:1;display:flex;flex-direction:column}
+  .q-prog{height:4px;background:var(--p-line);border-radius:2px;margin-bottom:22px;overflow:hidden}
+  .q-prog-fill{height:100%;background:var(--p-accent);transition:width .3s}
+  .q-q{font-family:var(--p-display);font-size:1.5rem;font-weight:700;line-height:1.2;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:11px}
+  .q-opt{display:flex;align-items:center;gap:13px;padding:15px 16px;background:var(--p-card);border:2px solid var(--p-line);border-radius:var(--radius);font-size:1.02rem;font-weight:700;cursor:pointer;text-align:left}
+  .q-opt:active{transform:scale(.98)}
+  .q-opt-emo{font-size:1.5rem}
+  .q-skip{margin-top:auto;text-align:center;background:none;border:none;color:var(--p-ink-soft);font-weight:700;font-size:.86rem;cursor:pointer;padding:12px}
+  /* ---- results ---- */
+  .res-head{padding:20px 20px 6px;flex-shrink:0}
+  .res-kick{font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--p-accent)}
+  .res-title{font-family:var(--p-display);font-size:1.6rem;font-weight:700;line-height:1.15;margin-top:3px}
+  .pick{background:var(--p-card);border:2px solid var(--p-line);border-radius:var(--radius);padding:14px;margin:0 16px 12px;position:relative}
+  .pick.top{border-color:var(--p-accent)}
+  .pick-rank{position:absolute;top:-10px;left:14px;background:var(--p-accent);color:#fff;font-family:var(--p-display);font-weight:700;font-size:.78rem;padding:3px 11px;border-radius:var(--pill)}
+  .pick-row{display:flex;gap:12px;align-items:flex-start;margin-top:5px}
+  .pick-name{font-family:var(--p-display);font-weight:700;font-size:1.1rem;flex:1}
+  .pick-price{font-weight:800;color:var(--p-accent2)}
+  .pick-desc{font-size:.82rem;color:var(--p-ink-soft);margin-top:4px;line-height:1.4}
+  .pick-reason{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:.8rem;font-weight:700;color:var(--p-accent);background:var(--p-good-bg);padding:7px 10px;border-radius:var(--radius-s)}
+  .pick-add{margin-top:10px;width:100%;padding:10px;background:var(--p-accent);color:#fff;border:none;border-radius:var(--radius-s);font-weight:700;cursor:pointer}
+  .res-foot{padding:6px 16px 22px;display:flex;flex-direction:column;gap:10px}
+  .ghost{width:100%;padding:12px;background:none;border:2px solid var(--p-line);border-radius:var(--radius-s);font-weight:700;color:var(--p-ink);cursor:pointer}
+  /* ---- overlay (order + feedback) ---- */
+  .ov{position:absolute;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:40}
+  .ov.active{display:flex}
+  .sheet{background:var(--p-bg);width:100%;max-height:88%;border-radius:22px 22px 0 0;display:flex;flex-direction:column;overflow:hidden}
+  .sheet-h{display:flex;align-items:center;padding:16px 18px;border-bottom:1px solid var(--p-line);flex-shrink:0}
+  .sheet-title{font-family:var(--p-display);font-weight:700;font-size:1.15rem}
+  .sheet-x{margin-left:auto;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--p-ink-soft);width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin-right:-12px}
+  .sheet-body{overflow-y:auto;padding:14px 18px}
+  .ord{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--p-line)}
+  .ord-name{flex:1;font-weight:700;font-size:.92rem}
+  .ord-price{font-weight:800;color:var(--p-accent2);min-width:56px;text-align:right}
+  .ord-qty{display:flex;align-items:center;gap:2px;flex-shrink:0}
+  .ord-step{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--p-line);background:var(--p-bg2);color:var(--p-ink);font-size:1.1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .ord-step:active{transform:scale(.92)}
+  .ord-n{min-width:24px;text-align:center;font-weight:800;font-size:.92rem}
+  .sheet-foot{padding:14px 18px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--p-line);flex-shrink:0}
+  .ord-total{display:flex;justify-content:space-between;font-family:var(--p-display);font-weight:700;font-size:1.1rem;margin-bottom:10px}
+  .fb-stars{display:flex;justify-content:center;gap:4px;margin:10px 0 16px}
+  .fb-stars .star{background:none;border:none;font-size:1.9rem;padding:6px;filter:grayscale(1);opacity:.4;cursor:pointer}
+  .fb-stars .star.on{filter:none;opacity:1}
+  .fb-msg{text-align:center;color:var(--p-good);font-weight:700;padding:20px}
+  .toast{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--p-ink);color:#fff;padding:10px 18px;border-radius:var(--pill);font-weight:700;font-size:.85rem;opacity:0;transition:opacity .2s;z-index:60;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:.95}
+  #app.has-cart .toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+  /* ---- sticky bottom order bar (thumb zone) ---- */
+  .cartbar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:30;display:none;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:13px 20px;background:var(--p-accent);color:#fff;border:none;border-radius:var(--pill);font-size:.98rem;font-weight:800;cursor:pointer;box-shadow:var(--shadow-btn);transition:background .3s}
+  #app.has-cart .cartbar{display:flex}
+  .cartbar:active{transform:scale(.985)}
+  .cartbar-l{display:flex;align-items:center;gap:9px}
+  .cartbar-count{background:rgba(255,255,255,.28);border-radius:var(--pill);min-width:26px;padding:2px 9px;font-size:.85rem;text-align:center}
+  #app.has-cart #screen-menu .list{padding-bottom:108px}
+  /* ===== Betty's-style cosmetic layer (menu view) ===== */
+  .bhdr{position:relative;background:var(--p-hdr-bg);color:var(--p-hdr-ink);padding:16px 18px 18px;flex-shrink:0;overflow:hidden;transition:background .3s}
+  .bhdr::before{content:"";position:absolute;inset:0;pointer-events:none}
+  #app.r-bettys .bhdr::before{opacity:.5;background:radial-gradient(circle at 12px 26px,rgba(255,255,255,.05) 0 1px,transparent 1.5px),radial-gradient(circle at 34px 12px,rgba(255,255,255,.04) 0 1px,transparent 1.5px),radial-gradient(circle at 50px 40px,rgba(255,255,255,.05) 0 1px,transparent 1.5px);background-size:60px 52px}
+  #app.r-osun .bhdr::before{opacity:.7;background:radial-gradient(130px 90px at 88% 12%,rgba(255,255,255,.20),transparent 70%)}
+  #app.r-hana .bhdr::before{opacity:.12;background:radial-gradient(circle at 10px 18px,transparent 6px,#fff 6px,#fff 7px,transparent 7px),radial-gradient(circle at 30px 18px,transparent 6px,#fff 6px,#fff 7px,transparent 7px);background-size:40px 20px}
+  #app.r-awa .bhdr::before{display:none}
+  .bhdr-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .bhdr-back{background:none;border:none;color:rgba(255,255,255,.85);font-weight:800;font-size:.82rem;cursor:pointer;padding:10px 12px;margin:-10px -12px}
+  .bhdr-actions{display:flex;gap:8px}
+  .bhdr-btn{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:800;font-size:.8rem;min-height:38px;padding:8px 14px;border-radius:var(--pill);cursor:pointer;display:flex;align-items:center;gap:5px}
+  .bhdr-inner{position:relative;z-index:1}
+  .bhdr-kicker{font-family:var(--p-display);font-size:.66rem;font-weight:700;letter-spacing:.24em;color:var(--p-hdr-kicker);text-transform:uppercase;margin-bottom:2px}
+  .bhdr-script{font-family:var(--p-script);font-size:2.4rem;color:var(--p-hdr-name);line-height:1.05;text-shadow:0 2px 0 rgba(0,0,0,.22)}
+  .bhdr-rule{width:40px;height:3px;background:var(--p-hdr-rule);margin:9px 0;border-radius:3px}
+  .bhdr-meta{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.82);line-height:1.5}
+  .bhdr-meta .star{color:#f0b33b;font-weight:800}
+  @keyframes itemEnter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .menu-item{position:relative;background:var(--p-card);border:1.5px solid var(--p-line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-s);margin-top:10px;transition:border-color .12s;animation:itemEnter .18s ease both}
+  .menu-item.mi-top{border-color:var(--p-accent);border-width:2px}
+  .mi-img{position:relative;width:100%;height:130px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .mi-img .tile{position:absolute;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;font-size:3rem}
+  .mi-img img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover}
+  .mi-add{position:absolute;bottom:8px;right:8px;z-index:3;width:42px;height:42px;border-radius:50%;border:none;background:var(--p-accent);color:#fff;font-size:1.35rem;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s}
+  .mi-add::after{content:"";position:absolute;inset:-4px}
+  .mi-add:active{transform:scale(.86)}
+  .mi-add.added{background:var(--p-good)}
+  .mi-body{padding:11px 14px 13px}
+  .mi-why{font-size:.78rem;font-weight:800;color:var(--p-accent);background:var(--p-good-bg);border-radius:var(--radius-s);padding:6px 9px;margin-bottom:7px;display:inline-block}
+  .mi-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .mi-name{font-family:var(--p-display);font-size:1.02rem;font-weight:700;color:var(--p-ink);line-height:1.2}
+  .mi-price{font-size:.92rem;font-weight:800;color:var(--p-accent2);white-space:nowrap}
+  .mi-desc{font-size:.84rem;font-weight:500;color:var(--p-ink-soft);line-height:1.4;margin:5px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .mi-foot{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+  .label{display:inline-block;padding:2px 8px;border-radius:var(--pill);font-size:.66rem;font-weight:800}
+  .label--Popular{background:#fde2ec;color:#c02a5c}.label--Spicy{background:#fde3d6;color:#c5571a}
+  .label--Vegetarian{background:var(--p-good-bg);color:#2f6b46}.label--Light{background:#e7f0e9;color:#3a7a55}
+  .label--Filling{background:#ece6f4;color:#4a3a86}.label--Sweet{background:#fbe9f0;color:#99356b}
+  .label--Special{background:#e6f3f1;color:#11756c}.label--Classic{background:#eef3e6;color:#5a7a1a}.label--Savory{background:#f3ece6;color:#7a5a3a}
+  .tile-burger{background:linear-gradient(135deg,#6f4326,#a96a3c)}.tile-chicken{background:linear-gradient(135deg,#9a6e2a,#caa14e)}
+  .tile-fish{background:linear-gradient(135deg,#2c5a72,#5a93ad)}.tile-salad{background:linear-gradient(135deg,#3f7a44,#79b06a)}
+  .tile-side{background:linear-gradient(135deg,#b4791f,#e0b057)}.tile-shake{background:linear-gradient(135deg,#c96d92,#e7a9c2)}
+  .tile-kids{background:linear-gradient(135deg,#7a5aa6,#a98fd0)}.tile-special{background:linear-gradient(135deg,#b3325c,#e0567f)}
+  .tile-default{background:linear-gradient(135deg,#8a6a4a,#c0a060)}
+</style>
+</head>
+<body>
+<div class="stage">
+  <aside class="pitch">
+    <div class="pitch-kick">PlateUp</div>
+    <div class="pitch-h">What should I order?</div>
+    <div class="pitch-p">Scan, answer a few taps, and get 3–4 dishes picked for you — in the restaurant's own style. One link, every venue.</div>
+    <div class="pitch-foot">PlateUp · plate-up.app</div>
+  </aside>
+  <div id="app">
+    <!-- HUB -->
+    <section id="screen-hub" class="screen active">
+      <div class="hub-hero"><div class="hub-logo">PlateUp</div><div class="hub-tag">What should I order?</div><div class="hub-loc">Honolulu, HI · 4 local spots</div></div>
+      <div class="scroll"><div class="hub-body">
+        <div class="hub-label">Choose a spot</div>
+        <div id="hub-cards"></div>
+        <div class="hub-note">Ratings from public Google &amp; Yelp reviews.<br>PlateUp shows real menus — and never takes payment.</div>
+        <div class="hub-contact">
+          <a href="mailto:atuikolo@hawaii.edu" aria-label="Contact us by email">Email us</a>
+          <a href="tel:+18015738372" aria-label="Call or text us at (801) 573-8372">Call or text</a>
+        </div>
+      </div></div>
+    </section>
+    <!-- MENU -->
+    <section id="screen-menu" class="screen">
+      <div class="bhdr">
+        <div class="bhdr-top">
+          <button class="bhdr-back" onclick="backToHub()">‹ All spots</button>
+          <div class="bhdr-actions">
+            <button class="bhdr-btn" id="lang-btn" onclick="toggleLang()" style="display:none" aria-label="Switch language"><span id="lang-lbl">EN</span></button>
+            <button class="bhdr-btn" onclick="openOrder()" aria-label="View my order">Order · <span id="order-count">0</span></button>
+          </div>
+        </div>
+        <div class="bhdr-inner">
+          <div class="bhdr-kicker" id="hdr-kicker"></div>
+          <div class="bhdr-script" id="hdr-script"></div>
+          <div class="bhdr-rule"></div>
+          <div class="bhdr-meta" id="hdr-meta"></div>
+        </div>
+      </div>
+      <div class="mq" id="menu-quiz"></div>
+      <div class="filters" id="filters"></div>
+      <div class="scroll"><div id="most-ordered"></div><div class="list" id="menu-list"></div></div>
+      <button class="cartbar" onclick="openOrder()" aria-label="View my order">
+        <span class="cartbar-l"><span class="cartbar-count" id="cartbar-count">0</span><span>View order</span></span>
+        <span id="cartbar-total">$0.00</span>
+      </button>
+    </section>
+    <!-- ORDER OVERLAY -->
+    <div class="ov" id="ov-order"><div class="sheet" role="dialog" aria-modal="true" aria-label="My order">
+      <div class="sheet-h"><div class="sheet-title">My Order</div><button class="sheet-x" onclick="closeOrder()" aria-label="Close order">×</button></div>
+      <div class="sheet-body" id="order-body"></div>
+      <div class="sheet-foot">
+        <div class="ord-total"><span>Total</span><span id="order-total">$0.00</span></div>
+        <div class="decide-sub" style="margin:0 0 8px">Show this to the staff — PlateUp doesn't take payment.</div>
+        <button class="ghost" onclick="clearOrder()">Clear</button>
+      </div>
+    </div></div>
+    <!-- FEEDBACK OVERLAY -->
+    <div class="ov" id="ov-fb"><div class="sheet" style="max-height:auto" role="dialog" aria-modal="true" aria-label="Feedback">
+      <div class="sheet-h"><div class="sheet-title">Was this helpful?</div><button class="sheet-x" onclick="closeFeedback()" aria-label="Close feedback">×</button></div>
+      <div class="sheet-body" id="fb-body">
+        <div class="fb-stars" id="fb-stars"></div>
+        <div class="decide-sub">Your feedback tunes the picks.</div>
+      </div>
+    </div></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<script>
+const RESTAURANTS = {
+  "bettys": {
+    name:"Betty's Burgers", tagline:"Smash burgers \u00b7 University Ave", emoji:"", cuisine:"Burgers \u00b7 American", langs:["en", "ja"],
+    theme:{"bg": "#fdf5ec", "bg2": "#f6ead8", "ink": "#2a2421", "inkSoft": "#6e5f52", "accent": "#14857a", "accent2": "#e23c6b", "card": "#fffaf3", "line": "#ecdcc8", "good": "#2fa36a", "goodBg": "#e3f4ea", "display": "\"Fredoka\", system-ui, sans-serif", "script": "\"Pacifico\", cursive"},
+    quiz:[{"key": "mood", "q": "What are you in the mood for?", "opts": [{"v": "bold", "emoji": "", "label": "Bold & spicy", "boost": {"spicy": 4, "bbq": 3}}, {"v": "rich", "emoji": "", "label": "Rich & savory", "boost": {"cheesy": 4, "hearty": 3, "bacon": 2, "teriyaki": 2}}, {"v": "fresh", "emoji": "", "label": "Light & fresh", "boost": {"light": 4, "salad": 3, "vegetarian": 2}}, {"v": "classic", "emoji": "", "label": "A classic pick", "boost": {"classic": 3, "popular": 3}}, {"v": "sweet", "emoji": "", "label": "Something sweet", "boost": {"sweet": 4, "shake": 3}}]}, {"key": "hunger", "q": "How hungry are you?", "opts": [{"v": "snack", "emoji": "", "label": "Just a bite", "boost": {"light": 3, "side": 2}}, {"v": "normal", "emoji": "", "label": "Normal", "boost": {"popular": 2}}, {"v": "starving", "emoji": "", "label": "Very hungry", "boost": {"hearty": 3, "filling": 3, "big": 2}}]}, {"key": "avoid", "q": "Anything to skip?", "opts": [{"v": "veg", "emoji": "", "label": "Keep it vegetarian", "exclude": ["beef", "chicken", "fish", "pork", "bacon"]}, {"v": "nospice", "emoji": "", "label": "No spice", "exclude": ["spicy"]}, {"v": "open", "emoji": "", "label": "I'm open", "boost": {"popular": 1}}]}],
+    menu: [
+  // ── Burgers ──
+  { id:"bettys-classic", group:"burger", category:"Burgers", name:"Betty's Classic Burger", jp:"ベティーズ・クラシックバーガー", price:7.49, emoji:"",
+    description:"Smashed beef patty with lettuce, tomato, and onion on a toasted bun.",
+    tags:["beef","classic","single","bun"], labels:[], featured:false },
+  { id:"bettys-cheese", group:"burger", category:"Burgers", name:"Betty's Cheeseburger", jp:"ベティーズ・チーズバーガー", price:7.99, emoji:"",
+    description:"The classic, plus melty American cheese.",
+    tags:["beef","classic","cheesy","single","bun"], labels:["Popular"], featured:false },
+  { id:"deluxe-cheese", group:"burger", category:"Burgers", name:"Deluxe Cheeseburger", jp:"デラックス・チーズバーガー", price:9.49, emoji:"",
+    description:"American cheese, lettuce, tomato, pickle, onion, and Betty's BB sauce.",
+    tags:["beef","classic","cheesy","hearty","pickle","bun"], labels:["Popular"], featured:true },
+  { id:"double-deluxe", group:"burger", category:"Burgers", name:"Double Deluxe Cheeseburger", jp:"ダブル・デラックス・チーズバーガー", price:11.99, emoji:"",
+    description:"Two quarter-pound patties, double American cheese, lettuce, tomato, pickle, onion, and BB sauce.",
+    tags:["beef","cheesy","big","filling","pickle","bun"], labels:["Filling"], featured:true },
+  { id:"bacon-deluxe", group:"burger", category:"Burgers", name:"Bacon Deluxe Cheeseburger", jp:"ベーコン・デラックス・チーズバーガー", price:9.99, emoji:"",
+    description:"Crispy pepper bacon, American cheese, lettuce, tomato, onion, and BB sauce.",
+    tags:["beef","bacon","cheesy","pork","hearty","bun"], labels:["Popular"], featured:false },
+  { id:"double-bacon-deluxe", group:"burger", category:"Burgers", name:"Double Bacon Deluxe", jp:"ダブル・ベーコン・デラックス", price:12.49, emoji:"",
+    description:"Two patties, pepper bacon, American cheese, and all the fixings.",
+    tags:["beef","bacon","cheesy","pork","big","filling","bun"], labels:[], featured:false },
+  { id:"bleu-bacon", group:"burger", category:"Burgers", name:"Bleu Cheese & Bacon Burger", jp:"ブルーチーズ＆ベーコンバーガー", price:10.99, emoji:"",
+    description:"Crumbled bleu cheese, pepper bacon, lettuce, tomato, onion, and BB sauce.",
+    tags:["beef","bleu","bacon","pork","cheesy","hearty","bun"], labels:[], featured:true },
+  { id:"bbq-burger", group:"burger", category:"Burgers", name:"BBQ Burger", jp:"BBQバーガー", price:9.49, emoji:"",
+    description:"House BBQ sauce and pepper jack, with lettuce, tomato, and onion.",
+    tags:["beef","bbq","cheesy","hearty","bun"], labels:["Popular"], featured:false },
+  { id:"teriyaki-burger", group:"burger", category:"Burgers", name:"Teriyaki Burger", jp:"照り焼きバーガー", price:9.49, emoji:"",
+    description:"House teriyaki and grilled pineapple, with lettuce, tomato, and onion.",
+    tags:["beef","teriyaki","pineapple","hearty","bun"], labels:["Popular"], featured:true },
+  { id:"shroom-guac", group:"burger", category:"Burgers", name:"Shroom & Guac Burger", jp:"マッシュルーム＆ワカモレバーガー", price:9.99, emoji:"",
+    description:"Sautéed mushrooms, fresh guacamole, American cheese, and BB sauce.",
+    tags:["beef","mushroom","cheesy","hearty","bun"], labels:[], featured:false },
+  { id:"spicy-burger", group:"burger", category:"Burgers", name:"Spicy Burger", jp:"スパイシーバーガー", price:9.49, emoji:"",
+    description:"Jalapeños and pepper jack for a real kick.",
+    tags:["beef","spicy","cheesy","hearty","bun"], labels:["Spicy"], featured:false },
+  { id:"beyond-burger", group:"burger", category:"Burgers", name:"Beyond Veggie Burger", jp:"ビヨンド・ベジバーガー", price:10.49, emoji:"",
+    description:"Plant-based Beyond patty, American cheese, lettuce, tomato, pickle, onion, and BB sauce.",
+    tags:["veggie","vegetarian","classic","cheesy","pickle","bun"], labels:["Vegetarian"], featured:false },
+
+  // ── Chicken & Fish ──
+  { id:"fish-burger", group:"fish", category:"Chicken & Fish", name:"Fish Burger", jp:"フィッシュバーガー", price:9.49, emoji:"",
+    description:"Crispy fish fillet with lettuce, tomato, onion, and house tartar.",
+    tags:["fish","classic","single","bun"], labels:[], featured:false },
+  { id:"teriyaki-chicken", group:"chicken", category:"Chicken & Fish", name:"Teriyaki Chicken Burger", jp:"照り焼きチキンバーガー", price:9.99, emoji:"",
+    description:"Grilled chicken, house teriyaki, grilled pineapple, lettuce, tomato, and onion.",
+    tags:["chicken","teriyaki","pineapple","hearty","bun"], labels:["Popular"], featured:true },
+  { id:"bbq-chicken-burger", group:"chicken", category:"Chicken & Fish", name:"BBQ Chicken Burger", jp:"BBQチキンバーガー", price:9.99, emoji:"",
+    description:"Grilled chicken, house BBQ, pepper jack, lettuce, tomato, and onion.",
+    tags:["chicken","bbq","cheesy","hearty","bun"], labels:[], featured:false },
+
+  // ── Salads ──
+  { id:"bbq-chicken-salad", group:"salad", category:"Salads", name:"BBQ Chicken Salad", jp:"BBQチキンサラダ", price:9.95, emoji:"",
+    description:"Romaine, sweet corn, cucumber, carrot, scallion, grilled chicken, with ranch or bleu cheese.",
+    tags:["chicken","salad","light","bbq"], labels:["Light"], featured:false },
+  { id:"cobb-salad", group:"salad", category:"Salads", name:"Tossed Cobb Salad", jp:"コブサラダ", price:10.95, emoji:"",
+    description:"Romaine, avocado, bleu cheese, bacon, egg, grilled chicken, tossed with vinaigrette.",
+    tags:["chicken","salad","bacon","pork","filling"], labels:["Popular"], featured:false },
+  { id:"house-salad", group:"salad", category:"Salads", name:"Betty House Salad", jp:"ベティー・ハウスサラダ", price:7.25, emoji:"",
+    description:"Romaine, tomato, cucumber, carrot, croutons, with ranch or bleu cheese.",
+    tags:["salad","vegetarian","light"], labels:["Vegetarian","Light"], featured:false },
+  { id:"caesar-salad", group:"salad", category:"Salads", name:"Chicken Caesar Salad", jp:"チキンシーザーサラダ", price:9.95, emoji:"",
+    description:"Romaine, tomato, croutons, parmesan, and grilled chicken.",
+    tags:["chicken","salad"], labels:[], featured:false },
+
+  // ── Sides ──
+  { id:"fries", group:"side", category:"Sides", name:"French Fries", jp:"フライドポテト", price:4.95, emoji:"",
+    description:"Golden, crispy, and salted. Small $4.95 / Large $5.95.",
+    tags:["side","vegetarian"], labels:["Popular"], featured:false },
+  { id:"onion-rings", group:"side", category:"Sides", name:"Onion Rings", jp:"オニオンリング", price:5.95, emoji:"",
+    description:"Thick-cut, battered, and fried.",
+    tags:["side","vegetarian","bun"], labels:[], featured:false },
+
+  // ── Shakes ──
+  { id:"shake-strawberry", group:"shake", category:"Shakes", name:"Strawberry Shake", jp:"ストロベリーシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Popular","Sweet"], featured:false },
+  { id:"shake-chocolate", group:"shake", category:"Shakes", name:"Chocolate Shake", jp:"チョコレートシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-vanilla", group:"shake", category:"Shakes", name:"Vanilla Shake", jp:"バニラシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-oreo", group:"shake", category:"Shakes", name:"Oreo Shake", jp:"オレオシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Popular","Sweet"], featured:false },
+  { id:"shake-peanut", group:"shake", category:"Shakes", name:"Peanut Butter Shake", jp:"ピーナッツバターシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-caramel", group:"shake", category:"Shakes", name:"Caramel Shake", jp:"キャラメルシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-mango", group:"shake", category:"Shakes", name:"Mango Shake", jp:"マンゴーシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-blueberry", group:"shake", category:"Shakes", name:"Blueberry Shake", jp:"ブルーベリーシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-passion", group:"shake", category:"Shakes", name:"Passion Fruit Shake", jp:"パッションフルーツシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"shake-white-choc", group:"shake", category:"Shakes", name:"White Chocolate Shake", jp:"ホワイトチョコシェイク", price:6.25, emoji:"",
+    description:"Hand-spun, thick and creamy. 16 oz (24 oz +$2).", tags:["shake","sweet","vegetarian"], labels:["Sweet"], featured:false },
+
+  // ── Kids ──
+  { id:"kids-combo", group:"kids", category:"Kids", name:"Kids Combo", jp:"キッズコンボ", price:7.95, emoji:"",
+    description:"For ages 12 & under. Pick mini burger, chicken fingers, mac & cheese, or grilled cheese — with fries and a kids drink.",
+    tags:["kids"], labels:[], featured:false },
+
+  // ── Specials (rotating) ──
+  { id:"cajun-burger", group:"special", category:"Specials", name:"Cajun Burger", jp:"ケイジャンバーガー", price:11.49, emoji:"",
+    description:"Two patties with house Cajun rub, fried onions, lettuce, tomato, and pepper jack.",
+    tags:["beef","spicy","cheesy","big","filling","bun"], labels:["Special","Spicy"], featured:true },
+  { id:"chicken-cheesesteak", group:"special", category:"Specials", name:"Chicken Cheese Steak Sub", jp:"チキンチーズステーキサブ", price:10.49, emoji:"",
+    description:"Chopped chicken, American cheese, lettuce, tomato, and mayo on a sub roll.",
+    tags:["chicken","cheesy","bun"], labels:["Special"], featured:false },
+  { id:"betty-burger-salad", group:"special", category:"Specials", name:"Betty Burger Salad", jp:"ベティー・バーガーサラダ", price:11.49, emoji:"",
+    description:"Two chopped patties, chopped tomato and onion, chopped cheese, with your choice of sauce. Bun-free.",
+    tags:["beef","cheesy","filling","salad"], labels:["Special"], featured:false },
+  { id:"mozz-wedges", group:"side", category:"Specials", name:"Mozzarella Wedges", jp:"モッツァレラウェッジ", price:6.49, emoji:"",
+    description:"Breaded mozzarella with house marinara.",
+    tags:["side","vegetarian","cheesy","bun"], labels:["Special"], featured:false },
+]
+  },
+  "osun": {
+    name:"O'Sun Grill", tagline:"Hawaiian plate lunches \u00b7 Waik\u012bk\u012b", emoji:"", cuisine:"Hawaiian \u00b7 Plate lunch", langs:["en","ja"],
+    theme:{"bg": "#fdf3e0", "bg2": "#f5e4c0", "ink": "#271400", "inkSoft": "#74501e", "accent": "#b8691a", "accent2": "#d98a2b", "card": "#ffffff", "line": "#e8c080", "good": "#2e7d32", "goodBg": "#e8f5e9", "display": "\"Baloo 2\", system-ui, sans-serif", "script": "\"Baloo 2\", cursive"},
+    quiz:[{"key": "mood", "q": "What are you in the mood for?", "opts": [{"v": "bold", "emoji": "", "label": "Bold & spicy", "boost": {"spicy": 4, "bbq": 3}}, {"v": "fresh", "emoji": "", "label": "Light & fresh", "boost": {"light": 4, "salad": 3, "vegetarian": 2}}, {"v": "classic", "emoji": "", "label": "A classic pick", "boost": {"classic": 3, "popular": 3}}]}, {"key": "hunger", "q": "How hungry are you?", "opts": [{"v": "normal", "emoji": "", "label": "Normal", "boost": {"popular": 2}}, {"v": "starving", "emoji": "", "label": "Very hungry", "boost": {"hearty": 3, "filling": 3, "big": 2}}]}, {"key": "avoid", "q": "Anything to skip?", "opts": [{"v": "veg", "emoji": "", "label": "Keep it vegetarian", "exclude": ["beef", "chicken", "fish", "pork", "bacon"]}, {"v": "nospice", "emoji": "", "label": "No spice", "exclude": ["spicy"]}, {"v": "open", "emoji": "", "label": "I'm open", "boost": {"popular": 1}}]}],
+    menu: [
+  { id:"garlic-wings",      category:"Appetizer", name:"Garlic Butter Chicken Wings", jp:"ガーリックバター手羽先", price:15.75, emoji:"", image:"menu_pictures/compressed/garlic-wings.webp",     description:"Crispy golden wings tossed in our signature rich garlic butter sauce.", tags:["chicken","savory","garlic","light-hunger","quick","appetizer"], labels:["Popular"], featured:true },
+  { id:"shrimp-tempura",    category:"Appetizer", name:"Shrimp Tempura", jp:"海老の天ぷら",              price:13.75, emoji:"", image:"menu_pictures/compressed/shrimp-tempura.webp",   description:"Plump shrimp dipped in a light, airy batter and fried until golden crisp.", tags:["shrimp","light-hunger","quick","appetizer","shellfish"], labels:["Light"], featured:false },
+  { id:"gyoza",             category:"Appetizer", name:"Gyoza", jp:"餃子",                       price:12.75, emoji:"", image:"menu_pictures/compressed/gyoza.webp",             description:"Japanese-style dumplings filled with savory pork and vegetables, pan-fried for a crispy bite.", tags:["pork","savory","light-hunger","quick","appetizer","gluten","soy"], labels:["Light"], featured:false },
+  { id:"veggie-rolls",      category:"Appetizer", name:"Veggie Spring Rolls", jp:"野菜春巻き",         price:12.75, emoji:"", image:"menu_pictures/compressed/veggie-rolls.webp",      description:"Crispy rolls filled with a fresh vegetable mix, fried golden and perfect for sharing.", tags:["light-hunger","quick","appetizer","vegetarian"], labels:["Vegetarian","Light"], featured:false },
+  { id:"fried-calamari",    category:"Appetizer", name:"Fried Calamari", jp:"イカリング",              price:14.75, emoji:"", image:"menu_pictures/compressed/fried-calamari.webp",   description:"Tender calamari rings lightly battered and fried until golden, served with a dipping sauce.", tags:["shellfish","savory","light-hunger","quick","appetizer"], labels:["Light"], featured:false },
+  { id:"onion-rings",       category:"Appetizer", name:"Onion Rings", jp:"オニオンリング",                 price:9.75,  emoji:"", image:"menu_pictures/compressed/onion-rings.webp",       description:"Thick-cut onion rings in a crispy golden batter — a classic crowd-pleasing side.", tags:["savory","light-hunger","quick","appetizer","vegetarian"], labels:["Light"], featured:false },
+  { id:"garlic-shrimp",     category:"Dish",     name:"Garlic Butter Shrimp", jp:"ガーリックバター海老",         price:20.75, emoji:"", image:"menu_pictures/compressed/garlic-shrimp.webp",     description:"A North Shore classic. Large shrimp sautéed in plenty of butter and fresh chopped garlic. Served with rice and salad.", tags:["shrimp","savory","garlic","classic","hawaiian","medium-hunger","shellfish"], labels:["Popular","Classic"], featured:true },
+  { id:"bbq-chicken",       category:"Dish",     name:"BBQ Chicken", jp:"BBQチキン",                  price:20.75, emoji:"", image:"menu_pictures/compressed/bbq-chicken.webp",       description:"Boneless chicken thighs marinated in island spices and grilled with our house BBQ sauce. Served with rice and salad.", tags:["chicken","bbq","savory","classic","hawaiian","medium-hunger"], labels:["Popular","Classic"], featured:true },
+  { id:"kalbi",             category:"Dish",     name:"Kalbi / Beef Short Ribs", jp:"カルビ（牛カルビ）",      price:23.75, emoji:"", image:"menu_pictures/compressed/kalbi.webp",             description:"Tender beef short ribs marinated in a sweet and savory soy-ginger glaze, grilled to perfection. Served with rice and salad.", tags:["beef","bbq","savory","filling","big-hunger","classic","soy"], labels:["Popular","Filling"], featured:true },
+  { id:"salted-egg-shrimp", category:"Dish",     name:"Salted Egg Yolk Shrimp", jp:"塩漬け卵黄の海老",       price:20.75, emoji:"", image:"menu_pictures/compressed/salted-egg-shrimp.webp", description:"A rich, umami-packed favorite. Crispy shrimp coated in a savory cured egg yolk sauce. Served with rice and salad.", tags:["shrimp","savory","rich","medium-hunger","shellfish","eggs"], labels:["Popular"], featured:true },
+  { id:"pork-chop",         category:"Dish",     name:"Pork Chop", jp:"ポークチョップ",                    price:20.75, emoji:"", image:"menu_pictures/compressed/pork-chop.webp",         description:"Juicy pork chops simply seasoned and pan-fried until golden brown. Served with rice and salad.", tags:["pork","savory","filling","medium-hunger","classic"], labels:["Filling"], featured:false },
+  { id:"salt-pepper-shrimp",category:"Dish",     name:"Salt & Pepper Shrimp", jp:"塩コショウ海老",         price:20.75, emoji:"", image:"menu_pictures/compressed/salt-pepper-shrimp.webp",description:"Wok-tossed with fresh chili peppers, garlic, and sea salt for a crispy, spicy kick. Served with rice and salad.", tags:["shrimp","savory","spicy","medium-hunger","shellfish"], labels:["Spicy"], featured:false },
+  { id:"steak",             category:"Dish",     name:"Steak", jp:"ステーキ",                        price:23.75, emoji:"", image:"menu_pictures/compressed/steak.webp",             description:"Juicy slices of beef seared hot and served with rice and salad.", tags:["beef","savory","filling","big-hunger"], labels:["Filling"], featured:false },
+  { id:"shaking-beef",      category:"Dish",     name:"Shaking Beef", jp:"シェイキングビーフ",                 price:23.75, emoji:"", image:"menu_pictures/compressed/shaking-beef.webp",      description:"Vietnamese-style wok-tossed beef cubes seared in a savory garlic and soy glaze. Served with rice and salad.", tags:["beef","savory","garlic","filling","big-hunger","soy"], labels:["Filling"], featured:false },
+  { id:"fish-fillet",       category:"Dish",     name:"Garlic Butter Fish Fillet", jp:"ガーリックバター白身魚",    price:20.75, emoji:"", image:"menu_pictures/compressed/fish-fillet.webp",       description:"Tender white fish fillets pan-seared and smothered in our famous garlic butter sauce. Served with rice and salad.", tags:["fish","savory","garlic","medium-hunger"], labels:["Savory"], featured:false },
+  { id:"fried-rice",        category:"Dish",     name:"Fried Rice", jp:"チャーハン",                   price:16.75, emoji:"", image:"menu_pictures/compressed/fried-rice.webp",        description:"Wok-tossed jasmine rice with eggs, vegetables, and savory seasonings.", tags:["savory","light-hunger","quick","soy","eggs"], labels:["Light"], featured:false },
+]
+  },
+  "hana": {
+    name:"Hana no Sato", tagline:"Japanese \u00b7 \u82b1\u306e\u91cc", emoji:"", cuisine:"Japanese", langs:["en", "ja"],
+    theme:{"bg": "#f5efe2", "bg2": "#efe6d4", "ink": "#1d1a16", "inkSoft": "#5c544a", "accent": "#25415c", "accent2": "#b23a2e", "card": "#fffdf7", "line": "#e3d8c2", "good": "#46795a", "goodBg": "#e7f0e9", "display": "\"Shippori Mincho\", serif", "script": "\"Shippori Mincho\", serif"},
+    quiz:[{"key": "mood", "q": "What are you in the mood for?", "opts": [{"v": "bold", "emoji": "", "label": "Bold & spicy", "boost": {"spicy": 4, "bbq": 3}}, {"v": "fresh", "emoji": "", "label": "Light & fresh", "boost": {"light": 4, "salad": 3, "vegetarian": 2}}]}, {"key": "hunger", "q": "How hungry are you?", "opts": [{"v": "snack", "emoji": "", "label": "Just a bite", "boost": {"light": 3, "side": 2}}, {"v": "normal", "emoji": "", "label": "Normal", "boost": {"popular": 2}}, {"v": "starving", "emoji": "", "label": "Very hungry", "boost": {"hearty": 3, "filling": 3, "big": 2}}]}, {"key": "avoid", "q": "Anything to skip?", "opts": [{"v": "veg", "emoji": "", "label": "Keep it vegetarian", "exclude": ["beef", "chicken", "fish", "pork", "bacon"]}, {"v": "nospice", "emoji": "", "label": "No spice", "exclude": ["spicy"]}, {"v": "open", "emoji": "", "label": "I'm open", "boost": {"popular": 1}}]}],
+    menu: [
+  // ── Ramen ──
+  { id:"shoyu-ramen", group:"ramen", category:"Ramen", name:"Shoyu Ramen", jp:"醤油ラーメン", price:11.50, emoji:"",
+    description:"Classic soy-based broth with chashu pork, green onion, and bamboo shoots.",
+    tags:["noodles","soup","pork","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"miso-ramen", group:"ramen", category:"Ramen", name:"Miso Ramen", jp:"味噌ラーメン", price:11.50, emoji:"",
+    description:"Hearty fermented-soybean broth, rich and deeply savory.",
+    tags:["noodles","soup","pork","medium-hunger"], labels:[], featured:false },
+  { id:"veg-pork-ramen", group:"ramen", category:"Ramen", name:"Vegetable & Pork Ramen", jp:"野菜ラーメン", price:11.50, emoji:"",
+    description:"Stir-fried vegetables and pork piled over noodles in savory broth.",
+    tags:["noodles","soup","pork","medium-hunger"], labels:[], featured:false },
+  { id:"curry-ramen", group:"ramen", category:"Ramen", name:"Curry Ramen", jp:"カレーラーメン", price:11.50, emoji:"",
+    description:"Japanese curry broth ramen — warming, aromatic, and comforting.",
+    tags:["noodles","soup","curry","medium-hunger"], labels:[], featured:false },
+  { id:"tantan-ramen", group:"ramen", category:"Ramen", name:"Tan Tan Ramen", jp:"担々麺", price:13.00, emoji:"",
+    description:"Spicy sesame-chili broth with seasoned ground pork. A house favorite.",
+    tags:["noodles","soup","spicy","pork","medium-hunger"], labels:["Spicy","Popular"], featured:true },
+
+  // ── Udon & Soba ──
+  { id:"curry-udon", group:"udon", category:"Udon & Soba", name:"Curry Udon", jp:"カレーうどん", price:12.00, emoji:"",
+    description:"Thick, chewy udon noodles in a savory Japanese curry broth.",
+    tags:["noodles","soup","curry","medium-hunger"], labels:[], featured:false },
+  { id:"yakiudon", group:"udon", category:"Udon & Soba", name:"Yaki Udon", jp:"焼きうどん", price:12.00, emoji:"",
+    description:"Udon stir-fried with vegetables and pork in a savory sauce.",
+    tags:["noodles","fried","pork","medium-hunger"], labels:[], featured:false },
+  { id:"shrimp-tempura-udon", group:"udon", category:"Udon & Soba", name:"Shrimp Tempura Udon (Cold)", jp:"海老天うどん", price:13.00, emoji:"",
+    description:"Chilled udon served alongside crisp shrimp tempura and dipping broth.",
+    tags:["noodles","shrimp","seafood","shellfish","medium-hunger"], labels:["Popular"], featured:true },
+
+  // ── Bento ──
+  { id:"grilled-salmon-bento", group:"bento", category:"Bento", name:"Grilled Salmon Bento", jp:"焼き鮭弁当", price:13.00, emoji:"",
+    description:"Grilled salmon with rice, sides, and your choice of salad or miso soup. Their #1 most-loved plate.",
+    tags:["rice-bowl","bento","fish","seafood","medium-hunger"], labels:["Top","Popular"], featured:true },
+  { id:"grilled-mackerel-bento", group:"bento", category:"Bento", name:"Grilled Mackerel Bento", jp:"焼き鯖弁当", price:13.00, emoji:"",
+    description:"Rich, flaky grilled mackerel with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fish","seafood","medium-hunger"], labels:[], featured:false },
+  { id:"karaage-bento", group:"bento", category:"Bento", name:"Karaage Chicken Bento", jp:"唐揚げ弁当", price:13.00, emoji:"",
+    description:"Juicy Japanese fried chicken with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fried","chicken","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"pork-cutlet-bento", group:"bento", category:"Bento", name:"Pork Cutlet Bento", jp:"とんかつ弁当", price:13.00, emoji:"",
+    description:"Panko-crusted tonkatsu with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fried","pork","medium-hunger"], labels:[], featured:false },
+  { id:"ginger-pork-bento", group:"bento", category:"Bento", name:"Ginger Pork Bento", jp:"生姜焼き弁当", price:13.00, emoji:"",
+    description:"Pork sautéed in sweet-savory ginger sauce with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","pork","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"chicken-cutlet-bento", group:"bento", category:"Bento", name:"Chicken Cutlet Bento", jp:"チキンカツ弁当", price:13.00, emoji:"",
+    description:"Crispy panko chicken cutlet with rice, sides, and salad or miso soup.",
+    tags:["rice-bowl","bento","fried","chicken","medium-hunger"], labels:[], featured:false },
+  { id:"assorted-fried-bento", group:"bento", category:"Bento", name:"Assorted Fried Bento", jp:"フライ盛り弁当", price:13.00, emoji:"",
+    description:"A mix of fried favorites — fish, karaage, and shrimp — over rice with sides.",
+    tags:["rice-bowl","bento","fried","seafood","chicken","shellfish","medium-hunger"], labels:[], featured:false },
+
+  // ── Bowls ──
+  { id:"beef-bowl", group:"bowls", category:"Bowls", name:"Beef Bowl", jp:"牛丼", price:11.50, emoji:"",
+    description:"Tender simmered beef and onion over rice, with miso soup.",
+    tags:["rice-bowl","beef","medium-hunger"], labels:["Popular"], featured:false },
+  { id:"mabo-don", group:"bowls", category:"Bowls", name:"Mabo Don (Tofu or Eggplant)", jp:"麻婆丼", price:12.00, emoji:"",
+    description:"Spicy mabo tofu or eggplant over rice, with miso soup.",
+    tags:["rice-bowl","tofu","spicy","medium-hunger"], labels:["Spicy"], featured:false },
+  { id:"katsu-bowl", group:"bowls", category:"Bowls", name:"Katsu Bowl", jp:"カツ丼", price:14.00, emoji:"",
+    description:"Pork cutlet simmered with egg and onion over rice, with miso soup.",
+    tags:["rice-bowl","fried","pork","eggs","big-hunger","filling"], labels:["Filling"], featured:false },
+  { id:"assorted-tempura-bowl", group:"bowls", category:"Bowls", name:"Assorted Tempura Bowl", jp:"天丼", price:14.00, emoji:"",
+    description:"Shrimp and vegetable tempura over rice with sweet tare, and miso soup.",
+    tags:["rice-bowl","fried","seafood","shellfish","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"shrimp-tempura-bowl", group:"bowls", category:"Bowls", name:"Shrimp Tempura Bowl", jp:"海老天丼", price:14.50, emoji:"",
+    description:"Five crisp shrimp tempura over rice with sweet glaze, and miso soup.",
+    tags:["rice-bowl","fried","shrimp","seafood","shellfish","medium-hunger"], labels:[], featured:false },
+  { id:"eel-bowl", group:"bowls", category:"Bowls", name:"Eel Bowl", jp:"うな丼", price:16.50, emoji:"",
+    description:"Grilled eel glazed in sweet unagi sauce over rice, with miso soup.",
+    tags:["rice-bowl","eel","seafood","fish","big-hunger","filling"], labels:["Filling"], featured:false },
+
+  // ── Curry ──
+  { id:"beef-curry", group:"curry", category:"Curry", name:"Beef Curry", jp:"ビーフカレー", price:11.50, emoji:"",
+    description:"Japanese curry with tender beef over rice. One of their top picks.",
+    tags:["rice-bowl","curry","beef","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"pork-cutlet-curry", group:"curry", category:"Curry", name:"Pork Cutlet Curry", jp:"カツカレー", price:14.00, emoji:"",
+    description:"Crispy katsu over rich Japanese curry and rice.",
+    tags:["rice-bowl","curry","fried","pork","big-hunger","filling"], labels:["Filling","Popular"], featured:false },
+
+  // ── Sushi & Rolls ──
+  { id:"sashimi-bowl", group:"sushi", category:"Sushi & Rolls", name:"Sashimi Bowl", jp:"海鮮丼", price:21.50, emoji:"",
+    description:"Assorted fresh sashimi over sushi rice, served with miso soup.",
+    tags:["raw","sushi","seafood","fish","rice-bowl","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"assorted-sashimi", group:"sushi", category:"Sushi & Rolls", name:"Assorted Sashimi Platter", jp:"刺身盛り合わせ", price:33.00, emoji:"",
+    description:"Chef's selection of the day's freshest sashimi — generous enough for 2–3 to share.",
+    tags:["raw","sushi","seafood","fish","big-hunger","filling"], labels:["Sharing"], featured:false },
+  { id:"spicy-ahi-roll", group:"sushi", category:"Sushi & Rolls", name:"Spicy Ahi Roll", jp:"スパイシーアヒ", price:11.50, emoji:"",
+    description:"Fresh ahi tuna with a spicy kick, rolled to order.",
+    tags:["raw","sushi","seafood","fish","spicy"], labels:["Spicy","Popular"], featured:false },
+  { id:"california-roll", group:"sushi", category:"Sushi & Rolls", name:"California Roll", jp:"カリフォルニアロール", price:6.00, emoji:"",
+    description:"Crab, avocado, and cucumber — a gentle, approachable cut roll.",
+    tags:["sushi","seafood","shellfish"], labels:[], featured:false },
+  { id:"eel-cucumber-roll", group:"sushi", category:"Sushi & Rolls", name:"Eel & Cucumber Roll", jp:"うなきゅう巻き", price:10.00, emoji:"",
+    description:"Grilled eel and crisp cucumber with sweet unagi glaze.",
+    tags:["sushi","eel","seafood","fish"], labels:[], featured:false },
+  { id:"inari-sushi", group:"sushi", category:"Sushi & Rolls", name:"Inari Sushi", jp:"いなり寿司", price:8.00, emoji:"",
+    description:"Sweet seasoned tofu pockets filled with sushi rice. Naturally meat-free.",
+    tags:["sushi","vegetarian","light"], labels:["Vegetarian"], featured:false },
+
+  // ── Small Plates ──
+  { id:"edamame", group:"small", category:"Small Plates", name:"Edamame", jp:"枝豆", price:5.00, emoji:"",
+    description:"Boiled young soybeans dusted with sea salt.",
+    tags:["appetizer","light","vegetarian","soy","light-hunger"], labels:["Vegetarian","Light"], featured:false },
+  { id:"garlic-edamame", group:"small", category:"Small Plates", name:"Garlic Edamame", jp:"ガーリック枝豆", price:7.00, emoji:"",
+    description:"Edamame tossed in fragrant garlic butter.",
+    tags:["appetizer","light","vegetarian","soy","light-hunger"], labels:["Vegetarian"], featured:false },
+  { id:"gyoza", group:"small", category:"Small Plates", name:"Gyoza (6 pcs)", jp:"餃子", price:5.00, emoji:"",
+    description:"Pan-fried pork-and-vegetable dumplings, crisp on the bottom.",
+    tags:["appetizer","fried","pork","gluten","soy","light-hunger"], labels:["Popular"], featured:false },
+  { id:"takoyaki", group:"small", category:"Small Plates", name:"Takoyaki (6 pcs)", jp:"たこ焼き", price:5.00, emoji:"",
+    description:"Crispy batter balls filled with tender octopus, bonito, and sauce.",
+    tags:["appetizer","seafood","shellfish","light-hunger"], labels:[], featured:false },
+  { id:"agedashi-tofu", group:"small", category:"Small Plates", name:"Agedashi Tofu", jp:"揚げ出し豆腐", price:7.00, emoji:"",
+    description:"Lightly fried tofu in a warm, savory dashi broth.",
+    tags:["appetizer","fried","tofu","vegetarian","soy","light-hunger"], labels:["Vegetarian"], featured:false },
+  { id:"karaage-chicken", group:"small", category:"Small Plates", name:"Karaage Chicken", jp:"鶏の唐揚げ", price:12.50, emoji:"",
+    description:"Marinated Japanese fried chicken, crisp outside and juicy within.",
+    tags:["appetizer","fried","chicken","medium-hunger"], labels:["Popular"], featured:true },
+  { id:"shrimp-tempura", group:"small", category:"Small Plates", name:"Shrimp Tempura (5 pcs)", jp:"海老の天ぷら", price:12.50, emoji:"",
+    description:"Plump shrimp in a light, airy batter, fried golden.",
+    tags:["appetizer","fried","shrimp","seafood","shellfish","light-hunger"], labels:[], featured:false },
+  { id:"vegetable-tempura", group:"small", category:"Small Plates", name:"Vegetable Tempura", jp:"野菜天ぷら", price:12.50, emoji:"",
+    description:"Assorted seasonal vegetables, lightly battered and fried.",
+    tags:["appetizer","fried","vegetarian","light-hunger"], labels:["Vegetarian"], featured:false },
+  { id:"ahi-poke", group:"small", category:"Small Plates", name:"Ahi Poke", jp:"アヒポキ", price:18.00, emoji:"",
+    description:"Fresh cubed ahi tuna marinated island-style in a savory blend.",
+    tags:["raw","seafood","fish","light","appetizer"], labels:["Popular"], featured:false },
+
+  // ── Salads ──
+  { id:"pork-shabu-salad", group:"salad", category:"Salads", name:"Pork Shabu Salad", jp:"豚しゃぶサラダ", price:11.00, emoji:"",
+    description:"Chilled shabu pork over crisp greens with sesame dressing.",
+    tags:["salad","light","pork"], labels:["Light"], featured:false },
+  { id:"seaweed-salad", group:"salad", category:"Salads", name:"Wakame Seaweed Salad", jp:"海藻サラダ", price:11.00, emoji:"",
+    description:"Marinated seaweed — refreshing, light, and clean.",
+    tags:["salad","light","vegetarian"], labels:["Vegetarian","Light"], featured:false },
+
+  // ── Dessert ──
+  { id:"mochi-ice-cream", group:"dessert", category:"Dessert", name:"Mochi Ice Cream", jp:"餅アイス", price:4.50, emoji:"",
+    description:"Soft, chewy mochi wrapped around cold ice cream.",
+    tags:["dessert","light","vegetarian"], labels:["Sweet"], featured:false },
+  { id:"matcha-ice-cream", group:"dessert", category:"Dessert", name:"Green Tea Ice Cream", jp:"抹茶アイス", price:4.50, emoji:"",
+    description:"Matcha ice cream — lightly sweet and earthy.",
+    tags:["dessert","light","vegetarian"], labels:["Sweet"], featured:false },
+]
+  },
+  "awa": {
+    name:"'Awa Hou", tagline:"Kava lounge \u00b7 King St", emoji:"", cuisine:"Kava lounge", langs:["en"],
+    theme:{"bg": "#f5efe4", "bg2": "#ece2d1", "ink": "#2a2a22", "inkSoft": "#645c50", "accent": "#2e5747", "accent2": "#c06a43", "card": "#fffaf1", "line": "#e7dcc7", "good": "#3f8a5f", "goodBg": "#e4f1e8", "display": "\"Fraunces\", Georgia, serif", "script": "\"Fraunces\", Georgia, serif"},
+    quiz:[{"key": "mood", "q": "What are you in the mood for?", "opts": [{"v": "fresh", "emoji": "", "label": "Light & fresh", "boost": {"light": 4, "salad": 3, "vegetarian": 2}}, {"v": "sweet", "emoji": "", "label": "Something sweet", "boost": {"sweet": 4, "shake": 3}}]}, {"key": "hunger", "q": "How hungry are you?", "opts": [{"v": "snack", "emoji": "", "label": "Just a bite", "boost": {"light": 3, "side": 2}}, {"v": "normal", "emoji": "", "label": "Normal", "boost": {"popular": 2}}]}, {"key": "avoid", "q": "Anything to skip?", "opts": [{"v": "veg", "emoji": "", "label": "Keep it vegetarian", "exclude": ["beef", "chicken", "fish", "pork", "bacon"]}, {"v": "nospice", "emoji": "", "label": "No spice", "exclude": ["spicy"]}, {"v": "open", "emoji": "", "label": "I'm open", "boost": {"popular": 1}}]}],
+    menu: [
+  // ── Single Serves ('Apu) ──
+  { id:"apu-fresh", group:"apu", category:"Single Serves", name:"'Apu Fresh", price:10.00, emoji:"",
+    description:"An 8 oz single serving of Hawaiian 'awa, grown on the Big Island and pressed from fresh roots that have never been dried. Smooth and mild.",
+    expect:"Gentle onset in ~15 min · earthy and mild.",
+    tags:["apu","fresh","mild","earthy","relax","focus","solo","beginner"], labels:["beginner"], featured:true },
+  { id:"apu-fresh-niu", group:"apu", category:"Single Serves", name:"'Apu Fresh Niu", price:10.50, emoji:"",
+    description:"Fresh Hawaiian 'awa pressed with refreshing coconut water — even smoother and easier to sip.",
+    expect:"Mild and creamy · the easiest first sip.",
+    tags:["apu","fresh","niu","coconut","mild","relax","solo","beginner"], labels:["beginner","popular"], featured:true },
+  { id:"apu-dry", group:"apu", category:"Single Serves", name:"'Apu Dry", price:10.00, emoji:"",
+    description:"An 8 oz single serving of kava from across the South Pacific, pressed from dried, ground roots. A stronger mix.",
+    expect:"Stronger · a deeper calm. Start slow.",
+    tags:["apu","dry","strong","earthy","relax","sleep","solo"], labels:[], featured:false },
+  { id:"apu-dry-niu", group:"apu", category:"Single Serves", name:"'Apu Dry Niu", price:10.50, emoji:"",
+    description:"Dry South Pacific kava pressed with coconut water — strong, but rounded and smooth.",
+    expect:"Strong, softened by coconut.",
+    tags:["apu","dry","niu","coconut","strong","relax","sleep","solo"], labels:[], featured:false },
+  { id:"apu-traditional", group:"apu", category:"Single Serves", name:"Traditional 'Apu", price:11.00, emoji:"",
+    description:"A classic 8 oz serving prepared the traditional way. Pure 'awa, pure calm.",
+    expect:"The real thing · drink it bottoms-up.",
+    tags:["apu","fresh","medium","earthy","relax","solo"], labels:["popular"], featured:false },
+
+  // ── Shared Bowls (Kānoa) ──
+  { id:"kanoa-32", group:"kanoa", category:"Shared Bowls", name:"32 oz Kānoa", price:16.50, emoji:"",
+    description:"32 oz of hand-pressed Pasifika kava with water or coconut water — a bowl to share between a couple of people.",
+    expect:"Made for sharing · refill your shells.",
+    tags:["kanoa","share","medium","earthy","relax","social","pair"], labels:["sharing"], featured:true },
+  { id:"kanoa-64", group:"kanoa", category:"Shared Bowls", name:"64 oz Kānoa", price:31.50, emoji:"",
+    description:"Half a gallon of hand-pressed Pasifika kava — the bowl for a small group.",
+    expect:"For a table · keep it flowing.",
+    tags:["kanoa","share","medium","relax","social","group"], labels:["sharing"], featured:false },
+  { id:"kanoa-gallon", group:"kanoa", category:"Shared Bowls", name:"Gallon Kānoa", price:55.00, emoji:"",
+    description:"A full gallon of hand-pressed kava for the whole crew.",
+    expect:"A group session · the traditional way.",
+    tags:["kanoa","share","strong","relax","social","group"], labels:[], featured:false },
+  { id:"kanoa-party", group:"kanoa", category:"Shared Bowls", name:"Party Size", price:90.00, emoji:"",
+    description:"An extra-large batch for events and gatherings — please call ahead.",
+    expect:"For events · share the aloha.",
+    tags:["kanoa","share","group"], labels:["special"], featured:false },
+
+  // ── Mocktails & Specialty ──
+  { id:"cocolada", group:"mocktail", category:"Mocktails & Specialty", name:"Ka 'Awa Cocolada", price:11.00, emoji:"",
+    description:"A kava mocktail with house-made coconut cream and fresh ginger syrup. Earthy calm, made delicious.",
+    expect:"Smooth and sweet · the easiest intro.",
+    tags:["mocktail","sweet","coconut","mild","relax","solo","beginner"], labels:["beginner","popular"], featured:true },
+  { id:"golden-sunrise", group:"mocktail", category:"Mocktails & Specialty", name:"Golden Sunrise Booch", price:9.00, emoji:"",
+    description:"A bright, refreshing kombucha mocktail to ease into your session.",
+    expect:"Light, fizzy, caffeine-free.",
+    tags:["mocktail","sweet","tea","caffeine-free","focus","solo","beginner"], labels:[], featured:false },
+  { id:"hawaiian-flag", group:"mocktail", category:"Mocktails & Specialty", name:"Hawaiian Flag", price:11.00, emoji:"",
+    description:"A layered house specialty — ask your server what's pouring today.",
+    expect:"A colorful house creation.",
+    tags:["mocktail","sweet","relax","solo"], labels:["special"], featured:false },
+
+  // ── Tea & Kombucha ──
+  { id:"seasonal-tea", group:"tea", category:"Tea & Kombucha", name:"Seasonal Tea", price:6.50, emoji:"",
+    description:"Caffeine-free seasonal tea made with locally grown botanicals. Served cold.",
+    expect:"Light and calming · no kava, no caffeine.",
+    tags:["tea","caffeine-free","focus","light","solo","beginner"], labels:[], featured:false },
+  { id:"kombucha-5", group:"tea", category:"Tea & Kombucha", name:"Kombucha (5 oz)", price:4.75, emoji:"",
+    description:"Locally made SKY Kombucha — a probiotic pour with rotating flavors on tap.",
+    expect:"Refreshing and probiotic.",
+    tags:["kombucha","tea","light","caffeine-free","solo"], labels:[], featured:false },
+  { id:"kombucha-32", group:"tea", category:"Tea & Kombucha", name:"32 oz Kombucha", price:9.00, emoji:"",
+    description:"32 oz of refreshing house kombucha on a rotating tap.",
+    expect:"Share it or sip all session.",
+    tags:["kombucha","tea","light","share","pair"], labels:[], featured:false },
+  { id:"kombucha-64", group:"tea", category:"Tea & Kombucha", name:"64 oz Kombucha", price:16.50, emoji:"",
+    description:"64 oz of probiotic kombucha on tap for the group.",
+    expect:"For the table.",
+    tags:["kombucha","tea","light","share","group"], labels:[], featured:false },
+
+  // ── Boosts ──
+  { id:"kava-boost", group:"boost", category:"Boosts", name:"Instant Kava Boost", price:1.50, emoji:"",
+    description:"Make it strong — a scoop (1 tsp) of dried Vanuatu kava added to any serving.",
+    expect:"An add-on · turns up the strength.",
+    tags:["boost","strong"], labels:[], featured:false },
+
+  // ── Snacks ──
+  { id:"muffin", group:"snack", category:"Snacks", name:"Muffin / Cake", price:5.50, emoji:"",
+    description:"A fresh-baked treat to enjoy alongside your 'awa.",
+    expect:"A little something sweet.",
+    tags:["snack","sweet"], labels:[], featured:false },
+
+  // ── Take Home ──
+  { id:"jar-2", group:"retail", category:"Take Home", name:"Instant Kava — 2 oz Jar", price:21.50, emoji:"",
+    description:"Made-fresh-then-dehydrated Vanuatu kava. Just add water for a strong cup at home.",
+    expect:"", tags:["retail"], labels:[], featured:false },
+  { id:"jar-4", group:"retail", category:"Take Home", name:"Instant Kava — 4 oz Jar", price:37.00, emoji:"",
+    description:"The larger jar of instant Vanuatu kava — just add water.",
+    expect:"", tags:["retail"], labels:[], featured:false },
+  { id:"kava-powder", group:"retail", category:"Take Home", name:"Kava Powder (½ lb)", price:27.50, emoji:"",
+    description:"Pasifika varietals for making kava at home. About one gallon of strong kava per ½ lb.",
+    expect:"", tags:["retail"], labels:[], featured:false },
+  { id:"coconut-shell", group:"retail", category:"Take Home", name:"Coconut Shell Cup", price:6.50, emoji:"",
+    description:"A real coconut-shell cup to drink your 'awa from, island-style.",
+    expect:"", tags:["retail"], labels:[], featured:false },
+  { id:"strainer", group:"retail", category:"Take Home", name:"Strainer Bag", price:6.50, emoji:"",
+    description:"A fine-mesh strainer bag for pressing kava at home.",
+    expect:"", tags:["retail"], labels:[], featured:false },
+  { id:"sticker-logo", group:"retail", category:"Take Home", name:"Sticker — Logo", price:4.50, emoji:"",
+    description:"Rep 'Awa Hou wherever you go.",
+    expect:"", tags:["retail"], labels:[], featured:false },
+]
+  }
+};
+const REST_ORDER = ["bettys", "osun", "hana", "awa"];
+
+/* ---------- state + tracking ---------- */
+const DEMO_MODE = location.protocol === "file:";
+const API_BASE = window.PLATEUP_API_BASE || "https://pick4me.fly.dev";
+const state = { rest:null, lang:"en", answers:{}, step:0, order:[], results:[], shown:4 };
+function track(type, payload){ if(DEMO_MODE) return; try{
+  fetch(API_BASE+"/api/v1/restaurants/"+state.rest+"/events",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({event_type:type,client_ts:new Date().toISOString(),language:state.lang,payload:payload||{}}),keepalive:true}).catch(()=>{});
+}catch(e){} }
+function go(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); document.querySelector("#app .scroll")&&(0); track("view_screen",{screen:id}); }
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1400); }
+const R = ()=>RESTAURANTS[state.rest];
+function esc(s){ return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function nm(it){ return (state.lang==="ja" && it.jp) ? it.jp : it.name; }
+function money(n){ return "$"+Number(n).toFixed(2); }
+function imgFallback(el){ const exts=["jpg","jpeg","png"]; el._t=el._t||0; if(el._t<exts.length){ el.src="menu_pictures/compressed/"+el.dataset.id+"."+exts[el._t++]; } else { el.remove(); } }
+
+/* ---------- hub ---------- */
+/* Trust data shown on the hub cards (Yelp-style). Ratings/counts come from public
+   Google/Yelp reviews — update these numbers here as the real ones change. */
+const HUB_META={
+  bettys:{photo:"deluxe-cheese", price:"$",  area:"Mōʻiliʻili", rating:4.4, reviews:"250+", known:"Deluxe Cheeseburger & fries", badge:null},
+  osun:  {photo:"garlic-shrimp", price:"$$", area:"Waikīkī",    rating:null, reviews:null, known:"Garlic Butter Shrimp", badge:"Family-run · open till 1 AM"},
+  hana:  {photo:"karaage-bento", price:"$",  area:"Mōʻiliʻili", rating:4.6, reviews:"400+", known:"Karaage Chicken Bento", badge:null},
+  awa:   {photo:"apu-fresh-niu", price:"$",  area:"Mōʻiliʻili", rating:null, reviews:null, known:"'Apu Fresh Niu", badge:"Featured in Honolulu Magazine"}
+};
+function starsHtml(r){
+  const pct=Math.max(0,Math.min(5,r))/5*100;
+  return `<span class="stars" aria-hidden="true"><span class="stars-bg">★★★★★</span><span class="stars-fill" style="width:${pct}%">★★★★★</span></span>`;
+}
+function renderHub(){
+  document.getElementById("hub-cards").innerHTML = REST_ORDER.map(k=>{
+    const r=RESTAURANTS[k], m=HUB_META[k]||{};
+    const rate = m.rating!=null
+      ? `<div class="rcard-rate">${starsHtml(m.rating)}<span aria-label="Rated ${m.rating} out of 5">${m.rating.toFixed(1)}</span>${m.reviews?`<span class="rc-c">(${esc(m.reviews)} reviews)</span>`:""}</div>`
+      : "";
+    return `<button class="rcard" onclick="openRestaurant('${k}')">
+      <div class="rcard-ph" aria-hidden="true" style="background:linear-gradient(135deg,${SKINS[k].bg},${r.theme.accent})">
+        <span class="rcard-letter">${esc((r.name.match(/[A-Za-z]/)||[r.name[0]])[0])}</span>
+        ${m.photo?`<img src="menu_pictures/compressed/${m.photo}.webp" data-id="${m.photo}" alt="" loading="lazy" onerror="imgFallback(this)">`:""}
+      </div>
+      <div class="rcard-main">
+        <div class="rcard-name">${esc(r.name)}</div>
+        ${rate}
+        <div class="rcard-meta">${esc([m.price,r.cuisine,m.area].filter(Boolean).join(" · "))}</div>
+        ${m.known?`<div class="rcard-known">Known for: <b>${esc(m.known)}</b></div>`:""}
+        ${m.badge?`<span class="rcard-badge">${esc(m.badge)}</span>`:""}
+      </div>
+      <div class="rcard-go" aria-hidden="true">›</div></button>`;
+  }).join("");
+}
+const SKINS={
+  bettys:{bg:"#211d1b",ink:"#fff",kicker:"#f0b33b",name:"var(--p-accent2)",rule:"var(--p-accent)"},
+  osun:{bg:"#b8691a",ink:"#fff",kicker:"rgba(255,255,255,.9)",name:"#fff",rule:"#ffe0b0"},
+  hana:{bg:"#25415c",ink:"#fff",kicker:"#c2a05f",name:"#fff",rule:"#c75044"},
+  awa:{bg:"#2e5747",ink:"#fff",kicker:"#e8d9b6",name:"#fff",rule:"#b58a3c"}
+};
+function applyTheme(k){
+  const t=RESTAURANTS[k].theme, a=document.getElementById("app").style;
+  a.setProperty("--p-bg",t.bg); a.setProperty("--p-bg2",t.bg2); a.setProperty("--p-ink",t.ink);
+  a.setProperty("--p-ink-soft",t.inkSoft); a.setProperty("--p-accent",t.accent); a.setProperty("--p-accent2",t.accent2);
+  a.setProperty("--p-card",t.card); a.setProperty("--p-line",t.line); a.setProperty("--p-good",t.good);
+  a.setProperty("--p-good-bg",t.goodBg); a.setProperty("--p-display",t.display); a.setProperty("--p-script",t.script);
+  const sk=SKINS[k];
+  a.setProperty("--p-hdr-bg",sk.bg); a.setProperty("--p-hdr-ink",sk.ink); a.setProperty("--p-hdr-kicker",sk.kicker); a.setProperty("--p-hdr-name",sk.name); a.setProperty("--p-hdr-rule",sk.rule);
+  const app=document.getElementById("app"); app.className=app.className.replace(/\br-[a-z]+/g,"").trim(); app.classList.add("r-"+k);
+}
+function openRestaurant(k){
+  state.rest=k; state.lang="en"; state.answers={}; state.order=[]; state.step=0;
+  applyTheme(k); track("restaurant_opened",{restaurant:k});
+  const r=R();
+  document.getElementById("hdr-kicker").textContent=r.cuisine;
+  document.getElementById("hdr-script").textContent=r.name;
+  document.getElementById("hdr-meta").textContent=r.tagline;
+  document.getElementById("lang-btn").style.display = r.langs.length>1 ? "flex":"none";
+  document.getElementById("lang-lbl").textContent="日本語";
+  updateOrderCount(); buildFilters(); renderMostOrdered(); renderQuizBlock(); rankAndRender(); go("screen-menu");
+}
+function backToHub(){ go("screen-hub"); }
+function toggleLang(){ state.lang = state.lang==="en" ? "ja":"en"; document.getElementById("lang-lbl").textContent = state.lang==="en" ? "日本語" : "English"; rankAndRender(); renderMostOrdered(); track("language_changed",{lang:state.lang}); }
+
+/* ---------- filters ---------- */
+function cats(){ const seen=[]; R().menu.forEach(i=>{ if(!seen.includes(i.category)) seen.push(i.category); }); return seen; }
+function buildFilters(){
+  state.filter="all";
+  document.getElementById("filters").innerHTML =
+    `<button class="fchip on" data-c="all" aria-pressed="true" onclick="setFilter('all')">All</button>`+
+    cats().map(c=>`<button class="fchip" data-c="${esc(c)}" aria-pressed="false" onclick="setFilter('${esc(c)}')">${esc(c)}</button>`).join("");
+}
+function setFilter(c){ state.filter=c; document.querySelectorAll("#filters .fchip").forEach(b=>{ const on=b.dataset.c===c; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false"); }); rankAndRender(); const sc=document.querySelector("#screen-menu .scroll"); if(sc) sc.scrollTop=0; track("filter_selected",{category:c}); }
+
+/* ---------- smart menu: quiz stays on the page, the menu re-ranks live ---------- */
+function quizDone(){ return state.step >= R().quiz.length; }
+function engaged(){ return Object.keys(state.answers).length>0; }
+function scoreItem(i){
+  let s=0, sink=false;
+  Object.values(state.answers).forEach(o=>{
+    Object.entries(o.boost||{}).forEach(([t,w])=>{ if((i.tags||[]).includes(t)) s+=w; });
+    (o.exclude||[]).forEach(t=>{ if((i.tags||[]).includes(t)) sink=true; });
+  });
+  if((i.labels||[]).some(l=>/pop/i.test(l))) s+=1.5;
+  if(i.featured) s+=1;
+  return sink ? s-100 : s;
+}
+function rankedItems(){
+  const items = R().menu.filter(i=> state.filter==="all" || i.category===state.filter);
+  return items.map(i=>({i,s:scoreItem(i)})).sort((a,b)=> b.s-a.s || Number(a.i.price)-Number(b.i.price));
+}
+function reasonFor(i){
+  for(const o of Object.values(state.answers)){
+    for(const t of Object.keys(o.boost||{})){ if((i.tags||[]).includes(t)) return o.label; }
+  }
+  if((i.labels||[]).some(l=>/pop/i.test(l))) return "Popular pick";
+  if(i.featured) return "House favorite";
+  return "A match for your taste";
+}
+function labelsHtml(i){ return (i.labels||[]).map(l=>`<span class="label label--${esc(l)}">${esc(l)}</span>`).join(""); }
+function rankAndRender(){
+  const ranked=rankedItems(), on=engaged();
+  document.getElementById("menu-list").innerHTML = ranked.map((r,idx)=>{
+    const i=r.i, top = on && idx===0;
+    return `<div class="menu-item${top?' mi-top':''}">
+      <div class="mi-img tile-${i.group||'default'}">
+        <img src="menu_pictures/compressed/${i.id}.webp" data-id="${i.id}" alt="" loading="lazy" onerror="imgFallback(this)">
+        <button class="mi-add" aria-label="Add ${esc(nm(i))} to order" onclick="addToOrder('${i.id}',this)">＋</button>
+      </div>
+      <div class="mi-body">
+        ${top?`<div class="mi-why">${esc(reasonFor(i))}</div>`:""}
+        <div class="mi-head"><div class="mi-name">${esc(nm(i))}</div><div class="mi-price">${money(i.price)}</div></div>
+        <div class="mi-desc">${esc(i.description||"")}</div>
+        <div class="mi-foot">${labelsHtml(i)}</div>
+      </div>
+    </div>`;
+  }).join("") || `<div class="hub-note" style="padding:20px 0">Nothing in this category.<br><button class="link-btn" onclick="setFilter('all')">Show everything</button></div>`;
+}
+function popularItems(){
+  const pop=R().menu.filter(i=>(i.labels||[]).some(l=>/pop/i.test(l))||i.featured);
+  return (pop.length?pop:R().menu).slice(0,6);
+}
+function renderMostOrdered(){
+  const items=popularItems();
+  document.getElementById("most-ordered").innerHTML=`<div class="mo"><div class="mo-title">Most Ordered</div>
+    <div class="mo-row">${items.map(i=>`<div class="mo-card">
+      <div class="mo-img tile-${i.group||'default'}">
+        <img src="menu_pictures/compressed/${i.id}.webp" data-id="${i.id}" alt="" loading="lazy" onerror="imgFallback(this)">
+        <span class="mo-badge">POPULAR</span>
+        <button class="mo-add" aria-label="Add ${esc(nm(i))} to order" onclick="popPick('${i.id}',this)">＋</button>
+      </div>
+      <div class="mo-body"><div class="mo-name">${esc(nm(i))}</div><div class="mo-price">${money(i.price)}</div></div>
+    </div>`).join("")}</div></div>`;
+}
+function popPick(id,btn){ track("popular_pick_clicked",{item_id:id}); addToOrder(id,btn); }
+function renderQuizBlock(){
+  const box=document.getElementById("menu-quiz");
+  if(quizDone()){
+    box.innerHTML=`<div class="mq-card mq-done">
+      <div><div class="mq-eyebrow">Sorted for you</div><div class="mq-sub2">Your best matches are up top.</div></div>
+      <button class="mq-restart" onclick="startOver()">Start over</button></div>
+      <div class="mq-thumbs" id="mq-thumbs"><span>Was this helpful?</span><button class="mq-thumb" onclick="quickFb('up')">Yes</button><button class="mq-thumb" onclick="quickFb('down')">No</button></div>`;
+    return;
+  }
+  const q=R().quiz[state.step], n=R().quiz.length;
+  box.innerHTML=`<div class="mq-card">
+    <div class="mq-eyebrow">Help me decide · ${state.step+1}/${n}</div>
+    <div class="mq-prompt">${esc(q.q)}</div>
+    <div class="mq-opts">${q.opts.map((o,i)=>`<button class="mq-opt" onclick="answerStep(${i})">${esc(o.label)}</button>`).join("")}</div>
+    ${state.step>0?`<button class="mq-back" onclick="quizBackStep()">‹ back</button>`:`<div class="mq-foot">Tap an answer — the menu sorts itself. Or just browse below.</div>`}
+  </div>`;
+}
+function answerStep(idx){
+  const q=R().quiz[state.step], o=q.opts[idx];
+  if(state.step===0) track("quiz_started",{restaurant:state.rest,entry_point:"smart_menu"});
+  state.answers[q.key]=o;
+  track("quiz_answer",{question:q.key,value:o.v,step:state.step+1});
+  state.step++;
+  renderQuizBlock(); rankAndRender();
+  const sc=document.querySelector("#screen-menu .scroll"); if(sc) sc.scrollTop=0;
+  if(quizDone()){ const r=rankedItems(); track("recommendation_shown",{answers:Object.keys(state.answers),ranked_ids:r.slice(0,3).map(x=>x.i.id),top_item_id:r[0]?r[0].i.id:null}); }
+}
+function quizBackStep(){ if(state.step>0){ state.step--; delete state.answers[R().quiz[state.step].key]; renderQuizBlock(); rankAndRender(); } }
+function startOver(){ state.answers={}; state.step=0; renderQuizBlock(); rankAndRender(); track("quiz_restart",{}); }
+function quickFb(r){ track("feedback_submitted",{rating:r==='up'?5:2,source:"smart_menu"}); const t=document.getElementById("mq-thumbs"); if(t) t.innerHTML="Thanks for the feedback!"; }
+
+/* ---------- order ---------- */
+function findItem(id){ return R().menu.find(i=>i.id===id); }
+function addToOrder(id,btn,silent){
+  state.order.push(id); updateOrderCount();
+  if(!silent) toast("Added to order");
+  if(btn){ btn.classList.add("added"); btn.textContent="✓"; setTimeout(()=>{ btn.classList.remove("added"); btn.textContent="＋"; },900); }
+  track("order_item_added",{item_id:id});
+}
+function orderTotal(){ let t=0; state.order.forEach(id=>{ const i=findItem(id); if(i) t+=Number(i.price); }); return t; }
+function updateOrderCount(){
+  const n=state.order.length;
+  document.getElementById("order-count").textContent=n;
+  document.querySelectorAll(".order-count-m").forEach(e=>e.textContent=n);
+  document.getElementById("app").classList.toggle("has-cart",n>0);
+  document.getElementById("cartbar-count").textContent=n;
+  document.getElementById("cartbar-total").textContent=money(orderTotal());
+}
+function openOrder(){ renderOrder(); document.getElementById("ov-order").classList.add("active"); track("order_opened",{count:state.order.length}); }
+function closeOrder(){ document.getElementById("ov-order").classList.remove("active"); }
+function renderOrder(){
+  if(!state.order.length){ document.getElementById("order-body").innerHTML=`<div class="hub-note" style="padding:14px 0">Nothing yet. Tap ＋ on a dish.</div>`; document.getElementById("order-total").textContent="$0.00"; return; }
+  const counts={}; state.order.forEach(id=>counts[id]=(counts[id]||0)+1);
+  document.getElementById("order-body").innerHTML=Object.entries(counts).map(([id,qty])=>{
+    const i=findItem(id);
+    return `<div class="ord"><div class="ord-name">${esc(nm(i))}</div>
+      <div class="ord-qty"><button class="ord-step" aria-label="Remove one ${esc(nm(i))}" onclick="decOrder('${id}')">−</button><span class="ord-n">${qty}</span><button class="ord-step" aria-label="Add one ${esc(nm(i))}" onclick="incOrder('${id}')">＋</button></div>
+      <div class="ord-price">${money(Number(i.price)*qty)}</div></div>`;
+  }).join("");
+  document.getElementById("order-total").textContent=money(orderTotal());
+}
+function incOrder(id){ addToOrder(id,null,true); renderOrder(); }
+function decOrder(id){ const idx=state.order.indexOf(id); if(idx>-1){ state.order.splice(idx,1); updateOrderCount(); renderOrder(); } }
+function clearOrder(){
+  if(!state.order.length) return;
+  state._lastOrder=state.order.slice(); state.order=[]; updateOrderCount(); track("order_cleared",{});
+  document.getElementById("order-body").innerHTML=`<div class="hub-note" style="padding:14px 0">Order cleared. <button class="link-btn" onclick="undoClear()">Undo</button></div>`;
+  document.getElementById("order-total").textContent="$0.00";
+}
+function undoClear(){ if(state._lastOrder&&state._lastOrder.length){ state.order=state._lastOrder.slice(); state._lastOrder=null; updateOrderCount(); renderOrder(); } }
+
+/* ---------- feedback ---------- */
+function openFeedback(){ document.getElementById("fb-body").innerHTML=`<div class="fb-stars" id="fb-stars"></div><div class="decide-sub">Your feedback tunes the picks.</div>`;
+  document.getElementById("fb-stars").innerHTML=[1,2,3,4,5].map(n=>`<button class="star" aria-label="Rate ${n} star${n>1?"s":""}" onclick="rate(${n})">⭐</button>`).join("");
+  document.getElementById("ov-fb").classList.add("active"); }
+function closeFeedback(){ document.getElementById("ov-fb").classList.remove("active"); }
+function rate(n){ document.querySelectorAll("#fb-stars .star").forEach((s,idx)=>s.classList.toggle("on",idx<n)); track("feedback_submitted",{rating:n});
+  setTimeout(()=>{ document.getElementById("fb-body").innerHTML=`<div class="fb-msg">Thank you!</div>`; setTimeout(closeFeedback,900); },350); }
+
+/* ---------- init ---------- */
+/* ---------- deep-link routing: /osun-grill or ?r=osun opens that restaurant directly ---------- */
+function initRoute(){
+  const pathMap={"osun-grill":"osun","bettys-burgers":"bettys","hana-no-sato":"hana","awa-hou":"awa"};
+  const q=new URLSearchParams(location.search).get("r");
+  let key = (q && RESTAURANTS[q]) ? q : null;
+  if(!key){
+    const path=location.pathname.toLowerCase();
+    for(const seg in pathMap){ if(path.includes(seg)){ key=pathMap[seg]; break; } }
+    if(!key){ for(const k in RESTAURANTS){ if(path.includes(k)){ key=k; break; } } }
+  }
+  if(key && RESTAURANTS[key]) openRestaurant(key);
+}
+/* dismiss sheets by tapping the backdrop or pressing Escape */
+document.querySelectorAll(".ov").forEach(ov=>ov.addEventListener("click",e=>{ if(e.target===ov) ov.classList.remove("active"); }));
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".ov.active").forEach(ov=>ov.classList.remove("active")); });
+renderHub();
+initRoute();
+</script>
+</body>
+</html>
