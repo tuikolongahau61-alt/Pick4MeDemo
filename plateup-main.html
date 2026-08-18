@@ -38,7 +38,11 @@
     .pitch-foot{margin-top:22px;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--p-ink-soft);opacity:.6}
   }
   #app{width:392px;min-height:844px;flex-shrink:0;background:var(--p-bg);border-radius:40px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.32),inset 0 0 0 1.5px rgba(255,255,255,.4);transition:background .3s}
-  @media(max-width:480px){.stage{padding:0;gap:0}#app{width:100%;min-height:0;height:100svh;border-radius:0;box-shadow:none}}
+  @media(max-width:480px){
+    html,body{height:100vh;height:100dvh;overflow:hidden}
+    .stage{padding:0;gap:0;min-height:0;height:100vh;height:100dvh;align-items:stretch}
+    #app{width:100%;min-height:0;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
+  }
   .screen{display:none;flex-direction:column;flex:1;overflow:hidden}
   .screen.active{display:flex}
   .scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
